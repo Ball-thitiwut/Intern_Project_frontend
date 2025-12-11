@@ -35,11 +35,22 @@ const router = createRouter({
       component: () => import('@/views/InfoRestaurantView.vue'),
       meta: { layout: AuthLayout } 
     },
-    
     {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('@/views/DashboardView.vue'),
+      meta: { layout: MainLayout } 
+    },
+    {
+      path: '/dashboard-bill',
+      name: 'dashboard-bill',
+      component: () => import('@/views/DashboardBillView.vue'),
+      meta: { layout: MainLayout } 
+    },
+    {
+      path: '/dashboard-behavior',
+      name: 'dashboard-behavior',
+      component: () => import('@/views/DashboardBehaviorView.vue'),
       meta: { layout: MainLayout } 
     },
   ],
