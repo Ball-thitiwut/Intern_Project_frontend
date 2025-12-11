@@ -3,6 +3,7 @@ import nProgress from 'nprogress'
 
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
+import MainDashboard from '@/views/MainDashboard.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,19 +39,7 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('@/views/DashboardView.vue'),
-      meta: { layout: MainLayout } 
-    },
-    {
-      path: '/dashboard-bill',
-      name: 'dashboard-bill',
-      component: () => import('@/views/DashboardBillView.vue'),
-      meta: { layout: MainLayout } 
-    },
-    {
-      path: '/dashboard-behavior',
-      name: 'dashboard-behavior',
-      component: () => import('@/views/DashboardBehaviorView.vue'),
+      component: MainDashboard,
       meta: { layout: MainLayout } 
     },
   ],

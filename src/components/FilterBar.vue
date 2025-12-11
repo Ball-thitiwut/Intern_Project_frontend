@@ -122,16 +122,14 @@ const selectPeriod = (period) => {
         case 'All': start.setFullYear(2023, 0, 1); break;
     }
 
-    // อัปเดตค่าเข้า dateRange
     dateRange.value = [start, end];
     emit('update:period', period); 
     emit('update:date-range', { start, end });
 };
 
-// เมื่อมีการเลือกวันที่จากปฏิทินเอง
 const onDateChange = (newRange) => {
     if (newRange) {
-        selectedPeriod.value = null; // ปลด Active ปุ่ม 7d, 1m ออก
+        selectedPeriod.value = null; 
         emit('update:date-range', { start: newRange[0], end: newRange[1] });
     }
 };

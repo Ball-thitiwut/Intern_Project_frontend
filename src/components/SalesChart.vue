@@ -15,7 +15,7 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Filler, // ต้องมีเพื่อระบายสีใต้กราฟ
+  Filler, 
   Legend
 } from 'chart.js';
 
@@ -30,7 +30,6 @@ ChartJS.register(
   Legend
 );
 
-// Mock Data ให้เหมือนรูปตัวอย่าง (Jan - Dec)
 const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const dataValues = [5500, 8800, 7200, 19000, 12200, 10200, 11500, 7000, 24500, 15500, 16500, 14800];
 
@@ -40,13 +39,13 @@ const chartData = computed(() => ({
     {
       label: 'Sales',
       data: dataValues,
-      borderColor: '#2563eb',       // สีเส้น (Blue 600)
-      backgroundColor: 'rgba(59, 130, 246, 0.2)', // สีพื้นที่ด้านล่าง (จางๆ)
-      fill: true,                   // สั่งให้ถมสี
-      tension: 0,                   // 0 = เส้นตรง (ตามรูป ref), ถ้าอยากได้โค้งๆ ให้แก้เป็น 0.4
-      pointRadius: 4,               // ขนาดจุด
-      pointBackgroundColor: '#2563eb',
-      pointBorderColor: '#ffffff',  // ขอบจุดสีขาว
+      borderColor: '#F47122',       
+      backgroundColor: 'rgba(244, 113, 34, 0.2)',
+      fill: true,
+      tension: 0,
+      pointRadius: 4,
+      pointBackgroundColor: '#F47122', 
+      pointBorderColor: '#ffffff',
       pointBorderWidth: 2,
     }
   ]
@@ -56,7 +55,7 @@ const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
-    legend: { display: false }, // ซ่อน Legend
+    legend: { display: false }, 
     tooltip: {
       backgroundColor: '#1e293b',
       padding: 12,
@@ -70,18 +69,18 @@ const chartOptions = {
     y: {
       beginAtZero: true,
       grid: {
-        color: '#f3f4f6', // สีเส้น Grid แนวนอน (จางๆ)
+        color: '#f3f4f6', 
       },
       ticks: {
         color: '#9ca3af',
         font: { size: 11 },
-        callback: (value) => value.toLocaleString() // ใส่ลูกน้ำให้แกน Y
+        callback: (value) => value.toLocaleString() 
       },
-      border: { display: false } // ซ่อนเส้นแกน Y
+      border: { display: false } 
     },
     x: {
       grid: {
-        display: false // ซ่อนเส้น Grid แนวตั้ง (ตามรูป ref)
+        display: false 
       },
       ticks: {
         color: '#9ca3af',

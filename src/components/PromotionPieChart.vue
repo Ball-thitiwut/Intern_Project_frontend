@@ -26,7 +26,7 @@ const chartData = computed(() => ({
       data: dataValues,
       backgroundColor: colors, 
       borderWidth: 0, 
-      hoverOffset: 15 // ขยายเวลา Hover ให้เห็นชัด (ต้องมี padding รองรับ)
+      hoverOffset: 15 
     }
   ]
 }));
@@ -34,9 +34,9 @@ const chartData = computed(() => ({
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
-  rotation: -120, // <--- จุดสำคัญ: หมุนกราฟให้สีส้มมาอยู่ฝั่งซ้าย (ประมาณ 10-11 นาฬิกา)
+  rotation: -120,
   layout: {
-    padding: 20 // <--- จุดสำคัญ: กันขอบกราฟไม่ให้ตัดเวลา Hover
+    padding: 20 
   },
   plugins: {
     legend: { display: false },

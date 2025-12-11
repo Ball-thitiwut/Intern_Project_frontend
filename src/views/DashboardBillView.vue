@@ -1,22 +1,15 @@
 <template>
-  <div class="space-y-6 font-sans text-[#051960]">
+  <div class="space-y-6 font-sans text-[#051960] animate-fade-in">
     
-    <FilterBar 
-      :initialPeriod="'1m'"
-      :initialView="'bill'"
-      @update:period="handlePeriodChange"
-      @change-view="handleViewChange"
-    />
-
     <div class="bg-white rounded-2xl p-6 shadow-sm">
       <div class="text-xl font-bold text-[#051960] mb-6">ยอดขายเฉลี่ยต่อบิลรายวัน</div>
       
       <div class="relative h-72 w-full pr-4">
          <div class="absolute left-0 top-0 bottom-8 flex flex-col justify-between text-xs text-gray-500 h-full pb-6">
-            <span>600</span>
-            <span>400</span>
-            <span>200</span>
-            <span>0</span>
+           <span>600</span>
+           <span>400</span>
+           <span>200</span>
+           <span>0</span>
          </div>
 
          <div class="absolute -left-5 top-1/2 -translate-y-1/2 -rotate-90 text-xs text-gray-400 font-medium tracking-wide">
@@ -62,10 +55,10 @@
 
       <div class="relative h-72 w-full pr-4">
          <div class="absolute left-0 top-0 bottom-8 flex flex-col justify-between text-xs text-gray-500 h-full pb-6">
-            <span>60</span>
-            <span>40</span>
-            <span>20</span>
-            <span>0</span>
+           <span>60</span>
+           <span>40</span>
+           <span>20</span>
+           <span>0</span>
          </div>
 
          <div class="absolute -left-5 top-1/2 -translate-y-1/2 -rotate-90 text-xs text-gray-400 font-medium tracking-wide">
@@ -117,8 +110,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import FilterBar from "@/components/FilterBar.vue";
+import { ref, watch } from 'vue';
+
+const props = defineProps({
+  dateRange: {
+    type: Array,
+    default: () => [new Date(), new Date()]
+  },
+  period: {
+    type: String,
+    default: '1m'
+  }
+});
 
 const dates = ['01/17', '01/18', '01/19', '01/20', '01/21', '01/22', '01/23', '01/24', '01/25', '01/26', '01/27'];
 
@@ -136,11 +139,7 @@ const barData = ref([
     { height: 45, value: 310, highlight: false },
 ]);
 
-const handlePeriodChange = (period) => {
-    console.log('Bill View - Period changed to:', period);
-};
-
-const handleViewChange = (viewId) => {
-    console.log('Bill View - View changed to:', viewId);
-};
+watch(() => props.dateRange, (newVal) => {
+    console.log("Bill View: Date updated to", newVal);
+});
 </script>
