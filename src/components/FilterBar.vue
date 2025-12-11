@@ -45,7 +45,7 @@
     <div class="relative">
       <button 
         @click="isOpen = !isOpen"
-        class="bg-white px-4 py-2 rounded-full flex items-center gap-2 shadow-sm cursor-pointer min-w-[200px] justify-between hover:bg-gray-50 transition"
+        class="bg-white px-4 py-2 rounded-full flex items-center gap-2 shadow-sm cursor-pointer min-w-[250px] justify-between hover:bg-gray-50 transition"
       >
         <span class="font-medium text-gray-800 truncate">{{ currentViewName }}</span>
         <svg class="w-4 h-4 text-gray-500 transform transition-transform" :class="isOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -82,7 +82,6 @@ const selectedPeriod = ref(props.initialPeriod);
 const isOpen = ref(false);
 const currentView = ref(props.initialView);
 
-// ใช้ตัวแปรเดียวเก็บเป็น Array [start, end] ตามข้อกำหนดของ Library
 const dateRange = ref([new Date(), new Date()]);
 
 const menuOptions = [

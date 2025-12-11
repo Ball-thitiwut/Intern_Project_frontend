@@ -33,7 +33,9 @@
             เมนูขายดีที่สุด
           </div>
           <div>
-            <div class="text-2xl font-bold text-[#051960] leading-tight truncate">
+            <div
+              class="text-2xl font-bold text-[#051960] leading-tight truncate"
+            >
               ข้าวกะเพราหมูกรอบ
             </div>
             <div class="text-sm text-gray-500 mt-3">
@@ -58,31 +60,9 @@
 
       <div class="bg-white shadow rounded-2xl p-6">
         <div class="text-xl font-bold text-[#051960] mb-4">ยอดขายรายวัน</div>
-        <div
-          class="w-full h-64 bg-gray-50 rounded-xl flex items-center justify-center border border-gray-200 border-dashed relative"
-        >
-          <div
-            class="absolute inset-x-4 bottom-4 top-8 flex items-end justify-between px-2"
-          >
-            <div class="w-1 h-[20%] bg-[#002683]/40 rounded-t"></div>
-            <div class="w-1 h-[40%] bg-[#002683]/60 rounded-t"></div>
-            <div class="w-1 h-[35%] bg-[#002683]/50 rounded-t"></div>
-            <div class="w-1 h-[70%] bg-[#002683] rounded-t"></div>
-            <div class="w-1 h-[50%] bg-[#002683]/70 rounded-t"></div>
-            <div class="w-1 h-[45%] bg-[#002683]/60 rounded-t"></div>
-            <div class="w-1 h-[55%] bg-[#002683]/75 rounded-t"></div>
-            <div class="w-1 h-[30%] bg-[#002683]/50 rounded-t"></div>
-            <div class="w-1 h-[80%] bg-[#002683] rounded-t"></div>
-            <div class="w-1 h-[60%] bg-[#002683]/80 rounded-t"></div>
-            <div class="w-1 h-[65%] bg-[#002683]/85 rounded-t"></div>
-            <div class="w-1 h-[55%] bg-[#002683]/75 rounded-t"></div>
-          </div>
-          <div
-            class="absolute inset-0 border-b border-l border-gray-200 m-4"
-          ></div>
-          <span class="text-gray-400 text-sm"
-            >พื้นที่สำหรับวาง Chart Component (Chart.js)</span
-          >
+
+        <div class="w-full h-80 relative">
+          <SalesChart />
         </div>
       </div>
 
@@ -124,9 +104,7 @@
                 ค่าเฉลี่ยของยอดต่อวัน
               </div>
               <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-bold text-[#051960]"
-                  >฿11,536.5</span
-                >
+                <span class="text-2xl font-bold text-[#051960]">฿11,536.5</span>
                 <span
                   class="text-sm font-semibold text-green-600 bg-green-100 px-1.5 py-0.5 rounded"
                   >+12.81%</span
@@ -150,53 +128,82 @@
             </div>
           </div>
         </div>
-
         <div
-          class="bg-white shadow rounded-2xl p-6 flex flex-col items-center justify-center relative min-h-[300px]"
+          class="bg-white shadow rounded-2xl p-6 flex flex-col items-center justify-center relative min-h-[350px] overflow-hidden"
         >
-          <div class="absolute top-6 left-6 text-lg font-bold text-[#051960] pr-6">
-            สัดส่วนยอดขายเมนูโปรโมชั่นต่อเมนูทั้งหมด
-          </div>
-
-          <div class="w-48 h-48 rounded-full bg-gray-100 relative mt-8">
-             <div
-              class="absolute inset-0 rounded-full border-4 border-white shadow-sm"
-              style="
-                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-                background: #002683;
-                transform: rotate(-45deg);
-                width: 100%;
-              "
-            ></div>
-            <div
-              class="absolute inset-0 rounded-full"
-              style="
-                background: #F47122;
-                clip-path: polygon(50% 50%, 100% 0, 100% 100%, 20% 100%);
-              "
-            ></div>
+          <div class="w-full text-center mb-4 z-10">
+            <h2 class="text-xl font-bold text-[#051960]">
+              สัดส่วนยอดขายเมนูโปรโมชั่นต่อเมนูทั้งหมด
+            </h2>
           </div>
 
           <div
-            class="absolute top-1/2 left-8 lg:left-8 transform -translate-y-1/2 bg-[#F47122] text-white text-sm px-3 py-1.5 rounded-lg shadow-md z-10"
+            class="relative w-full flex justify-center items-center flex-grow px-4"
           >
-            โปรโมชั่น <br />
-            <span class="font-bold">2,811</span>
-          </div>
-           <div
-            class="absolute top-1/3 right-8 lg:right-8 bg-[#002683] text-white text-sm px-3 py-1.5 rounded-lg shadow-md z-10"
-          >
-            เมนูทั่วไป <br />
-             <span class="font-bold">12,799</span>
+            <div
+              class="w-72 h-72 relative z-10 flex justify-center items-center"
+            >
+              <PromotionPieChart />
+            </div>
+
+            <div
+              class="absolute left-4 lg:left-5 top-[40%] -translate-y-1/2 z-20 flex items-center hidden md:flex"
+            >
+              <div
+                class="bg-white px-5 py-2 rounded-xl shadow-md flex flex-col items-start min-w-[100px] border-l-4 border-[#F47122]"
+              >
+                <span class="text-xs font-medium text-gray-400">โปรโมชั่น</span>
+                <span class="text-xl font-bold text-[#F47122]">2,811</span>
+              </div>
+
+              <svg width="60" height="40" class="-ml-1">
+                <path
+                  d="M0,25 L30,25 L55,10"
+                  fill="none"
+                  stroke="#E5E7EB"
+                  stroke-width="2"
+                />
+                <circle cx="55" cy="10" r="5" fill="#D9D9D9" />
+              </svg>
+            </div>
+
+            <div
+              class="absolute right-4 lg:right-5 top-[55%] -translate-y-1/2 z-20 flex items-center flex-row-reverse hidden md:flex"
+            >
+              <div
+                class="bg-white px-5 py-2 rounded-xl shadow-md flex flex-col items-end min-w-[100px] border-r-4 border-[#002683]"
+              >
+                <span class="text-xs font-medium text-gray-400"
+                  >เมนูทั่วไป</span
+                >
+                <span class="text-xl font-bold text-[#002683]">12,799</span>
+              </div>
+
+              <svg width="60" height="40" class="-mr-1">
+                <path
+                  d="M60,20 L30,20 L5,20"
+                  fill="none"
+                  stroke="#E5E7EB"
+                  stroke-width="2"
+                />
+                <circle cx="5" cy="20" r="5" fill="#D9D9D9" />
+              </svg>
+            </div>
           </div>
 
-          <div class="flex gap-4 mt-8 text-sm font-medium">
-            <div class="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
-              <span class="w-3 h-3 rounded-full bg-[#F47122]"></span> โปรโมชั่น
+          <div class="flex gap-4 mt-2 z-10">
+            <div
+              class="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full border border-gray-100 shadow-sm"
+            >
+              <span class="w-4 h-4 rounded-full bg-[#F47122]"></span>
+              <span class="text-gray-700 text-sm font-medium">โปรโมชั่น</span>
             </div>
-            <div class="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
-              <span class="w-3 h-3 rounded-full bg-[#002683]"></span>
-              เมนูทั่วไป
+
+            <div
+              class="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full border border-gray-100 shadow-sm"
+            >
+              <span class="w-4 h-4 rounded-full bg-[#002683]"></span>
+              <span class="text-gray-700 text-sm font-medium">เมนูทั่วไป</span>
             </div>
           </div>
         </div>
@@ -257,9 +264,7 @@
                 <td class="px-6 py-4 text-right">{{ item.percentSales }}%</td>
                 <td
                   class="px-6 py-4 text-right font-medium"
-                  :class="
-                    item.change > 0 ? 'text-green-600' : 'text-red-600'
-                  "
+                  :class="item.change > 0 ? 'text-green-600' : 'text-red-600'"
                 >
                   {{ item.change > 0 ? "+" : "" }}{{ item.change }}%
                 </td>
@@ -284,7 +289,9 @@
 
 <script setup>
 import { ref } from "vue";
-import FilterBar from "@/components/FilterBar.vue"; 
+import FilterBar from "@/components/FilterBar.vue";
+import SalesChart from "@/components/SalesChart.vue";
+import PromotionPieChart from "@/components/PromotionPieChart.vue";
 
 // State สำหรับ Filter
 const currentPeriod = ref("1m");
