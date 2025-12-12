@@ -9,7 +9,7 @@
         :class="[
           'px-4 py-1 rounded-full transition duration-200',
           selectedPeriod === period 
-            ? 'bg-gray-800 font-bold text-white shadow-md' 
+            ? 'bg-[#051960] font-bold text-white shadow-md' 
             : 'text-gray-600 hover:bg-gray-100'
         ]"
       >
@@ -25,7 +25,7 @@
             @update:model-value="onDateChange"
         >
             <template #trigger>
-                <div class="flex items-center gap-4 text-gray-700 font-medium cursor-pointer hover:opacity-80 transition">
+                <div class="flex items-center gap-4 text-[#031350] font-medium cursor-pointer hover:opacity-80 transition">
                     <div class="flex items-center gap-2 bg-white px-4 py-1.5 rounded-full shadow-sm hover:ring-1 hover:ring-gray-300">
                         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         <span>{{ displayDateRange.start }}</span>
@@ -47,7 +47,7 @@
         @click="isOpen = !isOpen"
         class="bg-white px-4 py-2 rounded-full flex items-center gap-2 shadow-sm cursor-pointer min-w-[250px] justify-between hover:bg-gray-50 transition"
       >
-        <span class="font-medium text-gray-800 truncate">{{ currentViewName }}</span>
+        <span class="font-medium text-[#031350] truncate">{{ currentViewName }}</span>
         <svg class="w-4 h-4 text-gray-500 transform transition-transform" :class="isOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
       </button>
 
