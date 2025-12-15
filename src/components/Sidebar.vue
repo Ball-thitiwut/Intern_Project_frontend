@@ -7,17 +7,20 @@
       class="h-20 flex items-center px-5 pt-4 pb-2 transition-all duration-300"
       :class="isCollapsed ? 'justify-center' : 'justify-between'"
     >
-      <div v-if="!isCollapsed" class="flex items-center gap-3 overflow-hidden whitespace-nowrap">
+      <RouterLink
+        v-if="!isCollapsed"
+        to="/dashboard"
+        class="flex items-center gap-3 overflow-hidden whitespace-nowrap cursor-pointer transition-opacity duration-200 hover:opacity-80"
+      >
         <img
           :src="logo"
           alt="Resself Logo"
           class="h-9 w-auto object-contain flex-shrink-0"
         />
         <span class="text-xl font-bold text-[#051960] tracking-tight">
-        RESSELF
+          RESSELF
         </span>
-      </div>
-
+      </RouterLink>
       <button
         v-if="!isCollapsed"
         @click="toggleSidebar"
