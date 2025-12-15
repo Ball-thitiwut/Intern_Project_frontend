@@ -38,13 +38,12 @@ const props = defineProps({
 
 const dates = ['01/17', '01/18', '01/19', '01/20', '01/21', '01/22', '01/23', '01/24', '01/25', '01/26', '01/27'];
 
-// ข้อมูลสำหรับกราฟบน (ยอดขาย)
 const barData = ref([
     { value: 320, highlight: false },
     { value: 150, highlight: false },
     { value: 350, highlight: false },
     { value: 210, highlight: false },
-    { value: 580, highlight: true }, // แท่ง Highlight สีส้ม
+    { value: 580, highlight: true }, 
     { value: 120, highlight: false },
     { value: 290, highlight: false },
     { value: 150, highlight: false },
@@ -53,7 +52,6 @@ const barData = ref([
     { value: 310, highlight: false },
 ]);
 
-// ข้อมูลสำหรับกราฟล่าง (จำนวนบิล)
 const billCountData = ref([
     { value: 32 },
     { value: 15 },

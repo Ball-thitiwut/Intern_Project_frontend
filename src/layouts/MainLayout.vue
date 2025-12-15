@@ -1,13 +1,13 @@
 <template>
-  <div class="flex h-screen bg-gray-100 overflow-hidden">
+  <div class="flex h-screen bg-[#F0F2F5] overflow-hidden">
     
     <Sidebar />
 
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col min-w-0">
       
       <Header />
 
-      <main class="flex-1 overflow-y-auto p-6">
+      <main class="flex-1 overflow-y-auto px-6 pb-8">
         <slot />
       </main>
 

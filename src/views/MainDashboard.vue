@@ -1,5 +1,6 @@
 <template>
-  <div class="min-h-screen p-4">
+  <div class="min-h-screen px-4">
+    <h1 class="text-4xl font-bold text-[#051960] tracking-tight mb-6">Dashboard</h1>
     <div class="mb-6">
       <FilterBar
         :initial-period="currentPeriod"

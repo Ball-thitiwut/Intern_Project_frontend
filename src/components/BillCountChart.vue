@@ -1,12 +1,14 @@
 <template>
   <div class="relative w-full h-full">
-    <div class="absolute -left-8 top-1/2 -translate-y-1/2 -rotate-90 text-xs text-gray-400 font-medium tracking-wide">
-      Bill
+    <div class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-sm text-[#64748b] font-medium tracking-wide font-sans">
+      บิล
     </div>
 
     <Line ref="chartRef" :data="chartData" :options="chartOptions" />
 
-    <div class="text-center text-xs text-gray-400 font-medium mt-2">Date</div>
+    <div class="text-center text-sm text-[#64748b] font-medium mt-2 font-sans">
+      วันที่
+    </div>
   </div>
 </template>
 
@@ -26,6 +28,9 @@ import {
 } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+
+ChartJS.defaults.font.family = "'Prompt', 'Kanit', 'Sarabun', sans-serif";
+ChartJS.defaults.color = '#64748b';
 
 const props = defineProps({
   dates: { type: Array, required: true },
@@ -67,7 +72,7 @@ const chartData = computed(() => {
         pointRadius: 4,
         pointHoverRadius: 6,
 
-        tension: 0, 
+        tension: 0.2, 
       }
     ]
   };
@@ -79,14 +84,16 @@ const chartOptions = {
   plugins: {
     legend: { display: false },
     tooltip: {
-      backgroundColor: '#F47122', 
+      backgroundColor: '#051960',
       titleColor: '#fff',
       bodyColor: '#fff',
-      padding: 10,
+      padding: 12,
       cornerRadius: 4,
       displayColors: false,
+      titleFont: { size: 14, weight: 'bold', family: "'Prompt', sans-serif" },
+      bodyFont: { size: 14, family: "'Prompt', sans-serif" },
       callbacks: {
-        label: (context) => `${context.raw} Bills`
+        label: (context) => `${context.raw.toLocaleString()} บิล` 
       }
     }
   },
@@ -100,18 +107,25 @@ const chartOptions = {
         drawTicks: false
       },
       ticks: {
-        color: '#9ca3af',
-        font: { size: 10 },
+        color: '#64748b', 
+        font: { 
+            size: 13,   
+            weight: 500  
+        },
         padding: 10,
-        stepSize: 10
+        stepSize: 10,
+        callback: (value) => value.toLocaleString()
       }
     },
     x: {
       border: { display: false },
       grid: { display: false },
       ticks: {
-        color: '#9ca3af',
-        font: { size: 10 }
+        color: '#64748b', 
+        font: { 
+            size: 13,    
+            weight: 500  
+        }
       }
     }
   }

@@ -1,12 +1,14 @@
 <template>
   <div class="relative w-full h-full">
-    <div class="absolute -left-8 top-1/2 -translate-y-1/2 -rotate-90 text-xs text-gray-400 font-medium tracking-wide">
-      Bath
+    <div class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-sm text-[#64748b] font-medium tracking-wide font-sans">
+      บาท
     </div>
 
     <Bar :data="chartData" :options="chartOptions" />
 
-    <div class="text-center text-xs text-gray-400 font-medium mt-2">Date</div>
+    <div class="text-center text-sm text-[#64748b] font-medium mt-2 font-sans">
+      วันที่
+    </div>
   </div>
 </template>
 
@@ -24,6 +26,9 @@ import {
 } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+ChartJS.defaults.font.family = "'Prompt', 'Kanit', 'Sarabun', sans-serif";
+ChartJS.defaults.color = '#64748b';
 
 const props = defineProps({
   dates: { type: Array, required: true },
@@ -58,12 +63,12 @@ const chartOptions = {
     tooltip: {
       backgroundColor: '#051960',
       titleColor: '#fff',
-      bodyFont: { size: 14 },
+      bodyFont: { size: 14, family: "'Prompt', sans-serif" }, 
       padding: 10,
       cornerRadius: 4,
       displayColors: false,
       callbacks: {
-        label: (context) => `฿${context.raw}`
+        label: (context) => `฿${context.raw.toLocaleString()}` 
       }
     }
   },
@@ -77,17 +82,24 @@ const chartOptions = {
         drawTicks: false
       },
       ticks: {
-        color: '#9ca3af', 
-        font: { size: 10 },
-        padding: 10
+        color: '#64748b', 
+        font: { 
+          size: 13,       
+          weight: 500     
+        },
+        padding: 10,
+        callback: (value) => value.toLocaleString() 
       }
     },
     x: {
       border: { display: false },
       grid: { display: false }, 
       ticks: {
-        color: '#9ca3af',
-        font: { size: 10 }
+        color: '#64748b', 
+        font: { 
+          size: 13,       
+          weight: 500     
+        }
       }
     }
   }
