@@ -1,78 +1,121 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
-const form = reactive({
-  firstName: 'Keerati',
-  lastName: 'THu',
-  phone: '081-234-5678',
-  email: 'keerati@example.com',
-  role: 'Owner',
-  avatarSeed: 'Keerati', 
+const router = useRouter();
+const isLoading = ref(false);
 
-  restaurantName: 'Keerati Kitchen',
-  category: 'Thai Food',
-  branches: 1,
-  establishedYear: 2020,
-  avgSales: '100k-500k',
-  menuItems: 45, 
-  posSystem: 'Wongnai POS'
+// 1. ตัวแปรสำหรับเก็บตัวเลือก Dropdown (Master Data)
+const masterData = reactive({
+  restaurantTypes: [],
+  incomeRanges: [],
+  branchRanges: [],
+  menuRanges: [],
+  ageRanges: [],
+  posSystems: []
 });
 
+// 2. ฟอร์มข้อมูล (ลบ role ออกแล้ว)
+const form = reactive({
+  firstName: '',
+  lastName: '',
+  phone: '',
+  email: '',
+  // role: 'Owner', <--- ลบออกเรียบร้อย
+  avatarSeed: 'Keerati', 
+
+  restaurantName: '',
+  categoryId: '',      
+  ageRangeId: '',      
+  avgSalesId: '',      
+  branchesId: '',      
+  menuRangeId: '',     
+  posSystemId: ''      
+});
+
+// --- ส่วน Avatar Modal (คงเดิม) ---
 const isAvatarModalOpen = ref(false);
 const tempSelectedAvatar = ref(form.avatarSeed);
+const avatarOptions = ['Felix', 'Aneka', 'Zack', 'Molly', 'Garrett', 'Willow', 'Leo', 'Bella', 'Christopher', 'Sarah', 'Jack', 'Daisy'];
+const openAvatarModal = () => { tempSelectedAvatar.value = form.avatarSeed; isAvatarModalOpen.value = true; };
+const selectAvatar = (seed) => { tempSelectedAvatar.value = seed; };
+const confirmAvatar = () => { form.avatarSeed = tempSelectedAvatar.value; isAvatarModalOpen.value = false; };
+// --------------------------------
 
-const avatarOptions = [
-  'Felix', 'Aneka', 'Zack', 'Molly', 'Garrett', 'Willow',
-  'Leo', 'Bella', 'Christopher', 'Sarah', 'Jack', 'Daisy'
-];
+// 3. ฟังก์ชันดึงข้อมูล
+onMounted(async () => {
+  const token = localStorage.getItem('accessToken');
+  if (!token) {
+    router.push('/login');
+    return;
+  }
 
-const openAvatarModal = () => {
-  tempSelectedAvatar.value = form.avatarSeed; 
-  isAvatarModalOpen.value = true;
-};
+  isLoading.value = true;
 
-const selectAvatar = (seed) => {
-  tempSelectedAvatar.value = seed;
-};
+  try {
+    const authConfig = { headers: { Authorization: `Bearer ${token}` } };
 
-const confirmAvatar = () => {
-  form.avatarSeed = tempSelectedAvatar.value;
-  isAvatarModalOpen.value = false;
-};
-// ----------------------------------------
+    const [optionsRes, userRes, restaurantRes] = await Promise.all([
+      axios.get('http://localhost:3000/api/v1/restaurant-registration-options'),
+      axios.get('http://localhost:3000/api/v1/user/profile', authConfig),
+      axios.get('http://localhost:3000/api/v1/restaurant/profile', authConfig)
+    ]);
 
-const categories = [
-  'Thai Food', 'Cafe & Bakery', 'Japanese', 'Western', 'Buffet', 'Street Food', 'Fast Food', 'Other'
-];
+    // A. Master Data
+    const opts = optionsRes.data;
+    masterData.restaurantTypes = opts.restaurantTypes || [];
+    masterData.incomeRanges = opts.incomeRanges || [];
+    masterData.branchRanges = opts.branchRanges || [];
+    masterData.menuRanges = opts.menuRanges || [];
+    masterData.ageRanges = opts.ageRanges || [];
+    masterData.posSystems = opts.posSystems || [];
 
-const salesRanges = [
-  { label: 'ต่ำกว่า 100,000 บาท', value: '<100k' },
-  { label: '100,001 - 500,000 บาท', value: '100k-500k' },
-  { label: '500,001 - 1,000,000 บาท', value: '500k-1m' },
-  { label: 'มากกว่า 1,000,000 บาท', value: '>1m' },
-];
+    // B. User Data
+    const userData = userRes.data.profile.user;
+    if (userData) {
+      form.firstName = userData.first_name;
+      form.lastName = userData.last_name;
+      form.email = userData.email;
+      form.phone = userData.phone;
+    }
 
-const isLoading = ref(false);
+    // C. Restaurant Data
+    const restData = restaurantRes.data.restaurant;
+    if (restData) {
+      form.restaurantName = restData.restaurant_name;
+      if (restData.type) form.categoryId = restData.type.id;
+      if (restData.monthly_income) form.avgSalesId = restData.monthly_income.id;
+      if (restData.branches) form.branchesId = restData.branches.id;
+      if (restData.menus) form.menuRangeId = restData.menus.id;
+      if (restData.age) form.ageRangeId = restData.age.id;
+      if (restData.pos_system) form.posSystemId = restData.pos_system.id;
+    }
+
+  } catch (error) {
+    console.error("Error loading data:", error);
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('accessToken');
+      router.push('/login');
+    }
+  } finally {
+    isLoading.value = false;
+  }
+});
 
 const saveProfile = async () => {
   isLoading.value = true;
-  
   await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  localStorage.setItem('userAvatarSeed', form.avatarSeed);
-  localStorage.setItem('userName', `${form.firstName} ${form.lastName}`); 
-
-  window.dispatchEvent(new Event('user-profile-updated'));
-
+  alert('บันทึกข้อมูลเรียบร้อยแล้ว (Mock)!');
   isLoading.value = false;
-  alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
 };
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#F0F2F5] p-6 pb-20 relative"> <div class="max-w-4xl mx-auto mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+  <div class="min-h-screen bg-[#F0F2F5] p-6 pb-20 relative"> 
+    <div class="max-w-4xl mx-auto mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-[#051960]">Profile Settings</h1>
+        <h1 class="text-2xl font-bold text-[#051960]">Account Settings</h1>
         <p class="text-gray-500 text-sm mt-1">จัดการข้อมูลส่วนตัวและข้อมูลร้านค้าของคุณ</p>
       </div>
 
@@ -109,7 +152,6 @@ const saveProfile = async () => {
         <div class="flex flex-col md:flex-row gap-8">
           
           <div class="flex flex-col items-center gap-4 md:w-48 flex-shrink-0">
-             
              <div 
                 @click="openAvatarModal"
                 class="w-32 h-32 rounded-full border-4 border-white ring-1 ring-gray-200 overflow-hidden shadow-sm cursor-pointer transition-all duration-200 hover:ring-4 hover:ring-blue-50 hover:shadow-md"
@@ -120,7 +162,6 @@ const saveProfile = async () => {
                   class="w-full h-full object-cover bg-gray-50" 
                 />
              </div>
-             
              <button 
                @click="openAvatarModal"
                type="button" 
@@ -128,7 +169,6 @@ const saveProfile = async () => {
              >
                Change Character
              </button>
-
           </div>
 
           <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -140,17 +180,13 @@ const saveProfile = async () => {
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Last Name</label>
                 <input v-model="form.lastName" type="text" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm" />
              </div>
+             
              <div class="col-span-1">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Phone Number</label>
                 <input v-model="form.phone" type="tel" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm" />
              </div>
-             <div class="col-span-1">
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Job Title</label>
-                <input v-model="form.role" type="text" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm" />
-             </div>
-             <div class="col-span-1 md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
-                <input v-model="form.email" type="email" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm" />
+             <div class="col-span-1"> <label class="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
+                <input v-model="form.email" type="email" disabled class="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-gray-500 cursor-not-allowed outline-none transition-all text-sm" />
              </div>
           </div>
         </div>
@@ -176,9 +212,11 @@ const saveProfile = async () => {
            <div class="col-span-1">
               <label class="block text-sm font-medium text-gray-700 mb-1.5">Category</label>
               <div class="relative">
-                <select v-model="form.category" class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white">
+                <select v-model="form.categoryId" class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white">
                    <option value="" disabled>Select Category</option>
-                   <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+                   <option v-for="cat in masterData.restaurantTypes" :key="cat.restaurant_types_id" :value="cat.restaurant_types_id">
+                     {{ cat.restaurant_types_label }}
+                   </option>
                 </select>
                 <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -187,8 +225,18 @@ const saveProfile = async () => {
            </div>
 
            <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">Year Established</label>
-              <input v-model="form.establishedYear" type="number" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm" placeholder="e.g. 2020" />
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Restaurant Age</label>
+              <div class="relative">
+                <select v-model="form.ageRangeId" class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white">
+                   <option value="" disabled>Select Age</option>
+                   <option v-for="age in masterData.ageRanges" :key="age.restaurant_age_ranges_id" :value="age.restaurant_age_ranges_id">
+                     {{ age.restaurant_age_ranges_label }}
+                   </option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+              </div>
            </div>
 
            <div class="col-span-1 md:col-span-2 border-t border-gray-100 my-1"></div>
@@ -196,9 +244,11 @@ const saveProfile = async () => {
            <div class="col-span-1">
               <label class="block text-sm font-medium text-gray-700 mb-1.5">Average Sales (Monthly)</label>
                <div class="relative">
-                <select v-model="form.avgSales" class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white">
+                <select v-model="form.avgSalesId" class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white">
                    <option value="" disabled>Select Range</option>
-                   <option v-for="range in salesRanges" :key="range.value" :value="range.value">{{ range.label }}</option>
+                   <option v-for="range in masterData.incomeRanges" :key="range.monthly_income_ranges_id" :value="range.monthly_income_ranges_id">
+                     {{ range.monthly_income_ranges_label }}
+                   </option>
                 </select>
                 <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -208,17 +258,47 @@ const saveProfile = async () => {
 
            <div class="col-span-1">
               <label class="block text-sm font-medium text-gray-700 mb-1.5">Number of Branches</label>
-              <input v-model="form.branches" type="number" min="1" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm" />
+              <div class="relative">
+                <select v-model="form.branchesId" class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white">
+                   <option value="" disabled>Select Branches</option>
+                   <option v-for="b in masterData.branchRanges" :key="b.branch_ranges_id" :value="b.branch_ranges_id">
+                     {{ b.branch_ranges_label }}
+                   </option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+              </div>
            </div>
 
            <div class="col-span-1">
               <label class="block text-sm font-medium text-gray-700 mb-1.5">Est. Menu Items</label>
-              <input v-model="form.menuItems" type="number" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm" placeholder="จำนวนรายการอาหารในร้าน" />
+              <div class="relative">
+                <select v-model="form.menuRangeId" class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white">
+                   <option value="" disabled>Select Menu Range</option>
+                   <option v-for="m in masterData.menuRanges" :key="m.menu_ranges_id" :value="m.menu_ranges_id">
+                     {{ m.menu_ranges_label }}
+                   </option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+              </div>
            </div>
 
            <div class="col-span-1">
               <label class="block text-sm font-medium text-gray-700 mb-1.5">Current POS System</label>
-              <input v-model="form.posSystem" type="text" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm" placeholder="e.g. Ocha, Wongnai" />
+              <div class="relative">
+                <select v-model="form.posSystemId" class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white">
+                   <option value="" disabled>Select POS</option>
+                   <option v-for="pos in masterData.posSystems" :key="pos.pos_systems_id" :value="pos.pos_systems_id">
+                     {{ pos.pos_systems_name }}
+                   </option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+              </div>
            </div>
 
         </div>
@@ -258,5 +338,5 @@ const saveProfile = async () => {
           </div>
        </div>
     </div>
-    </div>
+  </div>
 </template>

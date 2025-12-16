@@ -19,6 +19,7 @@
               type="email"
               v-model="email"
               placeholder="name@example.com"
+              required 
             />
           </div>
 
@@ -28,6 +29,7 @@
               type="password"
               v-model="password"
               placeholder="Enter your password"
+              required
             />
           </div>
 
@@ -35,7 +37,9 @@
             <a href="#">Forgot password?</a>
           </div>
 
-          <button type="submit" class="btn-login">Login</button>
+          <button type="submit" class="btn-login" :disabled="isLoading">
+            {{ isLoading ? 'Logging in...' : 'Login' }}
+          </button>
 
           <button type="button" class="btn-google">
             <svg class="google-icon" viewBox="0 0 24 24">
@@ -70,12 +74,34 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router"; 
+import axios from "axios"; 
 import "@/assets/css/auth.css";
 
+const router = useRouter();
 const email = ref("");
 const password = ref("");
+const isLoading = ref(false);
 
-const handleLogin = () => {
-  console.log("Login:", email.value, password.value);
+const handleLogin = async () => {
+  isLoading.value = true;
+  
+  try {
+    const response = await axios.post('http://localhost:3000/api/v1/auth/login', {
+      email: email.value,      
+      password: password.value
+    });
+
+    const token = response.data.token;
+    localStorage.setItem('accessToken', token);
+
+    router.push('/dashboard'); 
+
+  } catch (error) {
+    console.error("Login Error:", error);
+    alert(error.response?.data?.message || "Login ไม่ผ่าน");
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
