@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, computed, shallowRef } from "vue";
+import { ref, computed } from "vue";
 
 import FilterBar from "@/components/FilterBar.vue";
 import DashboardView from "@/views/DashboardView.vue";
@@ -35,14 +35,10 @@ const dateRange = ref([new Date(), new Date()]);
 
 const currentComponent = computed(() => {
   switch (currentView.value) {
-    case "sales":
-      return DashboardView;
-    case "bill":
-      return DashboardBillView;
-    case "behavior":
-      return DashboardBehaviorView;
-    default:
-      return DashboardView;
+    case "sales": return DashboardView;
+    case "bill": return DashboardBillView;
+    case "behavior": return DashboardBehaviorView;
+    default: return DashboardView;
   }
 });
 
@@ -55,6 +51,31 @@ const handlePeriodChange = (period) => {
 };
 
 const handleDateChange = (range) => {
-  dateRange.value = range;
+  let newStart, newEnd;
+
+  if (range && range.start && range.end) {
+    newStart = new Date(range.start);
+    newEnd = new Date(range.end);
+  } else if (Array.isArray(range) && range.length >= 2) {
+    newStart = new Date(range[0]);
+    newEnd = new Date(range[1]);
+  } else {
+    return;
+  }
+
+  const currentStart = dateRange.value[0] ? new Date(dateRange.value[0]) : null;
+  const currentEnd = dateRange.value[1] ? new Date(dateRange.value[1]) : null;
+
+  const isSameTime = (d1, d2) => {
+    if (!d1 || !d2) return false;
+    return Math.floor(d1.getTime() / 1000) === Math.floor(d2.getTime() / 1000);
+  };
+
+  if (isSameTime(newStart, currentStart) && isSameTime(newEnd, currentEnd)) {
+    return; 
+  }
+
+  console.log("Date updated:", newStart, newEnd); 
+  dateRange.value = [newStart, newEnd];
 };
 </script>

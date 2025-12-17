@@ -16,31 +16,40 @@ import {
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const colors = ['#F47122', '#002683'];
-const dataValues = [2811, 12799]; 
+const props = defineProps({
+  promotionAmount: { type: Number, default: 0 },
+  regularAmount: { type: Number, default: 0 }
+});
 
-const chartData = computed(() => ({
-  labels: ['โปรโมชั่น', 'เมนูทั่วไป'],
-  datasets: [
-    {
-      data: dataValues,
-      backgroundColor: colors, 
-      borderWidth: 0, 
-      hoverOffset: 15 
-    }
-  ]
-}));
+const colors = ['#F47122', '#002683'];
+
+const chartData = computed(() => {
+  const hasData = props.promotionAmount > 0 || props.regularAmount > 0;
+  
+  return {
+    labels: ['โปรโมชั่น', 'เมนูทั่วไป'],
+    datasets: [
+      {
+        data: hasData ? [props.promotionAmount, props.regularAmount] : [0, 0.01], 
+      
+        backgroundColor: colors,
+        borderWidth: 0,
+        hoverOffset: 15
+      }
+    ]
+  };
+});
 
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   rotation: -120,
   layout: {
-    padding: 20 
+    padding: 20
   },
   plugins: {
     legend: { display: false },
-    tooltip: { enabled: false }
+    tooltip: { enabled: false } 
   }
 };
 </script>

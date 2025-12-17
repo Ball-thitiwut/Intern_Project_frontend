@@ -6,7 +6,6 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const isLoading = ref(false);
 
-// 1. ตัวแปรสำหรับเก็บตัวเลือก Dropdown (Master Data)
 const masterData = reactive({
   restaurantTypes: [],
   incomeRanges: [],
@@ -16,13 +15,11 @@ const masterData = reactive({
   posSystems: []
 });
 
-// 2. ฟอร์มข้อมูล (ลบ role ออกแล้ว)
 const form = reactive({
   firstName: '',
   lastName: '',
   phone: '',
   email: '',
-  // role: 'Owner', <--- ลบออกเรียบร้อย
   avatarSeed: 'Keerati', 
 
   restaurantName: '',
@@ -34,16 +31,13 @@ const form = reactive({
   posSystemId: ''      
 });
 
-// --- ส่วน Avatar Modal (คงเดิม) ---
 const isAvatarModalOpen = ref(false);
 const tempSelectedAvatar = ref(form.avatarSeed);
 const avatarOptions = ['Felix', 'Aneka', 'Zack', 'Molly', 'Garrett', 'Willow', 'Leo', 'Bella', 'Christopher', 'Sarah', 'Jack', 'Daisy'];
 const openAvatarModal = () => { tempSelectedAvatar.value = form.avatarSeed; isAvatarModalOpen.value = true; };
 const selectAvatar = (seed) => { tempSelectedAvatar.value = seed; };
 const confirmAvatar = () => { form.avatarSeed = tempSelectedAvatar.value; isAvatarModalOpen.value = false; };
-// --------------------------------
 
-// 3. ฟังก์ชันดึงข้อมูล
 onMounted(async () => {
   const token = localStorage.getItem('accessToken');
   if (!token) {
@@ -62,7 +56,6 @@ onMounted(async () => {
       axios.get('http://localhost:3000/api/v1/restaurant/profile', authConfig)
     ]);
 
-    // A. Master Data
     const opts = optionsRes.data;
     masterData.restaurantTypes = opts.restaurantTypes || [];
     masterData.incomeRanges = opts.incomeRanges || [];
@@ -71,7 +64,6 @@ onMounted(async () => {
     masterData.ageRanges = opts.ageRanges || [];
     masterData.posSystems = opts.posSystems || [];
 
-    // B. User Data
     const userData = userRes.data.profile.user;
     if (userData) {
       form.firstName = userData.first_name;
@@ -80,7 +72,6 @@ onMounted(async () => {
       form.phone = userData.phone;
     }
 
-    // C. Restaurant Data
     const restData = restaurantRes.data.restaurant;
     if (restData) {
       form.restaurantName = restData.restaurant_name;

@@ -69,7 +69,8 @@
 
     <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto overflow-x-hidden">
       <div>
-        <button
+        <RouterLink
+          to="/dashboard"
           @click="
             isCollapsed
               ? (isCollapsed = false)
@@ -127,7 +128,7 @@
               </svg>
             </div>
           </div>
-        </button>
+        </RouterLink>
 
         <div
           v-if="!isCollapsed && isDashboardOpen"

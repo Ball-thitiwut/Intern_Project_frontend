@@ -41,6 +41,7 @@ const chartData = computed(() => {
     datasets: [
       {
         data: props.values.map(item => item.value),
+        // ใช้ highlight จาก Store เพื่อเปลี่ยนสีแท่งกราฟ (ถ้ามี logic นี้)
         backgroundColor: props.values.map(item => 
           item.highlight ? '#F47122' : 'rgba(0, 38, 131, 0.2)'
         ),
@@ -55,7 +56,7 @@ const chartData = computed(() => {
   };
 });
 
-const chartOptions = {
+const chartOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
@@ -83,10 +84,7 @@ const chartOptions = {
       },
       ticks: {
         color: '#64748b', 
-        font: { 
-          size: 13,       
-          weight: 500     
-        },
+        font: { size: 13, weight: 500 },
         padding: 10,
         callback: (value) => value.toLocaleString() 
       }
@@ -96,12 +94,12 @@ const chartOptions = {
       grid: { display: false }, 
       ticks: {
         color: '#64748b', 
-        font: { 
-          size: 13,       
-          weight: 500     
-        }
+        font: { size: 13, weight: 500 },
+        maxRotation: 0,
+        autoSkip: true,
+        maxTicksLimit: 10 // ช่วยให้ label ไม่ทับกันเวลาข้อมูลเยอะ
       }
     }
   }
-};
+}));
 </script>

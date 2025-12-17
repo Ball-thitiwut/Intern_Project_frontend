@@ -72,7 +72,7 @@ const chartData = computed(() => {
         pointRadius: 4,
         pointHoverRadius: 6,
 
-        tension: 0.2, 
+        tension: 0.4, 
       }
     ]
   };
@@ -108,12 +108,8 @@ const chartOptions = {
       },
       ticks: {
         color: '#64748b', 
-        font: { 
-            size: 13,   
-            weight: 500  
-        },
+        font: { size: 13, weight: 500 },
         padding: 10,
-        stepSize: 10,
         callback: (value) => value.toLocaleString()
       }
     },
@@ -122,10 +118,8 @@ const chartOptions = {
       grid: { display: false },
       ticks: {
         color: '#64748b', 
-        font: { 
-            size: 13,    
-            weight: 500  
-        }
+        font: { size: 13, weight: 500 },
+        maxTicksLimit: 10 
       }
     }
   }
