@@ -115,9 +115,14 @@ const handleContinue = () => {
   if (selectedPosId.value) {
     const selected = posList.value.find(p => p.id === selectedPosId.value);
     console.log('Selected POS:', selected.name)
+    
+    // ตรงนี้เราต้องพาไปหน้าสำหรับ Upload File หรือ History การ import
+    // สมมติว่าหน้าถัดไปชื่อ 'pos-import' หรือ 'sales-import'
+    // หรือถ้า flow เดิมของคุณคือไป branch-connect เลย ก็ใช้โค้ดเดิมได้ครับ 
+    // แต่จาก API ที่ให้มา น่าจะมีการ Upload CSV ก่อน
     router.push({ 
-        name: 'branch-connect',
-        query: { posName: selected.name }
+        name: 'branch-connect', // หรือเปลี่ยนเป็น 'pos-import' ถ้ามีหน้านั้น
+        query: { posName: selected.name, posId: selected.id }
     }) 
   }
 }

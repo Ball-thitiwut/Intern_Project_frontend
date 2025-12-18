@@ -24,7 +24,7 @@
           <div class="px-6 md:px-10 py-10">
             
             <div class="flex flex-col gap-8 mb-8">
-              <div v-for="(branch, index) in branches" :key="index" class="w-full relative group">
+              <div v-for="(branch, index) in branches" :key="index" class="w-full relative group/item">
                 
                 <div class="flex justify-between items-center mb-2">
                     <label class="block text-[#051960] text-sm font-bold pl-1">
@@ -57,19 +57,29 @@
                   <div v-if="allowUpload" class="flex-none w-full md:w-auto">
                      <button 
                       @click="triggerUpload(index)"
-                      class="w-full md:w-auto h-12 md:h-14 px-6 rounded-xl border transition-all duration-200 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2 shadow-sm"
-                      :class="branch.file 
+                      class="group w-full md:w-auto h-12 md:h-14 px-6 rounded-xl border transition-all duration-200 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2 shadow-sm"
+                      :class="branch.files.length > 0 
                         ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100' 
                         : 'bg-white text-gray-500 border-gray-200 hover:border-[#051960] hover:text-[#051960]'"
                     >
-                      <svg v-if="!branch.file" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg v-if="branch.files.length === 0" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                       </svg>
-                      <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
+
+                      <template v-else>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden group-hover:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                          </svg>
+                      </template>
                       
-                      <span>{{ branch.file ? 'แนบไฟล์เรียบร้อย' : 'อัพโหลดไฟล์' }}</span>
+                      <span v-if="branch.files.length === 0">อัปโหลดไฟล์</span>
+                      <span v-else>
+                         <span class="inline-block group-hover:hidden">{{ branch.files.length }} ไฟล์แนบแล้ว</span>
+                         <span class="hidden group-hover:inline-block font-semibold">เพิ่มไฟล์</span>
+                      </span>
                     </button>
 
                     <input 
@@ -77,14 +87,21 @@
                       ref="fileInputRefs"
                       class="hidden"
                       accept=".csv, .xls, .xlsx"
+                      multiple
                       @change="(e) => handleFileUpload(e, index)"
                     >
                   </div>
                 </div>
                 
-                <p v-if="branch.file" class="text-xs text-green-600 mt-2 pl-2">
-                    ไฟล์ที่เลือก: {{ branch.file.name }}
-                </p>
+                <div v-if="branch.files.length > 0" class="mt-3 pl-1 flex flex-wrap gap-2">
+                    <div v-for="(file, fIndex) in branch.files" :key="fIndex" 
+                         class="text-xs text-green-700 bg-green-50 border border-green-100 px-3 py-1.5 rounded-lg flex items-center gap-2 shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{ file.name }}
+                    </div>
+                </div>
 
               </div>
             </div>
@@ -130,24 +147,26 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import axios from 'axios'
 
 const router = useRouter()
 const route = useRoute()
 
 const posName = ref(route.query.posName || 'My Own POS')
+const isSubmitting = ref(false)
 
 const allowUpload = computed(() => {
   return posName.value !== 'RESSELF POS'
 })
 
 const branches = reactive([
-  { name: '', file: null } 
+  { name: '', files: [] } 
 ])
 
 const fileInputRefs = ref([])
 
 const addBranch = () => {
-  branches.push({ name: '', file: null })
+  branches.push({ name: '', files: [] })
 }
 
 const removeBranch = (index) => {
@@ -161,13 +180,14 @@ const triggerUpload = (index) => {
 }
 
 const handleFileUpload = (event, index) => {
-  const file = event.target.files[0]
-  if (file) {
-    branches[index].file = file
+  const selectedFiles = Array.from(event.target.files || [])
+  if (selectedFiles.length > 0) {
+    branches[index].files = [...branches[index].files, ...selectedFiles]
   }
+  event.target.value = ''
 }
 
-const handleContinue = () => {
+const handleContinue = async () => {
   const validBranches = branches.filter(b => b.name.trim() !== '')
   
   if (validBranches.length === 0) {
@@ -175,9 +195,66 @@ const handleContinue = () => {
     return
   }
 
-  console.log('Saved Branches:', validBranches)
+  const token = localStorage.getItem('access_token') 
+  
+  if (!token) {
+      alert("ไม่พบ Token กรุณา Login ใหม่")
+      router.push('/login')
+      return
+  }
 
-  router.push({ name: 'dashboard' }) 
+  isSubmitting.value = true
+
+  try {
+    if (!allowUpload.value) {
+       console.log('Registered RESSELF POS Branches:', validBranches)
+       router.push({ name: 'dashboard' })
+       return
+    }
+
+    const formData = new FormData()
+    let hasFiles = false
+
+    validBranches.forEach((branch, index) => {
+       formData.append(`branches[${index}][name]`, branch.name)
+       
+       if (branch.files && branch.files.length > 0) {
+         branch.files.forEach(file => {
+            formData.append('files', file)
+         })
+         hasFiles = true
+       }
+    })
+
+    if (hasFiles) {
+        await axios.post('http://localhost:3000/api/v1/sales/import', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        alert("Upload Successful!")
+    } else {
+        console.log('Saved Branches (No Files):', validBranches)
+    }
+
+    router.push({ name: 'dashboard' }) 
+
+  } catch (error) {
+    console.error('Submission Error:', error)
+    if (error.response) {
+         if (error.response.status === 401) {
+             alert("Session หมดอายุ กรุณา Login ใหม่")
+             router.push('/login')
+         } else {
+             alert(error.response.data.message || 'Upload failed')
+         }
+    } else {
+         alert('Cannot connect to server')
+    }
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 

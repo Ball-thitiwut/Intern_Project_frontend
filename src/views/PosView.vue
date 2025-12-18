@@ -88,16 +88,22 @@ const router = useRouter();
 const showMyOwnModal = ref(false);
 
 const handleConnectOther = () => {
+  // ไปหน้า SelectPosView ตามที่วาง Flow ไว้
   router.push({ name: "select-pos" });
 };
 
-const handleFormSubmit = (formData) => {
-  console.log("Form Data:", formData);
+const handleFormSubmit = async (formData) => {
+  // ตรงนี้จะเป็นส่วนจัดการเมื่อ User เลือกเชื่อมต่อกับ RESSELF POS (ผ่าน Modal)
+  console.log("Connect RESSELF POS with data:", formData);
+  
+  // ปิด Modal
   showMyOwnModal.value = false;
   
+  // ส่งต่อไปยังหน้า BranchConnectView
+  // ส่ง query param ไปบอกว่าเป็น RESSELF POS เผื่อไปใช้ display ในหน้าถัดไป
   router.push({ 
     name: "branch-connect", 
-    query: { posName: "RESSELF POS" } 
+    query: { posType: "resself", posName: "RESSELF POS" } 
   });
 };
 </script>
