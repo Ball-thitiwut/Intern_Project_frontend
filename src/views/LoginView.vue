@@ -19,7 +19,7 @@
               type="email"
               v-model="email"
               placeholder="name@example.com"
-              required 
+              required
             />
           </div>
 
@@ -38,7 +38,7 @@
           </div>
 
           <button type="submit" class="btn-login" :disabled="isLoading">
-            {{ isLoading ? 'Logging in...' : 'Login' }}
+            {{ isLoading ? "Logging in..." : "Login" }}
           </button>
 
           <button type="button" class="btn-google">
@@ -64,7 +64,8 @@
           </button>
 
           <p class="signup-text">
-            Don't have an account? <a href="#">Sign up</a>
+            Don't have an account?
+            <router-link to="/signup">Sign up</router-link>
           </p>
         </form>
       </div>
@@ -74,8 +75,8 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router"; 
-import axios from "axios"; 
+import { useRouter } from "vue-router";
+import axios from "axios";
 import "@/assets/css/auth.css";
 
 const router = useRouter();
@@ -85,18 +86,22 @@ const isLoading = ref(false);
 
 const handleLogin = async () => {
   isLoading.value = true;
-  
+
   try {
-    const response = await axios.post('http://localhost:3000/api/v1/auth/login', {
-      email: email.value,      
-      password: password.value
-    });
+    const response = await axios.post(
+      "http://localhost:3000/api/v1/auth/login",
+      {
+        email: email.value,
+        password: password.value,
+      }
+    );
 
     const token = response.data.token;
-    localStorage.setItem('accessToken', token);
+    
+    localStorage.setItem("access_token", token);
 
     router.push('/dashboard'); 
-
+    
   } catch (error) {
     console.error("Login Error:", error);
     alert(error.response?.data?.message || "Login ไม่ผ่าน");
