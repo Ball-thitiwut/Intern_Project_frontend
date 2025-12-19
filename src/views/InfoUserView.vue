@@ -115,20 +115,19 @@ const handleNext = () => {
 
 .content-wrapper {
   width: 100%;
-  max-width: 500px; /* จำกัดความกว้างให้เท่ากับการ์ดทั่วไป */
+  max-width: 500px; 
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; /* ระยะห่างระหว่างการ์ดกับปุ่ม */
+  gap: 1.5rem; 
 }
 
 .action-buttons {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0.5rem; /* ขยับเข้ามานิดหน่อยเพื่อให้ตรงกับขอบมนของการ์ด */
+  padding: 0 0.5rem; 
 }
 
-/* Style ปุ่มกด */
 .btn-nav {
   display: flex;
   align-items: center;
@@ -156,7 +155,7 @@ const handleNext = () => {
 }
 
 .btn-next {
-  background-color: #F97316; /* สีส้มตาม Theme */
+  background-color: #F97316; 
   color: white;
   box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.3);
 }

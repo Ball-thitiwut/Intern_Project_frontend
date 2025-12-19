@@ -2,7 +2,7 @@
   <div class="w-full h-full px-6 md:px-10 flex flex-col">
     
     <div class="mb-6 flex-none">
-      <h1 class="text-4xl font-bold text-[#051960] tracking-tight mb-3">
+      <h1 class="text-3xl font-bold text-[#051960] tracking-tight mb-3">
         เชื่อมต่อข้อมูล POS
       </h1>
       <p class="text-gray-500 text-sm md:text-base font-light">
@@ -88,19 +88,14 @@ const router = useRouter();
 const showMyOwnModal = ref(false);
 
 const handleConnectOther = () => {
-  // ไปหน้า SelectPosView ตามที่วาง Flow ไว้
   router.push({ name: "select-pos" });
 };
 
 const handleFormSubmit = async (formData) => {
-  // ตรงนี้จะเป็นส่วนจัดการเมื่อ User เลือกเชื่อมต่อกับ RESSELF POS (ผ่าน Modal)
   console.log("Connect RESSELF POS with data:", formData);
   
-  // ปิด Modal
   showMyOwnModal.value = false;
   
-  // ส่งต่อไปยังหน้า BranchConnectView
-  // ส่ง query param ไปบอกว่าเป็น RESSELF POS เผื่อไปใช้ display ในหน้าถัดไป
   router.push({ 
     name: "branch-connect", 
     query: { posType: "resself", posName: "RESSELF POS" } 

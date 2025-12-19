@@ -2,7 +2,7 @@
   <div class="w-full h-full px-6 md:px-10 flex flex-col">
     
     <div class="mb-8 flex-none">
-      <h1 class="text-4xl font-bold text-[#051960] tracking-tight mb-3">
+      <h1 class="text-3xl font-bold text-[#051960] tracking-tight mb-3">
         เชื่อมต่อข้อมูลสาขา
       </h1>
       <p class="text-gray-500 text-sm md:text-base font-light">

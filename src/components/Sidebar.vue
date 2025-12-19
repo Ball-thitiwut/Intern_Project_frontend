@@ -135,14 +135,14 @@
           class="mt-1 ml-5 pl-4 border-l-2 border-blue-100 space-y-1 transition-all duration-300"
         >
           <RouterLink
-            to="/dashboard/ideas"
+            to="/ideas"
             class="block px-3 py-2.5 text-sm font-medium text-slate-500 rounded-md hover:text-[#051960] hover:bg-blue-50/50 transition-colors truncate"
             active-class="text-[#051960] bg-blue-50 font-semibold"
           >
             ไอเดียเพิ่มยอดขาย
           </RouterLink>
           <RouterLink
-            to="/dashboard/pairing"
+            to="/menu-pairing"
             class="block px-3 py-2.5 text-sm font-medium text-slate-500 rounded-md hover:text-[#051960] hover:bg-blue-50/50 transition-colors truncate"
           >
             จับคู่เมนู

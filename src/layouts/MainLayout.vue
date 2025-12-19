@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen bg-[#F0F2F5] overflow-hidden">
+  <div class="flex h-screen bg-[#F3F5F9] overflow-hidden">
     
     <Sidebar />
 
