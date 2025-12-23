@@ -68,91 +68,66 @@
     </div>
 
     <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto overflow-x-hidden">
-      <div>
-        <RouterLink
-          to="/dashboard"
-          @click="
-            isCollapsed
-              ? (isCollapsed = false)
-              : (isDashboardOpen = !isDashboardOpen)
-          "
-          class="group w-full flex items-center px-3 py-3 text-left font-semibold rounded-lg transition-all duration-200 min-h-[48px]"
-          :class="
-            isDashboardActive
-              ? 'bg-blue-50 text-[#051960]'
-              : 'text-slate-600 hover:bg-gray-100'
-          "
-        >
-          <div class="flex items-center gap-3 w-full">
-            <svg
-              class="w-5 h-5 flex-shrink-0 transition-colors"
-              :class="
-                isDashboardActive
-                  ? 'text-blue-600'
-                  : 'text-slate-400 group-hover:text-slate-600'
-              "
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-              ></path>
-            </svg>
+      <RouterLink
+        to="/dashboard"
+        class="group w-full flex items-center px-3 py-3 text-left font-semibold rounded-lg transition-all duration-200 min-h-[48px] text-slate-600 hover:bg-gray-100 hover:text-[#051960]"
+        active-class="bg-blue-50 text-[#051960]"
+      >
+        <div class="flex items-center gap-3 w-full">
+          <svg
+            class="w-5 h-5 flex-shrink-0 transition-colors"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+            ></path>
+          </svg>
+          <span
+            v-if="!isCollapsed"
+            class="text-sm truncate transition-all duration-300"
+          >
+            Dashboard
+          </span>
+        </div>
+      </RouterLink>
 
-            <div
-              v-if="!isCollapsed"
-              class="flex items-center justify-between flex-1 overflow-hidden transition-all duration-300"
-            >
-              <span class="text-sm truncate">Dashboard</span>
-              <svg
-                class="w-4 h-4 transform transition-transform duration-200"
-                :class="
-                  isDashboardOpen
-                    ? 'rotate-180 text-blue-500'
-                    : 'text-slate-400'
-                "
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
-        </RouterLink>
-
-        <div
-          v-if="!isCollapsed && isDashboardOpen"
-          class="mt-1 ml-5 pl-4 border-l-2 border-blue-100 space-y-1 transition-all duration-300"
-        >
-          <RouterLink
-            to="/ideas"
-            class="block px-3 py-2.5 text-sm font-medium text-slate-500 rounded-md hover:text-[#051960] hover:bg-blue-50/50 transition-colors truncate"
-            active-class="text-[#051960] bg-blue-50 font-semibold"
+      <RouterLink
+        to="/ideas"
+        class="group w-full flex items-center px-3 py-3 text-left font-semibold rounded-lg transition-all duration-200 min-h-[48px] text-slate-600 hover:bg-gray-100 hover:text-[#051960]"
+        active-class="bg-blue-50 text-[#051960]"
+      >
+        <div class="flex items-center gap-3 w-full">
+          <svg
+            class="w-5 h-5 flex-shrink-0 transition-colors"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+            ></path>
+          </svg>
+          <span
+            v-if="!isCollapsed"
+            class="text-sm truncate transition-all duration-300"
           >
             ไอเดียเพิ่มยอดขาย
-          </RouterLink>
-          <RouterLink
-            to="/menu-pairing"
-            class="block px-3 py-2.5 text-sm font-medium text-slate-500 rounded-md hover:text-[#051960] hover:bg-blue-50/50 transition-colors truncate"
-          >
-            จับคู่เมนู
-          </RouterLink>
+          </span>
         </div>
-      </div>
+      </RouterLink>
 
       <RouterLink
         to="/pos-info"
         class="group w-full flex items-center px-3 py-3 text-left font-medium text-slate-600 rounded-lg hover:bg-white hover:text-[#051960] hover:shadow-sm transition-all duration-200 min-h-[48px]"
+        active-class="bg-blue-50 text-[#051960]"
       >
         <div class="flex items-center gap-3 w-full">
           <svg
@@ -171,8 +146,9 @@
           <span
             v-if="!isCollapsed"
             class="text-sm truncate transition-all duration-300"
-            >ข้อมูล POS</span
           >
+            ข้อมูล POS
+          </span>
         </div>
       </RouterLink>
     </nav>
@@ -191,8 +167,6 @@ import { ref } from "vue";
 import logo from "@/assets/images/logo.png";
 
 const isCollapsed = ref(false);
-const isDashboardOpen = ref(true);
-const isDashboardActive = ref(true);
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value;

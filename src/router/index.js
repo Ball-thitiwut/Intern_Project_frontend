@@ -67,12 +67,6 @@ const router = createRouter({
       meta: { layout: MainLayout },
     },
     {
-      path: "/menu-pairing",
-      name: "menu-pairing",
-      component: () => import("@/views/MenuPairView.vue"),
-      meta: { layout: MainLayout },
-    },
-    {
       path: "/ideas",
       name: "ideas",
       component: () => import("@/views/IdeasView.vue"),
