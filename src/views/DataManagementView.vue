@@ -2,15 +2,22 @@
 import { ref, onMounted } from "vue";
 import api from "@/utils/axios";
 import { useRouter } from "vue-router";
+import ConfirmManageModal from "@/components/ConfirmManageModal.vue";
+import AlertManageModal from "@/components/AlertManageModal.vue";
 
 const router = useRouter();
 const isLoading = ref(false);
 const historyList = ref([]);
+
 const isDeleteModalOpen = ref(false);
+const isSuccessModalOpen = ref(false);
+const isErrorModalOpen = ref(false);
+
 const fileToDelete = ref(null);
 const isDeleting = ref(false);
+const successMessage = ref("");
+const errorMessage = ref("");
 
-// Format วันที่ (DD/MM/YYYY HH:mm)
 const formatDate = (dateString) => {
   if (!dateString) return "-";
   const date = new Date(dateString);
@@ -23,7 +30,6 @@ const formatDate = (dateString) => {
   }).format(date);
 };
 
-// Format เงิน
 const formatCurrency = (amount) => {
   return Number(amount).toLocaleString("en-US", {
     minimumFractionDigits: 2,
@@ -47,7 +53,6 @@ const fetchHistory = async () => {
 };
 
 const goToUpload = () => {
-  // ส่งไปหน้าเลือก POS เพื่อเริ่มกระบวนการอัปโหลดใหม่
   router.push("/select-pos");
 };
 
@@ -66,16 +71,29 @@ const handleDelete = async () => {
     });
 
     isDeleteModalOpen.value = false;
-    fileToDelete.value = null;
-    await fetchHistory();
+
+    historyList.value = historyList.value.filter(
+        item => item.import_filename !== fileToDelete.value.import_filename
+    );
+
+    successMessage.value = "ลบข้อมูลเรียบร้อยแล้ว";
+    isSuccessModalOpen.value = true;
     
-    alert("ลบข้อมูลเรียบร้อยแล้ว ระบบกำลังประมวลผลข้อมูลใหม่");
+    fileToDelete.value = null;
+    
   } catch (error) {
     console.error("Delete Error:", error);
-    alert(error.response?.data?.message || "เกิดข้อผิดพลาดในการลบไฟล์");
+    isDeleteModalOpen.value = false;
+    errorMessage.value = error.response?.data?.message || "เกิดข้อผิดพลาดในการลบไฟล์";
+    isErrorModalOpen.value = true;
   } finally {
     isDeleting.value = false;
   }
+};
+
+const onSuccessModalClose = () => {
+    isSuccessModalOpen.value = false;
+    fetchHistory(); 
 };
 
 onMounted(() => {
@@ -95,16 +113,6 @@ onMounted(() => {
       </div>
       
       <div class="flex items-center gap-3">
-        <button 
-          @click="fetchHistory" 
-          class="p-2.5 text-gray-400 hover:text-[#051960] hover:bg-white bg-gray-50 border border-transparent hover:border-gray-200 rounded-xl transition-all shadow-sm"
-          title="Refresh Data"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-        </button>
-
         <button 
           @click="goToUpload"
           class="flex items-center gap-2 bg-[#F97316] hover:bg-[#ea580c] text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-orange-100 transition-all active:scale-95"
@@ -210,44 +218,39 @@ onMounted(() => {
       </div>
     </div>
 
-    <div v-if="isDeleteModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" @click="!isDeleting && (isDeleteModalOpen = false)"></div>
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl relative z-10 text-center animate-in fade-in zoom-in duration-200">
-            <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-            </div>
-            
-            <h3 class="text-xl font-bold mb-2">ยืนยันการลบข้อมูล?</h3>
-            <p class="text-sm text-gray-500 mb-6">
-                คุณต้องการลบข้อมูลไฟล์ <br/>
-                <span class="font-semibold text-[#051960]">"{{ fileToDelete?.import_filename }}"</span> ใช่หรือไม่?<br/>
-                <span class="text-xs text-red-400 mt-1 block">*ข้อมูลยอดขายทั้งหมดจากไฟล์นี้จะหายไป</span>
-            </p>
+    <ConfirmManageModal
+      :is-open="isDeleteModalOpen"
+      title="ยืนยันการลบข้อมูล?"
+      confirm-text="ลบข้อมูล"
+      cancel-text="ยกเลิก"
+      loading-text="กำลังลบ..."
+      :is-loading="isDeleting"
+      @close="isDeleteModalOpen = false"
+      @confirm="handleDelete"
+    >
+      <template #content>
+        คุณต้องการลบข้อมูลไฟล์ <br/>
+        <span class="font-semibold text-[#051960]">"{{ fileToDelete?.import_filename }}"</span> ใช่หรือไม่?<br/>
+        <span class="text-xs text-red-400 mt-1 block">*ข้อมูลยอดขายทั้งหมดจากไฟล์นี้จะหายไป</span>
+      </template>
+    </ConfirmManageModal>
 
-            <div class="flex gap-3">
-                <button 
-                    @click="isDeleteModalOpen = false" 
-                    :disabled="isDeleting"
-                    class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors disabled:opacity-50"
-                >
-                    ยกเลิก
-                </button>
-                <button 
-                    @click="handleDelete" 
-                    :disabled="isDeleting"
-                    class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
-                >
-                    <svg v-if="isDeleting" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    {{ isDeleting ? 'กำลังลบ...' : 'ลบข้อมูล' }}
-                </button>
-            </div>
-        </div>
-    </div>
+    <AlertManageModal
+      :is-open="isSuccessModalOpen"
+      type="success"
+      title="สำเร็จ!"
+      :message="successMessage"
+      @close="onSuccessModalClose"
+    />
+
+    <AlertManageModal
+      :is-open="isErrorModalOpen"
+      type="error"
+      title="เกิดข้อผิดพลาด"
+      :message="errorMessage"
+      button-text="ปิด"
+      @close="isErrorModalOpen = false"
+    />
 
   </div>
 </template>

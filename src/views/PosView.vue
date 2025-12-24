@@ -92,8 +92,6 @@ const handleConnectOther = () => {
 };
 
 const handleFormSubmit = async (formData) => {
-  console.log("Connect RESSELF POS with data:", formData);
-  
   showMyOwnModal.value = false;
   
   router.push({ 

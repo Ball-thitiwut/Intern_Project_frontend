@@ -12,7 +12,15 @@
     <div
       class="flex-1 overflow-y-auto px-6 md:px-10 py-6 scroll-smooth custom-scrollbar"
     >
-      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      <div v-if="isLoading" class="flex justify-center items-center h-40">
+        <p class="text-gray-400">Loading POS systems...</p>
+      </div>
+
+      <div v-else-if="posList.length === 0" class="flex justify-center items-center h-40">
+        <p class="text-gray-400">No POS systems found.</p>
+      </div>
+
+      <div v-else class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
         <div
           v-for="pos in posList"
           :key="pos.id"
@@ -48,28 +56,15 @@
             <div
               class="z-10 w-16 h-16 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-300 group-hover:scale-110 transition-transform duration-300"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="1.5"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                />
-              </svg>
+              <span class="text-2xl font-bold text-[#051960]">{{ pos.name.charAt(0) }}</span>
             </div>
           </div>
 
           <div
-            class="h-12 flex items-center justify-center border-t border-gray-50 bg-white group-hover:bg-[#051960] transition-colors duration-300"
+            class="h-12 flex items-center justify-center border-t border-gray-50 bg-white group-hover:bg-[#051960] transition-colors duration-300 px-2"
           >
             <span
-              class="font-medium text-sm transition-colors duration-300"
+              class="font-medium text-sm transition-colors duration-300 truncate w-full text-center"
               :class="
                 selectedPosId === pos.id
                   ? 'text-[#F97316] font-bold group-hover:text-white'
@@ -131,26 +126,31 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import api from "@/utils/axios";
 
 const router = useRouter();
 const selectedPosId = ref(null);
+const posList = ref([]);
+const isLoading = ref(true);
 
-const posList = ref([
-  { id: 1, name: "Wongnai POS" },
-  { id: 2, name: "Ocha" },
-  { id: 3, name: "FoodStory" },
-  { id: 4, name: "POS 4" },
-  { id: 5, name: "POS 5" },
-  { id: 6, name: "POS 6" },
-  { id: 7, name: "POS 7" },
-  { id: 8, name: "POS 8" },
-  { id: 9, name: "POS 9" },
-  { id: 10, name: "POS 10" },
-  { id: 11, name: "POS 11" },
-  { id: 12, name: "POS 12" },
-]);
+onMounted(async () => {
+  try {
+    const response = await api.get('/restaurant-registration-options');
+    
+    if (response.data && response.data.posSystems) {
+      posList.value = response.data.posSystems.map(system => ({
+        id: system.pos_systems_id,
+        name: system.pos_systems_name 
+      }));
+    }
+  } catch (error) {
+    console.error("Failed to fetch POS systems:", error);
+  } finally {
+    isLoading.value = false;
+  }
+});
 
 const selectPos = (id) => {
   selectedPosId.value = id;
