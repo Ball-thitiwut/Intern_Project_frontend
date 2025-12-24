@@ -67,9 +67,21 @@ const router = createRouter({
       meta: { layout: MainLayout },
     },
     {
+      path: "/data-management",
+      name: "data-management",
+      component: () => import("@/views/DataManagementView.vue"),
+      meta: { layout: MainLayout },
+    },
+    {
       path: "/ideas",
       name: "ideas",
       component: () => import("@/views/IdeasView.vue"),
+      meta: { layout: MainLayout },
+    },
+    {
+      path: "/history",
+      name: "history",
+      component: () => import("@/views/HistoryCampaignView.vue"),
       meta: { layout: MainLayout },
     },
   ],
