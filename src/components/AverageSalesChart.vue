@@ -7,7 +7,7 @@
     <Bar :data="chartData" :options="chartOptions" />
 
     <div class="text-center text-sm text-[#64748b] font-medium mt-2 font-sans">
-      วันที่
+      {{ isMonthlyView ? 'เดือน/ปี' : 'วันที่' }}
     </div>
   </div>
 </template>
@@ -35,13 +35,16 @@ const props = defineProps({
   values: { type: Array, required: true } 
 });
 
+const isMonthlyView = computed(() => {
+    return props.dates.length > 0 && props.dates[0].length > 5;
+});
+
 const chartData = computed(() => {
   return {
     labels: props.dates,
     datasets: [
       {
         data: props.values.map(item => item.value),
-        // ใช้ highlight จาก Store เพื่อเปลี่ยนสีแท่งกราฟ (ถ้ามี logic นี้)
         backgroundColor: props.values.map(item => 
           item.highlight ? '#F47122' : 'rgba(0, 38, 131, 0.2)'
         ),
@@ -49,7 +52,7 @@ const chartData = computed(() => {
           item.highlight ? '#d65f1a' : 'rgba(0, 38, 131, 0.4)'
         ),
         borderRadius: 4, 
-        barPercentage: 0.4, 
+        barPercentage: 0.6, 
         categoryPercentage: 0.8
       }
     ]
@@ -77,11 +80,7 @@ const chartOptions = computed(() => ({
     y: {
       beginAtZero: true,
       border: { display: false }, 
-      grid: {
-        color: '#f3f4f6', 
-        borderDash: [5, 5], 
-        drawTicks: false
-      },
+      grid: { color: '#f3f4f6', borderDash: [5, 5], drawTicks: false },
       ticks: {
         color: '#64748b', 
         font: { size: 13, weight: 500 },
@@ -97,7 +96,7 @@ const chartOptions = computed(() => ({
         font: { size: 13, weight: 500 },
         maxRotation: 0,
         autoSkip: true,
-        maxTicksLimit: 10 // ช่วยให้ label ไม่ทับกันเวลาข้อมูลเยอะ
+        maxTicksLimit: 12
       }
     }
   }

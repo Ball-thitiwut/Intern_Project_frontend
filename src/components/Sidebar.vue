@@ -96,61 +96,147 @@
         </div>
       </RouterLink>
 
-      <RouterLink
-        to="/ideas"
-        class="group w-full flex items-center px-3 py-3 text-left font-semibold rounded-lg transition-all duration-200 min-h-[48px] text-slate-600 hover:bg-gray-100 hover:text-[#051960]"
-        active-class="bg-blue-50 text-[#051960]"
-      >
-        <div class="flex items-center gap-3 w-full">
+      <div class="space-y-1">
+        <button
+          @click="
+            isCollapsed ? (isCollapsed = false) : (isIdeasOpen = !isIdeasOpen)
+          "
+          class="group w-full flex items-center justify-between px-3 py-3 text-left font-semibold rounded-lg transition-all duration-200 min-h-[48px]"
+          :class="
+            isIdeasActive
+              ? 'bg-blue-50 text-[#051960]'
+              : 'text-slate-600 hover:bg-gray-100 hover:text-[#051960]'
+          "
+        >
+          <div class="flex items-center gap-3 w-full">
+            <svg
+              class="w-5 h-5 flex-shrink-0 transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+              ></path>
+            </svg>
+            <span
+              v-if="!isCollapsed"
+              class="text-sm truncate transition-all duration-300"
+            >
+              ไอเดียเพิ่มยอดขาย
+            </span>
+          </div>
           <svg
-            class="w-5 h-5 flex-shrink-0 transition-colors"
+            v-if="!isCollapsed"
+            class="w-4 h-4 transform transition-transform duration-200"
+            :class="isIdeasOpen ? 'rotate-180' : ''"
             fill="none"
-            stroke="currentColor"
             viewBox="0 0 24 24"
+            stroke="currentColor"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-            ></path>
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
-          <span
-            v-if="!isCollapsed"
-            class="text-sm truncate transition-all duration-300"
-          >
-            ไอเดียเพิ่มยอดขาย
-          </span>
-        </div>
-      </RouterLink>
+        </button>
 
-      <RouterLink
-        to="/pos-info"
-        class="group w-full flex items-center px-3 py-3 text-left font-medium text-slate-600 rounded-lg hover:bg-white hover:text-[#051960] hover:shadow-sm transition-all duration-200 min-h-[48px]"
-        active-class="bg-blue-50 text-[#051960]"
-      >
-        <div class="flex items-center gap-3 w-full">
+        <div
+          v-if="!isCollapsed && isIdeasOpen"
+          class="mt-1 ml-4 pl-4 border-l-2 border-slate-100 space-y-1"
+        >
+          <RouterLink
+            to="/ideas"
+            class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
+            active-class="text-[#051960] bg-blue-50/50"
+          >
+            ค้นหาไอเดีย
+          </RouterLink>
+          <RouterLink
+            to="/history"
+            class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
+            active-class="text-[#051960] bg-blue-50/50"
+          >
+            ประวัติแคมเปญ
+          </RouterLink>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <button
+          @click="
+            isCollapsed ? (isCollapsed = false) : (isPosOpen = !isPosOpen)
+          "
+          class="group w-full flex items-center justify-between px-3 py-3 text-left font-semibold rounded-lg transition-all duration-200 min-h-[48px]"
+          :class="
+            isPosActive
+              ? 'bg-blue-50 text-[#051960]'
+              : 'text-slate-600 hover:bg-gray-100 hover:text-[#051960]'
+          "
+        >
+          <div class="flex items-center gap-3 w-full">
+            <svg
+              class="w-5 h-5 flex-shrink-0 transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+              ></path>
+            </svg>
+            <span
+              v-if="!isCollapsed"
+              class="text-sm truncate transition-all duration-300"
+            >
+              ข้อมูล POS
+            </span>
+          </div>
           <svg
-            class="w-5 h-5 flex-shrink-0 text-slate-400 group-hover:text-[#051960]"
+            v-if="!isCollapsed"
+            class="w-4 h-4 transform transition-transform duration-200"
+            :class="isPosOpen ? 'rotate-180' : ''"
             fill="none"
-            stroke="currentColor"
             viewBox="0 0 24 24"
+            stroke="currentColor"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-            ></path>
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
-          <span
-            v-if="!isCollapsed"
-            class="text-sm truncate transition-all duration-300"
+        </button>
+
+        <div
+          v-if="!isCollapsed && isPosOpen"
+          class="mt-1 ml-4 pl-4 border-l-2 border-slate-100 space-y-1"
+        >
+          <RouterLink
+            to="/pos-info"
+            class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
+            active-class="text-[#051960] bg-blue-50/50"
           >
-            ข้อมูล POS
-          </span>
+            เชื่อมต่อ POS
+          </RouterLink>
+          <RouterLink
+            to="/data-management"
+            class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
+            active-class="text-[#051960] bg-blue-50/50"
+          >
+            จัดการข้อมูล
+          </RouterLink>
         </div>
-      </RouterLink>
+      </div>
     </nav>
 
     <div
@@ -163,10 +249,27 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
 import logo from "@/assets/images/logo.png";
 
+const route = useRoute();
 const isCollapsed = ref(false);
+const isIdeasOpen = ref(true);
+const isPosOpen = ref(true); // Default เปิดไว้ตาม Requirement
+
+const isIdeasActive = computed(() => {
+  return route.path.startsWith("/ideas") || route.path.startsWith("/history");
+});
+
+const isPosActive = computed(() => {
+  return (
+    route.path.startsWith("/data-management") ||
+    route.path.startsWith("/pos-info") ||
+    route.path.startsWith("/select-pos") ||
+    route.path.startsWith("/branch-connect")
+  );
+});
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value;

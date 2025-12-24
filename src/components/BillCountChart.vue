@@ -7,7 +7,7 @@
     <Line ref="chartRef" :data="chartData" :options="chartOptions" />
 
     <div class="text-center text-sm text-[#64748b] font-medium mt-2 font-sans">
-      วันที่
+      {{ isMonthlyView ? 'เดือน/ปี' : 'วันที่' }}
     </div>
   </div>
 </template>
@@ -39,6 +39,10 @@ const props = defineProps({
 
 const chartRef = ref(null);
 
+const isMonthlyView = computed(() => {
+    return props.dates.length > 0 && props.dates[0].length > 5;
+});
+
 const getGradient = (ctx, chartArea) => {
   const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
   gradient.addColorStop(0, 'rgba(244, 113, 34, 0.05)'); 
@@ -54,31 +58,25 @@ const chartData = computed(() => {
         data: props.values.map(item => item.value),
         borderColor: '#F47122', 
         borderWidth: 3,
-
         fill: 'start', 
         backgroundColor: (context) => {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
-
-          if (!chartArea) {
-            return null;
-          }
+          if (!chartArea) return null;
           return getGradient(ctx, chartArea);
         },
-        
         pointBackgroundColor: '#F47122',
         pointBorderColor: '#fff',
         pointBorderWidth: 2,
         pointRadius: 4,
         pointHoverRadius: 6,
-
         tension: 0.4, 
       }
     ]
   };
 });
 
-const chartOptions = {
+const chartOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
@@ -101,11 +99,7 @@ const chartOptions = {
     y: {
       beginAtZero: true,
       border: { display: false },
-      grid: {
-        color: '#f3f4f6',
-        borderDash: [5, 5],
-        drawTicks: false
-      },
+      grid: { color: '#f3f4f6', borderDash: [5, 5], drawTicks: false },
       ticks: {
         color: '#64748b', 
         font: { size: 13, weight: 500 },
@@ -119,9 +113,9 @@ const chartOptions = {
       ticks: {
         color: '#64748b', 
         font: { size: 13, weight: 500 },
-        maxTicksLimit: 10 
+        maxTicksLimit: 12 
       }
     }
   }
-};
+}));
 </script>

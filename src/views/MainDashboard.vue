@@ -5,6 +5,8 @@
       <FilterBar
         :initial-period="currentPeriod"
         :initial-view="currentView"
+        :data-start="dashboardStore.dataRangeLimits.minDate"
+        :data-end="dashboardStore.dataRangeLimits.maxDate"
         @update:period="handlePeriodChange"
         @update:date-range="handleDateChange"
         @change-view="handleChangeView"
@@ -23,12 +25,14 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useDashboardStore } from "@/stores/dashboard";
 
 import FilterBar from "@/components/FilterBar.vue";
 import DashboardView from "@/views/DashboardView.vue";
 import DashboardBillView from "@/views/DashboardBillView.vue";
 import DashboardBehaviorView from "@/views/DashboardBehaviorView.vue";
 
+const dashboardStore = useDashboardStore(); 
 const currentView = ref("sales");
 const currentPeriod = ref("1m");
 const dateRange = ref([new Date(), new Date()]);
@@ -75,7 +79,6 @@ const handleDateChange = (range) => {
     return; 
   }
 
-  console.log("Date updated:", newStart, newEnd); 
   dateRange.value = [newStart, newEnd];
 };
 </script>

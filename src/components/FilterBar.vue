@@ -76,54 +76,58 @@
     </div>
 
     <div class="relative">
-      <button
-        @click="isOpen = !isOpen"
-        class="bg-[#F8FAFC] px-4 py-2 rounded-full flex items-center gap-2 shadow-sm border border-gray-200 cursor-pointer min-w-[250px] justify-between hover:bg-gray-100 transition"
-      >
-        <span class="font-medium text-[#031350] truncate">{{
-          currentViewName
-        }}</span>
-        <svg
-          class="w-4 h-4 text-gray-400 transform transition-transform"
-          :class="isOpen ? 'rotate-180' : ''"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 9l-7 7-7-7"
-          ></path>
-        </svg>
-      </button>
-
       <div
-        v-if="isOpen"
-        class="absolute right-0 mt-2 w-full bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50"
+        @click="isOpen = !isOpen"
+        class="min-w-[250px] bg-white px-4 py-2 rounded-full border transition-all duration-300 cursor-pointer flex items-center justify-between"
+        :class="[
+          isOpen
+            ? 'border-orange-500 ring-2 ring-orange-100'
+            : 'border-gray-200 hover:border-orange-400 hover:shadow-md',
+        ]"
       >
-        <div
-          v-for="item in menuOptions"
-          :key="item.id"
-          @click="selectMenu(item)"
-          class="px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 cursor-pointer"
-        >
-          {{ item.name }}
+        <span class="font-medium text-[#051960] truncate">{{ currentViewName }}</span>
+        <div class="text-gray-400 transition-transform duration-300 pointer-events-none" :class="{ 'rotate-180 text-orange-500': isOpen }">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
       </div>
+
+      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-75 ease-in"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
+      >
+        <div v-if="isOpen" class="absolute right-0 mt-2 w-full bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden py-1 z-50">
+          <div
+            v-for="item in menuOptions"
+            :key="item.id"
+            @click="selectMenu(item)"
+            class="px-4 py-2 cursor-pointer transition-colors text-sm font-medium flex items-center justify-between"
+            :class="[currentView === item.id ? 'bg-orange-50/50 text-orange-600' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600']"
+          >
+            <span>{{ item.name }}</span>
+          </div>
+        </div>
+      </transition>
+      <div v-if="isOpen" @click="isOpen = false" class="fixed inset-0 z-40 bg-transparent cursor-default"></div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = defineProps({
   initialPeriod: { type: String, default: "1m" },
   initialView: { type: String, default: "sales" },
+  dataStart: { type: [Date, String], default: null },
+  dataEnd: { type: [Date, String], default: null }
 });
 
 const emit = defineEmits(["update:period", "update:date-range", "change-view"]);
@@ -131,7 +135,6 @@ const emit = defineEmits(["update:period", "update:date-range", "change-view"]);
 const selectedPeriod = ref(props.initialPeriod);
 const isOpen = ref(false);
 const currentView = ref(props.initialView);
-
 const dateRange = ref([new Date(), new Date()]);
 
 const menuOptions = [
@@ -140,10 +143,19 @@ const menuOptions = [
   { id: "behavior", name: "พฤติกรรมลูกค้า" },
 ];
 
+watch([() => props.dataStart, () => props.dataEnd], ([newStart, newEnd]) => {
+    if (selectedPeriod.value === 'All' && newStart) {
+        const start = new Date(newStart);
+        const end = newEnd ? new Date(newEnd) : new Date();
+        dateRange.value = [start, end];
+    }
+});
+
 const displayDateRange = computed(() => {
   const formatDate = (date) => {
-    if (!date) return "-";
+    if (!date) return "-"; 
     const d = new Date(date);
+    if (isNaN(d.getTime())) return "NaN"; 
     const day = String(d.getDate()).padStart(2, "0");
     const month = String(d.getMonth() + 1).padStart(2, "0");
     const year = d.getFullYear();
@@ -178,7 +190,12 @@ const selectPeriod = (period) => {
       start.setFullYear(end.getFullYear() - 1);
       break;
     case "All":
-      start.setFullYear(2023, 0, 1);
+      if (props.dataStart) {
+          start.setTime(new Date(props.dataStart).getTime());
+          if (props.dataEnd) end.setTime(new Date(props.dataEnd).getTime());
+      } else {
+          start.setFullYear(new Date().getFullYear(), 0, 1);
+      }
       break;
   }
 

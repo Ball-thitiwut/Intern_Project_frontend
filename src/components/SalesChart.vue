@@ -48,34 +48,55 @@ const props = defineProps({
   }
 });
 
+const normalizedPeriod = computed(() => props.period ? props.period.toLowerCase() : '');
+
 const processedData = computed(() => {
     const rawData = props.data || [];
+    const p = normalizedPeriod.value;
     
-    const labels = rawData.map(item => {
-        if (props.period === '24h') {
-            return item.hour || ''; 
-        }
+    if (p === '1y' || p === 'all' || rawData.length > 35) {
+        const groupedData = {};
 
+        rawData.forEach(item => {
+            const dateStr = item.date_iso || item.date;
+            if (dateStr) {
+                const d = new Date(dateStr);
+                if (!isNaN(d.getTime())) {
+                    const year = d.getFullYear();
+                    const month = d.getMonth() + 1;
+                    const key = `${year}-${String(month).padStart(2, '0')}`;
+                    
+                    if (!groupedData[key]) {
+                        groupedData[key] = {
+                            total_sales: 0,
+                            displayLabel: `${String(month).padStart(2, '0')}/${year}`
+                        };
+                    }
+                    groupedData[key].total_sales += (item.amount || item.sales || item.total_sales || 0);
+                }
+            }
+        });
+
+        const sortedKeys = Object.keys(groupedData).sort();
+        return {
+            labels: sortedKeys.map(key => groupedData[key].displayLabel),
+            values: sortedKeys.map(key => groupedData[key].total_sales)
+        };
+    }
+
+    const labels = rawData.map(item => {
+        if (p === '24h') return item.hour || '';
         const dateStr = item.date_iso || item.date;
         if (dateStr) {
             const d = new Date(dateStr);
-            
-            if (isNaN(d.getTime())) return item.date;
-
-            if (props.period === '1y') {
-                return new Intl.DateTimeFormat('th-TH', { month: 'short' }).format(d);
-            } else {
-                const day = String(d.getDate()).padStart(2, '0');
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                return `${day}/${month}`;
+            if (!isNaN(d.getTime())) {
+                return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
             }
         }
-        
         return item.label || '';
     });
 
     const values = rawData.map(item => item.amount || item.sales || item.total_sales || 0);
-
     return { labels, values };
 });
 
@@ -99,14 +120,11 @@ const chartData = computed(() => ({
 }));
 
 const chartOptions = computed(() => {
-    let xAxisLabel = 'ช่วงเวลา';
-    if (props.period === '24h') {
-        xAxisLabel = 'ช่วงเวลา (นาฬิกา)';
-    } else if (props.period === '1y') {
-        xAxisLabel = 'ช่วงเวลา (เดือน)';
-    } else {
-        xAxisLabel = 'ช่วงเวลา (วัน/เดือน)';
-    }
+    let xAxisLabel = 'ช่วงเวลา (วัน/เดือน)';
+    const p = normalizedPeriod.value;
+    
+    if (p === '24h') xAxisLabel = 'ช่วงเวลา (นาฬิกา)';
+    else if (p === '1y' || p === 'all' || processedData.value.labels.length > 35) xAxisLabel = 'ช่วงเวลา (เดือน/ปี)';
 
     return {
         responsive: true,
@@ -123,9 +141,7 @@ const chartOptions = computed(() => {
                 bodyFont: { size: 14, family: "'Prompt', sans-serif" },
                 displayColors: false, 
                 callbacks: {
-                    title: (context) => {
-                         return `เวลา: ${context[0].label}`;
-                    },
+                    title: (context) => `เวลา: ${context[0].label}`,
                     label: (ctx) => `ยอดขาย: ฿${ctx.parsed.y.toLocaleString()}`
                 }
             }
@@ -141,10 +157,7 @@ const chartOptions = computed(() => {
                     font: { size: 14, weight: 500 },
                     padding: { bottom: 8 }
                 },
-                grid: {
-                    color: '#f3f4f6', 
-                    drawBorder: false, 
-                },
+                grid: { color: '#f3f4f6', drawBorder: false },
                 ticks: {
                     color: '#64748b',
                     padding: 10,
