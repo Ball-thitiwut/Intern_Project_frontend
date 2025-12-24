@@ -164,7 +164,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRegisterStore } from '@/stores/registration';
-import axios from 'axios'; 
+import api from '@/utils/axios';
 import '@/assets/css/infoForm.css'; 
 
 const router = useRouter();
@@ -187,7 +187,7 @@ const posSystems = ref([]);
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api/v1/restaurant-registration-options');
+    const response = await api.get('/restaurant-registration-options');
     
     const data = response.data;
     restaurantTypes.value = data.restaurantTypes || [];
@@ -222,10 +222,11 @@ const handleNext = async () => {
     registerStore.formData.pos_systems_id = posSystem.value;
 
     try {
-        const response = await axios.post('http://localhost:3000/api/v1/auth/register', registerStore.formData);
+        const response = await api.post('/auth/register', registerStore.formData);
     
         if (response.status === 200 || response.status === 201) {
             alert("Registration Successful!");
+            registerStore.resetForm();
             router.push('/login'); 
         }
 
@@ -245,7 +246,6 @@ const handleNext = async () => {
   color: #A0AEC0 !important; 
 }
 
-/* Reuse layout styles from info-user page */
 .info-container {
   display: flex;
   justify-content: center;

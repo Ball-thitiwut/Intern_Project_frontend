@@ -22,7 +22,7 @@ const form = reactive({
   lastName: "",
   phone: "",
   email: "",
-  avatarSeed: "character",
+  avatarSeed: "character", // ค่าเริ่มต้น
   restaurantName: "",
   categoryId: "",
   ageRangeId: "",
@@ -32,41 +32,13 @@ const form = reactive({
   posSystemId: "",
 });
 
-const isAvatarModalOpen = ref(false);
-const tempSelectedAvatar = ref(form.avatarSeed);
-const avatarOptions = [
-  "Felix",
-  "Aneka",
-  "Zack",
-  "Molly",
-  "Garrett",
-  "Willow",
-  "Leo",
-  "Bella",
-  "Christopher",
-  "Sarah",
-  "Jack",
-  "Daisy",
-];
-const openAvatarModal = () => {
-  tempSelectedAvatar.value = form.avatarSeed;
-  isAvatarModalOpen.value = true;
-};
-const selectAvatar = (seed) => {
-  tempSelectedAvatar.value = seed;
-};
-const confirmAvatar = () => {
-  form.avatarSeed = tempSelectedAvatar.value;
-  isAvatarModalOpen.value = false;
-};
-
 onMounted(async () => {
   isLoading.value = true;
   try {
     const [optionsRes, userRes, restaurantRes] = await Promise.all([
-      api.get("/api/v1/restaurant-registration-options"),
-      api.get("/api/v1/user/profile"),
-      api.get("/api/v1/restaurant/profile"),
+      api.get("/restaurant-registration-options"),
+      api.get("/user/profile"),
+      api.get("/restaurant/profile"),
     ]);
 
     const opts = optionsRes.data;
@@ -77,10 +49,10 @@ onMounted(async () => {
       form.firstName = userData.first_name;
       form.lastName = userData.last_name;
       form.email = userData.email;
-      form.phone = userData.phone;
+      form.phone = userData.phone || userData.phone_number;
 
-      form.avatarSeed =
-        userData.avatar_seed || userStore.avatarSeed || userData.first_name;
+      // ดึงค่า Avatar ปัจจุบันมาแสดง แต่ไม่ต้องมี logic เปลี่ยน
+      form.avatarSeed = userData.avatar_seed || userStore.avatarSeed || userData.first_name;
 
       userStore.updateState({
         firstName: form.firstName,
@@ -92,19 +64,16 @@ onMounted(async () => {
     const restData = restaurantRes.data.restaurant;
     if (restData) {
       form.restaurantName = restData.restaurant_name;
-      if (restData.type) form.categoryId = restData.type.id;
-      if (restData.monthly_income) form.avgSalesId = restData.monthly_income.id;
-      if (restData.branches) form.branchesId = restData.branches.id;
-      if (restData.menus) form.menuRangeId = restData.menus.id;
-      if (restData.age) form.ageRangeId = restData.age.id;
-      if (restData.pos_system) form.posSystemId = restData.pos_system.id;
+      if (restData.type) form.categoryId = restData.type.id || restData.restaurant_types_id;
+      if (restData.monthly_income) form.avgSalesId = restData.monthly_income.id || restData.monthly_income_ranges_id;
+      if (restData.branches) form.branchesId = restData.branches.id || restData.branch_ranges_id;
+      if (restData.menus) form.menuRangeId = restData.menus.id || restData.menu_ranges_id;
+      if (restData.age) form.ageRangeId = restData.age.id || restData.restaurant_age_ranges_id;
+      if (restData.pos_system) form.posSystemId = restData.pos_system.id || restData.pos_systems_id;
     }
   } catch (error) {
     console.error("Error loading data:", error);
-    if (
-      error.response &&
-      (error.response.status === 401 || error.response.status === 403)
-    ) {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
       localStorage.removeItem("access_token");
       router.push("/login");
     }
@@ -116,21 +85,52 @@ onMounted(async () => {
 const saveProfile = async () => {
   isLoading.value = true;
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  try {
+    const userPayload = {
+        first_name: form.firstName,
+        last_name: form.lastName,
+        phone_number: form.phone,
+        // ไม่ส่ง avatar_seed ไป update เพราะใช้ค่าเดิมตลอด
+    };
 
-  userStore.updateState({
-    firstName: form.firstName,
-    lastName: form.lastName,
-    avatarSeed: form.avatarSeed,
-  });
+    const restaurantPayload = {
+        restaurant_name: form.restaurantName,
+        restaurant_types_id: form.categoryId,
+        monthly_income_ranges_id: form.avgSalesId,
+        branch_ranges_id: form.branchesId,
+        menu_ranges_id: form.menuRangeId,
+        restaurant_age_ranges_id: form.ageRangeId,
+        pos_systems_id: form.posSystemId
+    };
 
-  alert("บันทึกข้อมูลเรียบร้อยแล้ว (และอัปเดตรูปมุมขวาบนแล้ว)!");
-  isLoading.value = false;
+    const promises = [
+        api.put('/user/profile/update', userPayload),
+        api.put('/restaurant/update', restaurantPayload)
+    ];
+
+    await Promise.all(promises);
+
+    userStore.updateState({
+      firstName: form.firstName,
+      lastName: form.lastName,
+      // avatarSeed ไม่เปลี่ยน
+      restaurantName: form.restaurantName
+    });
+
+    alert("บันทึกข้อมูลเรียบร้อยแล้ว!");
+
+  } catch (error) {
+    console.error("Save Error:", error);
+    const msg = error.response?.data?.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล";
+    alert(msg);
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#F0F2F5] p-6 pb-10 relative">
+  <div class="min-h-screen p-6 pb-10 relative">
     <div
       class="max-w-4xl mx-auto mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4"
     >
@@ -143,6 +143,7 @@ const saveProfile = async () => {
 
       <div class="flex gap-3">
         <button
+          @click="router.back()"
           class="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
         >
           Cancel
@@ -207,23 +208,15 @@ const saveProfile = async () => {
         <div class="flex flex-col md:flex-row gap-8">
           <div class="flex flex-col items-center gap-4 md:w-48 flex-shrink-0">
             <div
-              @click="openAvatarModal"
-              class="w-32 h-32 rounded-full border-4 border-white ring-1 ring-gray-200 overflow-hidden shadow-sm cursor-pointer transition-all duration-200 hover:ring-4 hover:ring-blue-50 hover:shadow-md"
+              class="w-32 h-32 rounded-full border-4 border-white ring-1 ring-gray-200 overflow-hidden shadow-sm bg-gray-50"
             >
               <img
                 :src="`https://api.dicebear.com/7.x/avataaars/svg?seed=${form.avatarSeed}`"
                 alt="Avatar"
-                class="w-full h-full object-cover bg-gray-50"
+                class="w-full h-full object-cover"
               />
             </div>
-            <button
-              @click="openAvatarModal"
-              type="button"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-[#051960] hover:border-[#051960]/30 transition-all shadow-sm"
-            >
-              Change Character
-            </button>
-          </div>
+            </div>
 
           <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="col-span-1">
@@ -541,80 +534,6 @@ const saveProfile = async () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      v-if="isAvatarModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4"
-    >
-      <div
-        class="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        @click="isAvatarModalOpen = false"
-      ></div>
-
-      <div
-        class="relative bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 animate-in fade-in zoom-in duration-200"
-      >
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-bold text-[#051960]">
-            Choose Your Character
-          </h3>
-          <button
-            @click="isAvatarModalOpen = false"
-            class="text-gray-400 hover:text-gray-600"
-          >
-            <svg
-              class="w-6 h-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
-          </button>
-        </div>
-
-        <div
-          class="grid grid-cols-3 sm:grid-cols-4 gap-4 mb-6 max-h-[60vh] overflow-y-auto p-2"
-        >
-          <div
-            v-for="seed in avatarOptions"
-            :key="seed"
-            @click="selectAvatar(seed)"
-            class="aspect-square rounded-full border-2 cursor-pointer transition-all hover:scale-105 p-1"
-            :class="
-              tempSelectedAvatar === seed
-                ? 'border-[#051960] ring-2 ring-blue-100 bg-blue-50'
-                : 'border-transparent hover:border-gray-200'
-            "
-          >
-            <img
-              :src="`https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`"
-              class="w-full h-full rounded-full"
-            />
-          </div>
-        </div>
-
-        <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
-          <button
-            @click="isAvatarModalOpen = false"
-            class="px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            @click="confirmAvatar"
-            class="px-6 py-2 text-sm font-medium text-white bg-[#051960] rounded-lg hover:bg-[#031245] transition-colors"
-          >
-            Confirm Selection
-          </button>
         </div>
       </div>
     </div>

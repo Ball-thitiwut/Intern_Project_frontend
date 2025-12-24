@@ -103,7 +103,6 @@ const handleNext = () => {
 </script>
 
 <style scoped>
-/* จัด Layout ใหม่ */
 .info-container {
   display: flex;
   justify-content: center;
