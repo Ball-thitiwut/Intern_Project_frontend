@@ -113,21 +113,35 @@
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-2">
                 <label class="text-sm font-bold text-[#051960] ml-1">วันที่เริ่ม</label>
-                <input
-                  v-model="form.startDate"
-                  type="date"
-                  class="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm"
-                  required
-                />
+                <div class="relative">
+                  <input
+                    v-model="form.startDate"
+                    type="date"
+                    class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
+                    required
+                  />
+                  <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </span>
+                </div>
               </div>
               <div class="space-y-2">
                 <label class="text-sm font-bold text-[#051960] ml-1">วันที่สิ้นสุด</label>
-                <input
-                  v-model="form.endDate"
-                  type="date"
-                  class="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm"
-                  required
-                />
+                <div class="relative">
+                  <input
+                    v-model="form.endDate"
+                    type="date"
+                    class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
+                    required
+                  />
+                  <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </span>
+                </div>
               </div>
             </div>
           </form>
@@ -171,7 +185,6 @@ const form = ref({
     .split("T")[0],
 });
 
-// เมื่อเปิด Modal หรือเปลี่ยน Suggestion ให้ Auto-fill ชื่อแคมเปญ
 watch(
   () => props.suggestionData,
   (newVal) => {
@@ -186,13 +199,21 @@ const close = () => {
 };
 
 const handleConfirm = () => {
-  // ส่งข้อมูลกลับไปให้หน้าหลัก
   emit("confirm", form.value);
 };
 </script>
 
 <style scoped>
-/* Scrollbar Style */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
