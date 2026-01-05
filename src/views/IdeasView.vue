@@ -258,17 +258,12 @@
                 class="text-emerald-500 text-lg font-bold animate-bounce-short"
                 >✓</span
               >
-              <div v-else class="relative w-full h-full">
+              <div
+                v-else
+                class="relative w-full h-full flex items-center justify-center"
+              >
                 <span
-                  class="text-base absolute left-2 top-2.5 transition-transform duration-300"
-                  :class="{
-                    'group-hover:-translate-x-1 group-hover:rotate-[-10deg]':
-                      !isButtonDisabled && !isAnalyzing,
-                  }"
-                  >🚀</span
-                >
-                <span
-                  class="text-base absolute right-2 bottom-2.5 transition-transform duration-300"
+                  class="text-2xl transition-transform duration-300"
                   :class="{
                     'group-hover:translate-x-1 group-hover:rotate-[10deg]':
                       !isButtonDisabled && !isAnalyzing,
@@ -716,7 +711,7 @@ const handlePromotionConfirm = (formData) => {
   });
 
   showSetupModal.value = false;
-  router.push('/history');
+  router.push("/history");
 };
 </script>
 
