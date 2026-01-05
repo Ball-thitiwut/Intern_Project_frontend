@@ -1,7 +1,6 @@
 <template>
   <div class="info-container">
     <div class="content-wrapper">
-      
       <div class="info-card">
         <h1 class="info-title">Personal Info</h1>
         <p class="info-description">Please tell us a bit about yourself.</p>
@@ -9,73 +8,155 @@
         <form @submit.prevent="handleNext">
           <div class="form-group">
             <label>First Name</label>
-            <input 
-              type="text" 
-              class="form-input" 
-              v-model="firstName" 
+            <input
+              type="text"
+              class="form-input"
+              v-model="firstName"
               placeholder="e.g. Somchai"
-              required
+              :class="{ 'input-error': errors.firstName }"
+              @input="clearError('firstName')"
             />
+            <p v-if="errors.firstName" class="error-text">
+              {{ errors.firstName }}
+            </p>
           </div>
 
           <div class="form-group">
             <label>Last Name</label>
-            <input 
-              type="text" 
-              class="form-input" 
-              v-model="lastName" 
+            <input
+              type="text"
+              class="form-input"
+              v-model="lastName"
               placeholder="e.g. Jaidee"
-              required
+              :class="{ 'input-error': errors.lastName }"
+              @input="clearError('lastName')"
             />
+            <p v-if="errors.lastName" class="error-text">
+              {{ errors.lastName }}
+            </p>
           </div>
-
           <div class="form-group">
             <label>Phone Number</label>
-            <input 
-              type="tel" 
-              class="form-input" 
-              v-model="phoneNumber" 
+            <input
+              type="tel"
+              class="form-input"
+              v-model="phoneNumber"
               placeholder="081-234-5678"
-              required
+              :class="{ 'input-error': errors.phoneNumber }"
+              @input="handlePhoneInput"
+              maxlength="12"
             />
+            <p v-if="errors.phoneNumber" class="error-text">
+              {{ errors.phoneNumber }}
+            </p>
           </div>
         </form>
       </div>
 
       <div class="action-buttons">
         <button class="btn-nav btn-back" @click="handleBack">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 12H5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 19L5 12L12 5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           Back
         </button>
 
         <button class="btn-nav btn-next" @click="handleNext">
-          Next 
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          Next
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M5 12H19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 5L19 12L12 19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </button>
       </div>
-
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useRegisterStore } from '@/stores/registration';
-import '@/assets/css/infoForm.css'; 
+import { ref, reactive, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useRegisterStore } from "@/stores/registration";
+import "@/assets/css/infoForm.css";
 
 const router = useRouter();
 const registerStore = useRegisterStore();
 
-const firstName = ref('');
-const lastName = ref('');
-const phoneNumber = ref('');
+const firstName = ref("");
+const lastName = ref("");
+const phoneNumber = ref("");
+
+const errors = reactive({
+  firstName: "",
+  lastName: "",
+  phoneNumber: "",
+});
+
+// [เพิ่มฟังก์ชันนี้] สำหรับจัดรูปแบบเบอร์โทร (xxx-xxx-xxxx)
+const formatPhoneNumber = (value) => {
+  if (!value) return value;
+
+  // 1. เอาเฉพาะตัวเลขออกมา
+  const phoneNumber = value.replace(/[^\d]/g, "");
+
+  // 2. จำกัดความยาวไม่เกิน 10 ตัวเลข
+  const phoneNumberLength = phoneNumber.length;
+
+  // 3. จัดรูปแบบตามความยาว
+  if (phoneNumberLength < 4) return phoneNumber;
+  if (phoneNumberLength < 7) {
+    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+  }
+  return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(
+    3,
+    6
+  )}-${phoneNumber.slice(6, 10)}`;
+};
+
+// [เพิ่มฟังก์ชันนี้] รับ event input แล้วจัดรูปแบบ + เคลียร์ error
+const handlePhoneInput = (event) => {
+  // รับค่า input แล้วส่งไป format ทันที
+  const formatted = formatPhoneNumber(event.target.value);
+  phoneNumber.value = formatted;
+  clearError("phoneNumber");
+};
 
 onMounted(() => {
   if (registerStore.formData.first_name) {
@@ -85,24 +166,63 @@ onMounted(() => {
     lastName.value = registerStore.formData.last_name;
   }
   if (registerStore.formData.phone_number) {
-    phoneNumber.value = registerStore.formData.phone_number;
+    // [แก้ไข] จัดรูปแบบเบอร์โทรที่ดึงมาจาก Store ด้วย
+    phoneNumber.value = formatPhoneNumber(registerStore.formData.phone_number);
   }
 });
 
+const validateForm = () => {
+  let isValid = true;
+  errors.firstName = "";
+  errors.lastName = "";
+  errors.phoneNumber = "";
+
+  if (!firstName.value.trim()) {
+    errors.firstName = "First name is required";
+    isValid = false;
+  }
+
+  if (!lastName.value.trim()) {
+    errors.lastName = "Last name is required";
+    isValid = false;
+  }
+
+  // Logic เดิมของคุณดีอยู่แล้ว เพราะมัน replace(/-/g, '') ก่อนเช็ค
+  // ดังนั้นมันจะทำงานกับเบอร์ที่มีขีด (-) ได้ถูกต้องครับ
+  if (!phoneNumber.value.trim()) {
+    errors.phoneNumber = "Phone number is required";
+    isValid = false;
+  } else if (!/^[0-9]{9,10}$/.test(phoneNumber.value.replace(/-/g, ""))) {
+    errors.phoneNumber = "Invalid phone number format";
+    isValid = false;
+  }
+
+  return isValid;
+};
+
+const clearError = (field) => {
+  errors[field] = "";
+};
+
 const handleBack = () => {
-  router.push('/signup');
+  router.push("/signup");
 };
 
 const handleNext = () => {
+  if (!validateForm()) return;
+
   registerStore.formData.first_name = firstName.value;
   registerStore.formData.last_name = lastName.value;
+  // ส่งค่าแบบมี - หรือไม่มี - ก็ได้ แต่ปกติ Database มักเก็บแบบไม่มี -
+  // บรรทัดนี้จะส่งแบบมีขีดไปครับ (ถ้าอยากส่งแบบไม่มีขีด ให้ใช้ phoneNumber.value.replace(/-/g, ''))
   registerStore.formData.phone_number = phoneNumber.value;
 
-  router.push('/info-restaurant');
+  router.push("/info-restaurant");
 };
 </script>
 
 <style scoped>
+/* CSS เดิมของคุณ */
 .info-container {
   display: flex;
   justify-content: center;
@@ -114,17 +234,17 @@ const handleNext = () => {
 
 .content-wrapper {
   width: 100%;
-  max-width: 500px; 
+  max-width: 500px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; 
+  gap: 1.5rem;
 }
 
 .action-buttons {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0.5rem; 
+  padding: 0 0.5rem;
 }
 
 .btn-nav {
@@ -154,7 +274,7 @@ const handleNext = () => {
 }
 
 .btn-next {
-  background-color: #F97316; 
+  background-color: #f97316;
   color: white;
   box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.3);
 }
@@ -167,5 +287,22 @@ const handleNext = () => {
 
 .btn-next:active {
   transform: translateY(0);
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2;
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  text-align: left;
+  display: block;
 }
 </style>

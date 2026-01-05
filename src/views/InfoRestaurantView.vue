@@ -5,7 +5,7 @@
         <h1 class="info-title">Restaurant Info</h1>
         <p class="info-description">Tell us about your restaurant.</p>
 
-        <form @submit.prevent="handleNext">
+        <form @submit.prevent="handleSubmit">
           <div class="form-group">
             <label for="restaurantName">Restaurant Name</label>
             <input 
@@ -14,8 +14,10 @@
               class="form-input" 
               v-model="restaurantName"
               placeholder="Ex. The Burger Joint" 
-              required
+              :class="{ 'input-error': errors.restaurantName }"
+              @input="clearError('restaurantName')"
             >
+            <p v-if="errors.restaurantName" class="error-text">{{ errors.restaurantName }}</p>
           </div>
 
           <div class="form-row">
@@ -24,9 +26,9 @@
               <select 
                 id="category" 
                 class="form-input" 
-                :class="{ 'placeholder-text': !category }"
+                :class="{ 'placeholder-text': !category, 'input-error': errors.category }"
                 v-model="category"
-                required
+                @change="clearError('category')"
               >
                 <option :value="null" disabled selected>Select Category</option>
                 <option 
@@ -37,15 +39,16 @@
                   {{ type.restaurant_types_label }}
                 </option>
               </select>
+              <p v-if="errors.category" class="error-text">{{ errors.category }}</p>
             </div>
             <div class="form-group">
               <label for="monthlySales">Avg. Sales</label>
               <select 
                 id="monthlySales" 
                 class="form-input"
-                :class="{ 'placeholder-text': !monthlySales }"
+                :class="{ 'placeholder-text': !monthlySales, 'input-error': errors.monthlySales }"
                 v-model="monthlySales"
-                required
+                @change="clearError('monthlySales')"
               >
                 <option :value="null" disabled selected>Select Range</option>
                 <option 
@@ -56,6 +59,7 @@
                   {{ income.monthly_income_ranges_label }}
                 </option>
               </select>
+              <p v-if="errors.monthlySales" class="error-text">{{ errors.monthlySales }}</p>
             </div>
           </div>
 
@@ -65,9 +69,9 @@
               <select 
                 id="branches" 
                 class="form-input"
-                :class="{ 'placeholder-text': !branches }"
+                :class="{ 'placeholder-text': !branches, 'input-error': errors.branches }"
                 v-model="branches"
-                required
+                @change="clearError('branches')"
               >
                 <option :value="null" disabled selected>Select</option>
                 <option 
@@ -78,15 +82,16 @@
                   {{ branch.branch_ranges_label }}
                 </option>
               </select>
+              <p v-if="errors.branches" class="error-text">{{ errors.branches }}</p>
             </div>
             <div class="form-group">
               <label for="menuItems">Menu Items</label>
               <select 
                 id="menuItems" 
                 class="form-input"
-                :class="{ 'placeholder-text': !menuItems }"
+                :class="{ 'placeholder-text': !menuItems, 'input-error': errors.menuItems }"
                 v-model="menuItems"
-                required
+                @change="clearError('menuItems')"
               >
                 <option :value="null" disabled selected>Select</option>
                 <option 
@@ -97,6 +102,7 @@
                   {{ menu.menu_ranges_label }}
                 </option>
               </select>
+              <p v-if="errors.menuItems" class="error-text">{{ errors.menuItems }}</p>
             </div>
           </div>
 
@@ -106,9 +112,9 @@
               <select 
                 id="yearsInBusiness" 
                 class="form-input"
-                :class="{ 'placeholder-text': !yearsInBusiness }"
+                :class="{ 'placeholder-text': !yearsInBusiness, 'input-error': errors.yearsInBusiness }"
                 v-model="yearsInBusiness"
-                required
+                @change="clearError('yearsInBusiness')"
               >
                 <option :value="null" disabled selected>Select</option>
                 <option 
@@ -119,15 +125,16 @@
                   {{ age.restaurant_age_ranges_label }}
                 </option>
               </select>
+              <p v-if="errors.yearsInBusiness" class="error-text">{{ errors.yearsInBusiness }}</p>
             </div>
             <div class="form-group">
               <label for="posSystem">POS System</label>
               <select 
                 id="posSystem" 
                 class="form-input"
-                :class="{ 'placeholder-text': !posSystem }"
+                :class="{ 'placeholder-text': !posSystem, 'input-error': errors.posSystem }"
                 v-model="posSystem"
-                required
+                @change="clearError('posSystem')"
               >
                 <option :value="null" disabled selected>Select</option>
                 <option 
@@ -138,13 +145,14 @@
                   {{ pos.pos_systems_name }}
                 </option>
               </select>
+              <p v-if="errors.posSystem" class="error-text">{{ errors.posSystem }}</p>
             </div>
           </div>
         </form>
       </div>
 
       <div class="action-buttons">
-        <button class="btn-nav btn-back" @click="handleBack">
+        <button class="btn-nav btn-back" @click="handleBack" :disabled="isLoading">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -152,19 +160,30 @@
           Back
         </button>
 
-        <button class="btn-nav btn-next" @click="handleNext">
-          Done
+        <button class="btn-nav btn-next" @click="handleSubmit" :disabled="isLoading">
+          <span v-if="!isLoading">Done</span>
+          <span v-else>Processing...</span>
         </button>
       </div>
     </div>
+
+    <DoneSignupModal 
+      :show="showModal" 
+      :type="modalType" 
+      :title="modalTitle" 
+      :message="modalMessage" 
+      @close="closeModal" 
+    />
+
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRegisterStore } from '@/stores/registration';
 import api from '@/utils/axios';
+import DoneSignupModal from '@/components/DoneSignupModal.vue';
 import '@/assets/css/infoForm.css'; 
 
 const router = useRouter();
@@ -185,10 +204,16 @@ const menuRanges = ref([]);
 const ageRanges = ref([]);
 const posSystems = ref([]);
 
+const isLoading = ref(false);
+const errors = reactive({});
+const showModal = ref(false);
+const modalType = ref('success'); 
+const modalTitle = ref('');
+const modalMessage = ref('');
+
 onMounted(async () => {
   try {
     const response = await api.get('/restaurant-registration-options');
-    
     const data = response.data;
     restaurantTypes.value = data.restaurantTypes || [];
     incomeRanges.value = data.incomeRanges || [];
@@ -197,47 +222,115 @@ onMounted(async () => {
     ageRanges.value = data.ageRanges || [];
     posSystems.value = data.posSystems || [];
 
+    if (registerStore.formData.restaurant_name) restaurantName.value = registerStore.formData.restaurant_name;
+    if (registerStore.formData.restaurant_types_id) category.value = registerStore.formData.restaurant_types_id;
+    if (registerStore.formData.monthly_income_ranges_id) monthlySales.value = registerStore.formData.monthly_income_ranges_id;
+    if (registerStore.formData.branch_ranges_id) branches.value = registerStore.formData.branch_ranges_id;
+    if (registerStore.formData.menu_ranges_id) menuItems.value = registerStore.formData.menu_ranges_id;
+    if (registerStore.formData.restaurant_age_ranges_id) yearsInBusiness.value = registerStore.formData.restaurant_age_ranges_id;
+    if (registerStore.formData.pos_systems_id) posSystem.value = registerStore.formData.pos_systems_id;
+
   } catch (error) {
     console.error("Failed to fetch options:", error);
-    alert("Cannot load options from server.");
+    triggerModal('error', 'Connection Error', 'Cannot load options from server.');
   }
 });
 
+const validateForm = () => {
+  let isValid = true;
+  Object.keys(errors).forEach(key => delete errors[key]);
+
+  if (!restaurantName.value.trim()) {
+    errors.restaurantName = "Restaurant name is required";
+    isValid = false;
+  }
+  if (!category.value) {
+    errors.category = "Please select a category";
+    isValid = false;
+  }
+  if (!monthlySales.value) {
+    errors.monthlySales = "Please select average sales";
+    isValid = false;
+  }
+  if (!branches.value) {
+    errors.branches = "Please select number of branches";
+    isValid = false;
+  }
+  if (!menuItems.value) {
+    errors.menuItems = "Please select menu range";
+    isValid = false;
+  }
+  if (!yearsInBusiness.value) {
+    errors.yearsInBusiness = "Please select years in business";
+    isValid = false;
+  }
+  if (!posSystem.value) {
+    errors.posSystem = "Please select a POS system";
+    isValid = false;
+  }
+
+  return isValid;
+};
+
+const clearError = (field) => {
+  if (errors[field]) {
+    delete errors[field];
+  }
+};
+
+const triggerModal = (type, title, message) => {
+  modalType.value = type;
+  modalTitle.value = title;
+  modalMessage.value = message;
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  if (modalType.value === 'success') {
+    registerStore.resetForm();
+    router.push('/login');
+  }
+};
+
 const handleBack = () => {
+  registerStore.formData.restaurant_name = restaurantName.value;
+  registerStore.formData.restaurant_types_id = category.value;
+  registerStore.formData.monthly_income_ranges_id = monthlySales.value;
+  registerStore.formData.branch_ranges_id = branches.value;
+  registerStore.formData.menu_ranges_id = menuItems.value;
+  registerStore.formData.restaurant_age_ranges_id = yearsInBusiness.value;
+  registerStore.formData.pos_systems_id = posSystem.value;
+
   router.push('/info-user');
 };
 
-const handleNext = async () => {
-    if (!restaurantName.value || !category.value || !monthlySales.value || !branches.value || !menuItems.value || !yearsInBusiness.value || !posSystem.value) {
-        alert("Please fill in all fields");
-        return;
-    }
-  
-    registerStore.formData.restaurant_name = restaurantName.value;
-    registerStore.formData.restaurant_types_id = category.value;
-    registerStore.formData.monthly_income_ranges_id = monthlySales.value;
-    registerStore.formData.branch_ranges_id = branches.value;
-    registerStore.formData.menu_ranges_id = menuItems.value;
-    registerStore.formData.restaurant_age_ranges_id = yearsInBusiness.value;
-    registerStore.formData.pos_systems_id = posSystem.value;
+const handleSubmit = async () => {
+  if (!validateForm()) return;
 
-    try {
-        const response = await api.post('/auth/register', registerStore.formData);
+  isLoading.value = true;
+
+  registerStore.formData.restaurant_name = restaurantName.value;
+  registerStore.formData.restaurant_types_id = category.value;
+  registerStore.formData.monthly_income_ranges_id = monthlySales.value;
+  registerStore.formData.branch_ranges_id = branches.value;
+  registerStore.formData.menu_ranges_id = menuItems.value;
+  registerStore.formData.restaurant_age_ranges_id = yearsInBusiness.value;
+  registerStore.formData.pos_systems_id = posSystem.value;
+
+  try {
+    const response = await api.post('/auth/register', registerStore.formData);
     
-        if (response.status === 200 || response.status === 201) {
-            alert("Registration Successful!");
-            registerStore.resetForm();
-            router.push('/login'); 
-        }
-
-    } catch (error) {
-        console.error(error);
-        if (error.response) {
-            alert(error.response.data.message || "Registration failed");
-        } else {
-            alert("Cannot connect to server.");
-        }
+    if (response.status === 200 || response.status === 201) {
+      triggerModal('success', 'Registration Successful!', 'Your account has been created. Please login.');
     }
+  } catch (error) {
+    console.error(error);
+    const msg = error.response?.data?.message || "Registration failed. Please try again.";
+    triggerModal('error', 'Registration Failed', msg);
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
 
@@ -302,13 +395,30 @@ const handleNext = async () => {
   box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.3);
 }
 
-.btn-next:hover {
+.btn-next:hover:not(:disabled) {
   background-color: #ea580c;
   transform: translateY(-1px);
   box-shadow: 0 6px 8px -1px rgba(249, 115, 22, 0.4);
 }
 
-.btn-next:active {
+.btn-next:active:not(:disabled) {
   transform: translateY(0);
+}
+
+.btn-next:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2;
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0;
 }
 </style>

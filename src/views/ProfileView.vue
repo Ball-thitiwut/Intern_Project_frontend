@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, computed, watch } from "vue";
 import api from "@/utils/axios";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
@@ -8,6 +8,23 @@ const router = useRouter();
 const userStore = useUserStore();
 const isLoading = ref(false);
 
+// --- Notification State ---
+const toast = reactive({
+  show: false,
+  message: "",
+  type: "success",
+});
+
+const showToast = (message, type = "success") => {
+  toast.message = message;
+  toast.type = type;
+  toast.show = true;
+  setTimeout(() => {
+    toast.show = false;
+  }, 3000);
+};
+
+// --- Data ---
 const masterData = reactive({
   restaurantTypes: [],
   incomeRanges: [],
@@ -22,7 +39,7 @@ const form = reactive({
   lastName: "",
   phone: "",
   email: "",
-  avatarSeed: "character", // ค่าเริ่มต้น
+  avatarSeed: "character",
   restaurantName: "",
   categoryId: "",
   ageRangeId: "",
@@ -30,6 +47,12 @@ const form = reactive({
   branchesId: "",
   menuRangeId: "",
   posSystemId: "",
+});
+
+const originalForm = reactive({});
+
+const isFormChanged = computed(() => {
+  return JSON.stringify(form) !== JSON.stringify(originalForm);
 });
 
 onMounted(async () => {
@@ -46,13 +69,12 @@ onMounted(async () => {
 
     const userData = userRes.data.profile.user;
     if (userData) {
-      form.firstName = userData.first_name;
-      form.lastName = userData.last_name;
-      form.email = userData.email;
-      form.phone = userData.phone || userData.phone_number;
-
-      // ดึงค่า Avatar ปัจจุบันมาแสดง แต่ไม่ต้องมี logic เปลี่ยน
-      form.avatarSeed = userData.avatar_seed || userStore.avatarSeed || userData.first_name;
+      form.firstName = userData.first_name || "";
+      form.lastName = userData.last_name || "";
+      form.email = userData.email || "";
+      form.phone = userData.phone || userData.phone_number || "";
+      form.avatarSeed =
+        userData.avatar_seed || userStore.avatarSeed || userData.first_name;
 
       userStore.updateState({
         firstName: form.firstName,
@@ -63,17 +85,29 @@ onMounted(async () => {
 
     const restData = restaurantRes.data.restaurant;
     if (restData) {
-      form.restaurantName = restData.restaurant_name;
-      if (restData.type) form.categoryId = restData.type.id || restData.restaurant_types_id;
-      if (restData.monthly_income) form.avgSalesId = restData.monthly_income.id || restData.monthly_income_ranges_id;
-      if (restData.branches) form.branchesId = restData.branches.id || restData.branch_ranges_id;
-      if (restData.menus) form.menuRangeId = restData.menus.id || restData.menu_ranges_id;
-      if (restData.age) form.ageRangeId = restData.age.id || restData.restaurant_age_ranges_id;
-      if (restData.pos_system) form.posSystemId = restData.pos_system.id || restData.pos_systems_id;
+      form.restaurantName = restData.restaurant_name || "";
+      if (restData.type)
+        form.categoryId = restData.type.id || restData.restaurant_types_id;
+      if (restData.monthly_income)
+        form.avgSalesId =
+          restData.monthly_income.id || restData.monthly_income_ranges_id;
+      if (restData.branches)
+        form.branchesId = restData.branches.id || restData.branch_ranges_id;
+      if (restData.menus)
+        form.menuRangeId = restData.menus.id || restData.menu_ranges_id;
+      if (restData.age)
+        form.ageRangeId = restData.age.id || restData.restaurant_age_ranges_id;
+      if (restData.pos_system)
+        form.posSystemId = restData.pos_system.id || restData.pos_systems_id;
     }
+
+    Object.assign(originalForm, JSON.parse(JSON.stringify(form)));
   } catch (error) {
     console.error("Error loading data:", error);
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+    if (
+      error.response &&
+      (error.response.status === 401 || error.response.status === 403)
+    ) {
       localStorage.removeItem("access_token");
       router.push("/login");
     }
@@ -83,29 +117,30 @@ onMounted(async () => {
 });
 
 const saveProfile = async () => {
+  if (!isFormChanged.value) return;
+
   isLoading.value = true;
 
   try {
     const userPayload = {
-        first_name: form.firstName,
-        last_name: form.lastName,
-        phone_number: form.phone,
-        // ไม่ส่ง avatar_seed ไป update เพราะใช้ค่าเดิมตลอด
+      first_name: form.firstName,
+      last_name: form.lastName,
+      phone_number: form.phone,
     };
 
     const restaurantPayload = {
-        restaurant_name: form.restaurantName,
-        restaurant_types_id: form.categoryId,
-        monthly_income_ranges_id: form.avgSalesId,
-        branch_ranges_id: form.branchesId,
-        menu_ranges_id: form.menuRangeId,
-        restaurant_age_ranges_id: form.ageRangeId,
-        pos_systems_id: form.posSystemId
+      restaurant_name: form.restaurantName,
+      restaurant_types_id: form.categoryId,
+      monthly_income_ranges_id: form.avgSalesId,
+      branch_ranges_id: form.branchesId,
+      menu_ranges_id: form.menuRangeId,
+      restaurant_age_ranges_id: form.ageRangeId,
+      pos_systems_id: form.posSystemId,
     };
 
     const promises = [
-        api.put('/user/profile/update', userPayload),
-        api.put('/restaurant/update', restaurantPayload)
+      api.put("/user/profile/update", userPayload),
+      api.put("/restaurant/update", restaurantPayload),
     ];
 
     await Promise.all(promises);
@@ -113,16 +148,17 @@ const saveProfile = async () => {
     userStore.updateState({
       firstName: form.firstName,
       lastName: form.lastName,
-      // avatarSeed ไม่เปลี่ยน
-      restaurantName: form.restaurantName
+      restaurantName: form.restaurantName,
     });
 
-    alert("บันทึกข้อมูลเรียบร้อยแล้ว!");
+    Object.assign(originalForm, JSON.parse(JSON.stringify(form)));
 
+    showToast("บันทึกข้อมูลเรียบร้อยแล้ว!", "success");
   } catch (error) {
     console.error("Save Error:", error);
-    const msg = error.response?.data?.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล";
-    alert(msg);
+    const msg =
+      error.response?.data?.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล";
+    showToast(msg, "error");
   } finally {
     isLoading.value = false;
   }
@@ -150,8 +186,8 @@ const saveProfile = async () => {
         </button>
         <button
           @click="saveProfile"
-          :disabled="isLoading"
-          class="flex items-center gap-2 px-6 py-2 text-sm font-medium text-white bg-[#051960] rounded-lg hover:bg-[#031245] transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-sm"
+          :disabled="isLoading || !isFormChanged"
+          class="flex items-center gap-2 px-6 py-2 text-sm font-medium text-white bg-[#051960] rounded-lg hover:bg-[#031245] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         >
           <svg
             v-if="isLoading"
@@ -216,7 +252,7 @@ const saveProfile = async () => {
                 class="w-full h-full object-cover"
               />
             </div>
-            </div>
+          </div>
 
           <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="col-span-1">
@@ -239,7 +275,6 @@ const saveProfile = async () => {
                 class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm"
               />
             </div>
-
             <div class="col-span-1">
               <label class="block text-sm font-medium text-gray-700 mb-1.5"
                 >Phone Number</label
@@ -537,5 +572,110 @@ const saveProfile = async () => {
         </div>
       </div>
     </div>
+
+    <Transition
+      enter-active-class="transform ease-out duration-300 transition"
+      enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+      enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+      leave-active-class="transition ease-in duration-200"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="toast.show"
+        class="fixed top-5 right-5 z-50 flex w-full max-w-xs bg-white shadow-[0_4px_20px_rgb(0,0,0,0.08)] rounded-xl border border-gray-100 overflow-hidden ring-1 ring-black ring-opacity-5"
+      >
+        <div class="p-3 flex items-center w-full">
+          <div class="flex-shrink-0">
+            <div
+              v-if="toast.type === 'success'"
+              class="w-8 h-8 bg-green-50 rounded-full flex items-center justify-center"
+            >
+              <svg
+                class="h-5 w-5 text-green-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <div
+              v-else
+              class="w-8 h-8 bg-red-50 rounded-full flex items-center justify-center"
+            >
+              <svg
+                class="h-5 w-5 text-red-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div class="ml-3 w-0 flex-1">
+            <p class="text-sm font-bold text-[#051960]">
+              {{ toast.type === "success" ? "บันทึกสำเร็จ" : "เกิดข้อผิดพลาด" }}
+            </p>
+            <p class="text-xs text-gray-500 mt-0.5">{{ toast.message }}</p>
+          </div>
+
+          <div class="ml-2 flex-shrink-0 flex">
+            <button
+              @click="toast.show = false"
+              class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none transition-colors"
+            >
+              <span class="sr-only">Close</span>
+              <svg
+                class="h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div
+          v-if="toast.show"
+          class="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r transition-all duration-[3000ms] ease-linear w-full"
+          :class="
+            toast.type === 'success'
+              ? 'from-green-400 to-green-500'
+              : 'from-red-400 to-red-500'
+          "
+          style="width: 0%; animation: progress 3s linear forwards"
+        ></div>
+      </div>
+    </Transition>
   </div>
 </template>
+
+<style scoped>
+@keyframes progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+</style>
