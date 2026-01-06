@@ -25,90 +25,23 @@
         >
           <div class="relative group z-30">
             <div
-              @click="!isAnalyzing ? toggleBranch() : null"
-              class="relative w-full h-[48px] rounded-[2rem] border bg-white transition-all duration-300 cursor-pointer flex items-center px-6"
-              :class="[
-                isBranchOpen
-                  ? 'border-orange-500 ring-2 ring-orange-100'
-                  : 'border-gray-200 hover:border-orange-400 hover:shadow-md',
-              ]"
+              class="relative w-full h-[48px] rounded-[2rem] border border-gray-200 bg-white flex items-center px-6 cursor-default"
             >
               <label
-                class="absolute -top-2.5 left-6 bg-white px-2 text-[12px] font-semibold uppercase tracking-wider transition-colors z-10"
-                :class="
-                  isBranchOpen
-                    ? 'text-orange-500'
-                    : 'text-gray-400 group-hover:text-orange-500'
-                "
+                class="absolute -top-2.5 left-6 bg-white px-2 text-[12px] font-semibold uppercase tracking-wider text-gray-400 z-10"
               >
                 สาขา
               </label>
 
               <div
-                class="w-full font-semibold text-sm md:text-base truncate pr-8 select-none"
-                :class="
-                  selectedBranch
-                    ? 'text-[#051960]'
-                    : 'text-gray-300 font-normal'
-                "
+                class="w-full font-semibold text-sm md:text-base truncate pr-8 select-none text-[#051960]"
               >
                 {{ getSelectedBranchName || "-- เลือกสาขา --" }}
               </div>
-
-              <div
-                class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 transition-transform duration-300 pointer-events-none"
-                :class="{ 'rotate-180 text-orange-500': isBranchOpen }"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
+              
               </div>
+
             </div>
-
-            <transition
-              enter-active-class="transition duration-100 ease-out"
-              enter-from-class="transform scale-95 opacity-0"
-              enter-to-class="transform scale-100 opacity-100"
-              leave-active-class="transition duration-75 ease-in"
-              leave-from-class="transform scale-100 opacity-100"
-              leave-to-class="transform scale-95 opacity-0"
-            >
-              <div
-                v-if="isBranchOpen"
-                class="absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden py-2 z-50"
-              >
-                <div
-                  v-for="branch in branches"
-                  :key="branch.id"
-                  @click="selectBranch(branch.id)"
-                  class="px-6 py-3 hover:bg-orange-50 cursor-pointer transition-colors text-[#051960] text-sm md:text-base font-medium flex items-center justify-between"
-                  :class="{
-                    'bg-orange-50/50 text-orange-600':
-                      selectedBranch === branch.id,
-                  }"
-                >
-                  <span>{{ branch.name }}</span>
-                </div>
-              </div>
-            </transition>
-
-            <div
-              v-if="isBranchOpen"
-              @click="isBranchOpen = false"
-              class="fixed inset-0 z-40 bg-transparent cursor-default"
-            ></div>
-          </div>
 
           <div class="relative group z-20">
             <div
@@ -492,7 +425,7 @@ const router = useRouter();
 
 const isAnalyzing = ref(false);
 const isAnalyzed = ref(false);
-const selectedBranch = ref("");
+const selectedBranch = ref(1);
 const selectedChannel = ref("dinein");
 const lastUpdated = ref(null);
 const isBranchOpen = ref(false);
@@ -555,13 +488,6 @@ const buttonSubText = computed(() => {
   if (isAnalyzed.value && hasFilterChanged.value) return "Data Changed";
   return "Start AI Analysis";
 });
-
-const toggleBranch = () => {
-  isBranchOpen.value = !isBranchOpen.value;
-  if (isBranchOpen.value) {
-    isChannelOpen.value = false;
-  }
-};
 
 const toggleChannel = () => {
   isChannelOpen.value = !isChannelOpen.value;

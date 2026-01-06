@@ -5,7 +5,7 @@
         เชื่อมต่อข้อมูลสาขา
       </h1>
       <p class="text-gray-500 text-sm md:text-base font-light">
-        เลือกสาขาที่คุณต้องการให้ RESSELF ช่วยวิเคราะห์
+        ระบุข้อมูลสาขาของคุณเพื่อให้ RESSELF ช่วยวิเคราะห์
       </p>
     </div>
 
@@ -28,8 +28,10 @@
                 class="w-full relative group/item"
               >
                 <div class="flex justify-between items-center mb-2">
-                  <label class="block text-[#051960] text-sm font-bold pl-1">
-                    สาขา {{ index + 1 }}
+                  <label
+                    class="block text-[#051960] text-base font-semibold pl-1"
+                  >
+                    ข้อมูลสาขา
                   </label>
                   <button
                     v-if="branches.length > 1"
@@ -237,7 +239,12 @@
                         >
                         <span
                           v-if="fileItem.message"
-                          class="text-[9px] opacity-80 truncate leading-tight"
+                          class="text-[9px] opacity-80 truncate leading-tight cursor-help"
+                          :class="{
+                            'text-red-600 font-medium':
+                              fileItem.status === 'error',
+                          }"
+                          :title="fileItem.message"
                           >{{ fileItem.message }}</span
                         >
                       </div>
@@ -272,17 +279,6 @@
                 </div>
               </div>
             </div>
-
-            <button
-              @click="addBranch"
-              class="w-full border-2 border-dashed border-gray-300 text-gray-500 hover:border-[#051960] hover:text-[#051960] hover:bg-blue-50 font-medium py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group"
-            >
-              <span
-                class="bg-gray-200 group-hover:bg-[#051960] group-hover:text-white rounded-full w-6 h-6 flex items-center justify-center text-sm transition-colors"
-                >+</span
-              >
-              เพิ่มสาขา
-            </button>
           </div>
         </div>
 
@@ -402,6 +398,31 @@
             {{ modalState.message }}
           </p>
 
+          <div
+            v-if="modalState.details && modalState.details.length > 0"
+            class="w-full mb-6 text-left bg-red-50 rounded-xl p-4 max-h-40 overflow-y-auto custom-scrollbar border border-red-100"
+          >
+            <ul class="space-y-3">
+              <li
+                v-for="(item, idx) in modalState.details"
+                :key="idx"
+                class="text-xs border-b border-red-100 last:border-0 pb-2 last:pb-0"
+              >
+                <div class="flex items-start gap-2">
+                  <span class="mt-0.5 text-red-500 text-[10px]">⚠️</span>
+                  <div>
+                    <div class="font-bold text-red-700 truncate">
+                      {{ item.filename }}
+                    </div>
+                    <div class="text-red-600/80 leading-relaxed mt-0.5">
+                      {{ item.reason }}
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
           <div v-if="modalState.type === 'success'">
             <p class="text-[#F97316] text-sm font-medium animate-pulse">
               กำลังนำคุณไปที่ Dashboard...
@@ -434,12 +455,13 @@ const posId = ref(route.query.posId || "99");
 
 const isSubmitting = ref(false);
 
-// State ควบคุม Popup (รวมทั้ง Success และ Error)
+// State ควบคุม Popup (เพิ่ม details)
 const modalState = reactive({
   show: false,
   type: "success", // 'success' | 'error'
   title: "",
   message: "",
+  details: [], // Array เก็บรายการ error
 });
 
 const allowUpload = computed(() => {
@@ -449,10 +471,6 @@ const allowUpload = computed(() => {
 const branches = reactive([{ name: "", files: [] }]);
 
 const fileInputRefs = ref([]);
-
-const addBranch = () => {
-  branches.push({ name: "", files: [] });
-};
 
 const removeBranch = (index) => {
   branches.splice(index, 1);
@@ -489,11 +507,12 @@ const handleFileUpload = (event, index) => {
   event.target.value = "";
 };
 
-// Helper function to show popup
-const showModal = (type, title, message) => {
+// Helper function to show popup (เพิ่ม param details)
+const showModal = (type, title, message, details = []) => {
   modalState.type = type;
   modalState.title = title;
   modalState.message = message;
+  modalState.details = details;
   modalState.show = true;
 };
 
@@ -501,11 +520,7 @@ const handleContinue = async () => {
   const validBranches = branches.filter((b) => b.name.trim() !== "");
 
   if (validBranches.length === 0) {
-    showModal(
-      "error",
-      "ข้อมูลไม่ครบถ้วน",
-      "กรุณากรอกชื่อสาขาอย่างน้อย 1 สาขา"
-    );
+    showModal("error", "ข้อมูลไม่ครบถ้วน", "กรุณากรอกชื่อสาขา");
     return;
   }
 
@@ -553,8 +568,18 @@ const handleContinue = async () => {
             })
             .catch((error) => {
               fileItem.status = "error";
+              const details = error.response?.data?.details;
+
+              let specificReason = null;
+              if (Array.isArray(details) && details.length > 0) {
+                specificReason = details[0].reason;
+              }
+
               const msg =
-                error.response?.data?.message || "เกิดข้อผิดพลาด";
+                specificReason ||
+                error.response?.data?.message ||
+                "เกิดข้อผิดพลาด";
+
               fileItem.message = msg;
               throw error;
             });
@@ -569,22 +594,34 @@ const handleContinue = async () => {
       const hasFailure = results.some((r) => r.status === "rejected");
 
       if (!hasFailure) {
-        // Success case
         showModal(
           "success",
           "นำเข้าข้อมูลสำเร็จ!",
           "ระบบบันทึกไฟล์ของคุณเรียบร้อยแล้ว"
         );
-
         setTimeout(() => {
           router.push("/dashboard");
         }, 2000);
       } else {
-        // Partial Failure case
+        // รวบรวม Error ทั้งหมด
+        const failedItems = [];
+        validBranches.forEach((branch) => {
+          branch.files.forEach((f) => {
+            if (f.status === "error") {
+              failedItems.push({
+                filename: f.file.name,
+                reason: f.message,
+              });
+            }
+          });
+        });
+
+        // ส่งไปแสดงผลใน Modal
         showModal(
           "error",
           "นำเข้าข้อมูลไม่สมบูรณ์",
-          "บางไฟล์นำเข้าไม่สำเร็จ กรุณาตรวจสอบสถานะสีแดงที่ไฟล์"
+          "พบไฟล์ที่ไม่ผ่านการตรวจสอบ:",
+          failedItems
         );
       }
     } else {
@@ -592,11 +629,7 @@ const handleContinue = async () => {
     }
   } catch (error) {
     console.error("Global Submission Error:", error);
-    showModal(
-      "error",
-      "เกิดข้อผิดพลาด",
-      "เกิดข้อผิดพลาดในการเชื่อมต่อระบบ"
-    );
+    showModal("error", "เกิดข้อผิดพลาด", "เกิดข้อผิดพลาดในการเชื่อมต่อระบบ");
   } finally {
     isSubmitting.value = false;
   }
