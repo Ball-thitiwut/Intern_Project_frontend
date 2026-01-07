@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useDashboardStore } from "@/stores/dashboard";
 
 import FilterBar from "@/components/FilterBar.vue";
@@ -32,10 +32,22 @@ import DashboardView from "@/views/DashboardView.vue";
 import DashboardBillView from "@/views/DashboardBillView.vue";
 import DashboardBehaviorView from "@/views/DashboardBehaviorView.vue";
 
-const dashboardStore = useDashboardStore(); 
+const dashboardStore = useDashboardStore();
 const currentView = ref("sales");
 const currentPeriod = ref("1m");
 const dateRange = ref([new Date(), new Date()]);
+
+const fetchData = () => {
+  dashboardStore.fetchDashboardOverview(currentPeriod.value, dateRange.value);
+};
+
+onMounted(() => {
+  fetchData();
+});
+
+watch([currentPeriod, dateRange], () => {
+  fetchData();
+});
 
 const currentComponent = computed(() => {
   switch (currentView.value) {
@@ -76,7 +88,7 @@ const handleDateChange = (range) => {
   };
 
   if (isSameTime(newStart, currentStart) && isSameTime(newEnd, currentEnd)) {
-    return; 
+    return;
   }
 
   dateRange.value = [newStart, newEnd];
