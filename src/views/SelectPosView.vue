@@ -140,13 +140,30 @@ onMounted(async () => {
     const response = await api.get('/restaurant-registration-options');
     
     if (response.data && response.data.posSystems) {
-      posList.value = response.data.posSystems.map(system => ({
+      const rawPosList = response.data.posSystems.map(system => ({
         id: system.pos_systems_id,
         name: system.pos_systems_name 
       }));
+
+      const fallbackOption = rawPosList.find(pos => 
+        ['Standard CSV', 'อื่นๆ', 'Other'].includes(pos.name)
+      );
+      
+      const otherPosId = fallbackOption ? fallbackOption.id : 99;
+
+      const mainPosList = rawPosList.filter(pos => {
+        const name = pos.name.trim();
+        return !['ไม่มี', 'Standard CSV', 'อื่นๆ', 'None', 'Other'].includes(name);
+      });
+
+      posList.value = [
+        ...mainPosList,
+        { id: otherPosId, name: 'POS อื่นๆ' } 
+      ];
     }
   } catch (error) {
     console.error("Failed to fetch POS systems:", error);
+    posList.value = [{ id: 99, name: 'POS อื่นๆ' }];
   } finally {
     isLoading.value = false;
   }
@@ -159,7 +176,7 @@ const selectPos = (id) => {
 const handleContinue = () => {
   if (selectedPosId.value) {
     const selected = posList.value.find((p) => p.id === selectedPosId.value);
-    console.log("Selected POS:", selected.name);
+    console.log("Selected POS:", selected.name, "ID:", selected.id);
 
     router.push({
       name: "branch-connect",

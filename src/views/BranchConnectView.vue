@@ -455,13 +455,12 @@ const posId = ref(route.query.posId || "99");
 
 const isSubmitting = ref(false);
 
-// State ควบคุม Popup (เพิ่ม details)
 const modalState = reactive({
   show: false,
-  type: "success", // 'success' | 'error'
+  type: "success", 
   title: "",
   message: "",
-  details: [], // Array เก็บรายการ error
+  details: [], 
 });
 
 const allowUpload = computed(() => {
@@ -507,7 +506,6 @@ const handleFileUpload = (event, index) => {
   event.target.value = "";
 };
 
-// Helper function to show popup (เพิ่ม param details)
 const showModal = (type, title, message, details = []) => {
   modalState.type = type;
   modalState.title = title;
@@ -555,7 +553,7 @@ const handleContinue = async () => {
           fileItem.message = "กำลังอัปโหลด...";
 
           const formData = new FormData();
-          formData.append("pos_system_id", posId.value);
+          formData.append("pos_systems_id", posId.value);
           formData.append("branch_name", branch.name);
           formData.append("file", fileItem.file);
 
@@ -603,7 +601,6 @@ const handleContinue = async () => {
           router.push("/dashboard");
         }, 2000);
       } else {
-        // รวบรวม Error ทั้งหมด
         const failedItems = [];
         validBranches.forEach((branch) => {
           branch.files.forEach((f) => {
@@ -616,7 +613,6 @@ const handleContinue = async () => {
           });
         });
 
-        // ส่งไปแสดงผลใน Modal
         showModal(
           "error",
           "นำเข้าข้อมูลไม่สมบูรณ์",
