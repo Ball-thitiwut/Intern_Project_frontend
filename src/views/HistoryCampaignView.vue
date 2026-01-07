@@ -61,7 +61,7 @@
         </div>
         <div>
           <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">
-            Conversion Rate เฉลี่ย
+            Bill Penetration เฉลี่ย
           </p>
           <h3 class="text-2xl font-bold text-[#051960]">12.5%</h3>
         </div>

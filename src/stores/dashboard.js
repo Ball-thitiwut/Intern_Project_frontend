@@ -13,6 +13,7 @@ export const useDashboardStore = defineStore("dashboard", {
       busiest_hour: null,
       top_menus: [],
       sales_trend: [],
+      sales_forecast: [],
       sales_by_hour: [],
     },
     customerInsights: {
@@ -139,6 +140,20 @@ export const useDashboardStore = defineStore("dashboard", {
                } else {
                   item.date_iso = item.date.split('T')[0];
                }
+            }
+            return item;
+          });
+        }
+
+        if (data.sales_forecast && Array.isArray(data.sales_forecast)) {
+          data.sales_forecast = data.sales_forecast.map((item) => {
+            if (item.date) {
+              const parts = item.date.split("/"); 
+              if (parts.length === 3) {
+                let year = parseInt(parts[2]);
+                year -= 543; 
+                item.date_iso = `${year}-${parts[1]}-${parts[0]}`; 
+              }
             }
             return item;
           });

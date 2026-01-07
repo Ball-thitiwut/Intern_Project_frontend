@@ -150,6 +150,7 @@
                 ? dashboardStore.overviewData?.sales_by_hour || []
                 : dashboardStore.overviewData?.sales_trend || []
             "
+            :forecast="dashboardStore.overviewData?.sales_forecast || []"
             :period="period"
           />
         </div>
