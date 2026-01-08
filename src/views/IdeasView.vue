@@ -38,10 +38,8 @@
               >
                 {{ getSelectedBranchName || "-- เลือกสาขา --" }}
               </div>
-              
-              </div>
-
             </div>
+          </div>
 
           <div class="relative group z-20">
             <div
@@ -195,14 +193,20 @@
                 v-else
                 class="relative w-full h-full flex items-center justify-center"
               >
-                <span
-                  class="text-2xl transition-transform duration-300"
-                  :class="{
-                    'group-hover:translate-x-1 group-hover:rotate-[10deg]':
-                      !isButtonDisabled && !isAnalyzing,
-                  }"
-                  >💡</span
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-orange-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
                 >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                  />
+                </svg>
               </div>
             </div>
           </button>
@@ -210,12 +214,10 @@
       </div>
     </div>
 
-    <div
-      class="bg-[#F8FAFC] rounded-[2.5rem] shadow-sm border border-white overflow-hidden relative min-h-[500px]"
-    >
+    <div class="bg-transparent relative min-h-[500px]">
       <div
         v-if="isAnalyzing"
-        class="absolute inset-0 bg-white/80 backdrop-blur-sm z-30 flex flex-col items-center justify-center transition-all duration-300"
+        class="absolute inset-0 z-30 flex flex-col items-center justify-center transition-all duration-300"
       >
         <div
           class="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 flex flex-col items-center gap-6 animate-bounce-slight max-w-sm text-center"
@@ -223,7 +225,25 @@
           <div
             class="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center relative"
           >
-            <span class="text-3xl animate-spin">⚙️</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-10 w-10 text-orange-500 animate-spin"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
           </div>
           <div>
             <h3 class="text-[#051960] font-bold text-lg mb-1">AI กำลังทำงาน</h3>
@@ -239,9 +259,22 @@
         class="flex flex-col items-center justify-center h-[500px] text-gray-300 gap-6 opacity-60"
       >
         <div
-          class="w-28 h-28 bg-white rounded-full flex items-center justify-center text-6xl shadow-sm mb-2 grayscale animate-float"
+          class="w-28 h-28 bg-white rounded-full flex items-center justify-center text-gray-300 shadow-sm mb-2 animate-float"
         >
-          🔮
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-14 w-14"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
         </div>
         <div class="text-center">
           <h3 class="text-xl font-bold text-gray-400 mb-2">รอคำสั่งจากคุณ</h3>
@@ -251,7 +284,7 @@
         </div>
       </div>
 
-      <div v-if="isAnalyzed" class="p-6 md:p-10">
+      <div v-if="isAnalyzed" class="mt-4 p-4">
         <div
           class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 animate-fade-in-up"
         >
@@ -289,11 +322,10 @@
 
             <div class="flex items-start gap-4 mb-5 mt-2">
               <div
-                class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm border border-gray-50 flex-shrink-0"
+                class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm border border-gray-50 flex-shrink-0"
                 :class="idea.iconBg"
-              >
-                {{ idea.icon }}
-              </div>
+                v-html="idea.icon"
+              ></div>
               <div class="min-w-0">
                 <h4
                   class="text-lg font-bold text-[#051960] group-hover:text-[#F97316] transition-colors truncate pr-20"
@@ -323,7 +355,16 @@
                   ></div>
 
                   <div class="flex items-center gap-2 mb-2">
-                    <span class="text-lg">👑</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-yellow-500 fill-yellow-500"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
                     <span
                       class="text-xs font-bold uppercase tracking-wide opacity-70"
                       :class="idea.textColor"
@@ -347,7 +388,11 @@
                       <div class="text-lg font-bold" :class="idea.scoreColor">
                         {{ item.score }}%
                       </div>
-                      <div class="text-[10px] text-gray-400">Match Rate</div>
+                      <div
+                        class="text-[10px] text-gray-400 flex items-center justify-end gap-1 group/tooltip relative"
+                      >
+                        โอกาสเพิ่มยอดขาย
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -512,7 +557,7 @@ const ideas = ref([
     title: "จับคู่เซ็ตเมนู",
     subtitle: "เพิ่มยอดต่อบิลด้วยเมนูที่คู่กัน",
     badgeColor: "bg-blue-50 text-blue-600 border-blue-100",
-    icon: "🍔",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>`,
     iconBg: "bg-blue-50 text-blue-500",
     contentBg: "bg-blue-50",
     textColor: "text-blue-600",
@@ -536,7 +581,7 @@ const ideas = ref([
     title: "โปรช่วงเวลาพิเศษ",
     subtitle: "กระตุ้นยอดขายช่วงคนน้อย",
     badgeColor: "bg-red-50 text-red-600 border-red-100",
-    icon: "⏰",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
     iconBg: "bg-red-50 text-red-500",
     contentBg: "bg-red-50",
     textColor: "text-red-600",
@@ -552,7 +597,7 @@ const ideas = ref([
     title: "จัดโปรของแถม",
     subtitle: "ดันยอดบิลเฉลี่ยให้สูงขึ้น",
     badgeColor: "bg-purple-50 text-purple-600 border-purple-100",
-    icon: "🎁",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>`,
     iconBg: "bg-purple-50 text-purple-500",
     contentBg: "bg-purple-50",
     textColor: "text-purple-600",
@@ -572,7 +617,7 @@ const ideas = ref([
     title: "กระตุ้นเมนูยอดน้อย",
     subtitle: "เพิ่มยอดสั่งเมนูที่ลูกค้ามองข้าม",
     badgeColor: "bg-orange-50 text-orange-600 border-orange-100",
-    icon: "📉",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>`,
     iconBg: "bg-orange-50 text-orange-500",
     contentBg: "bg-orange-50",
     textColor: "text-orange-600",

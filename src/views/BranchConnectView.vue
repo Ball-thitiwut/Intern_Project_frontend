@@ -553,13 +553,19 @@ const handleContinue = async () => {
           fileItem.message = "กำลังอัปโหลด...";
 
           const formData = new FormData();
-          formData.append("pos_systems_id", posId.value);
+          formData.append("pos_system_id", posId.value);
           formData.append("branch_name", branch.name);
           formData.append("file", fileItem.file);
 
           const p = api
             .post("/sales/import", formData)
             .then((response) => {
+              const resData = response.data;
+              if (resData && resData.summary && resData.summary.failed > 0) {
+                 const logicalError = new Error("Business Logic Error");
+                 logicalError.response = response; 
+                 throw logicalError; 
+              }
               fileItem.status = "success";
               fileItem.message = "นำเข้าข้อมูลสำเร็จ";
               return response;

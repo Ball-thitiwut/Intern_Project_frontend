@@ -153,7 +153,8 @@ onMounted(async () => {
 
       const mainPosList = rawPosList.filter(pos => {
         const name = pos.name.trim();
-        return !['ไม่มี', 'Standard CSV', 'อื่นๆ', 'None', 'Other'].includes(name);
+        const isStandardCsv = name.toLowerCase().includes('standard csv');
+        return !isStandardCsv && !['ไม่มี', 'อื่นๆ', 'None', 'Other', 'Standard CSV (Others)'].includes(name);
       });
 
       posList.value = [

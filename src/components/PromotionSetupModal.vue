@@ -61,11 +61,11 @@
 
             <div class="flex items-start gap-4 z-10 relative">
               <div
-                class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-white/50 flex-shrink-0"
-                :class="ideaData?.iconBg"
-              >
-                {{ ideaData?.icon }}
-              </div>
+  class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-white/50 flex-shrink-0 bg-white"
+  :class="ideaData?.iconBg"
+  v-html="ideaData?.icon"
+>
+</div>
               <div class="min-w-0 flex-1">
                 <div class="flex items-center justify-between mb-2">
                   <span

@@ -22,12 +22,25 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
       <div
-        class="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 flex items-center gap-4"
+        class="bg-white p-6 rounded-[1.5rem] shadow-sm border border-gray-100 flex items-center gap-4"
       >
         <div
-          class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-2xl"
+          class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center"
         >
-          ⚡️
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
+          </svg>
         </div>
         <div>
           <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">
@@ -37,12 +50,25 @@
         </div>
       </div>
       <div
-        class="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 flex items-center gap-4"
+        class="bg-white p-6 rounded-[1.5rem] shadow-sm border border-gray-100 flex items-center gap-4"
       >
         <div
-          class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-2xl"
+          class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center"
         >
-          💰
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
         </div>
         <div>
           <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">
@@ -52,12 +78,31 @@
         </div>
       </div>
       <div
-        class="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 flex items-center gap-4"
+        class="bg-white p-6 rounded-[1.5rem] shadow-sm border border-gray-100 flex items-center gap-4"
       >
         <div
-          class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center text-2xl"
+          class="w-12 h-12 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center"
         >
-          📈
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
+            />
+          </svg>
         </div>
         <div>
           <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">
@@ -83,20 +128,14 @@
           @click="navigateToDetails(campaign.id)"
           class="bg-white rounded-[2rem] p-6 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 group relative cursor-pointer"
         >
-          <div
-            class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none overflow-hidden rounded-[2rem]"
-          >
-            <span class="text-9xl">{{ campaign.icon }}</span>
-          </div>
-
           <div class="relative z-10">
             <div class="flex justify-between items-start mb-4">
               <div class="flex items-center gap-4">
                 <div
-                  class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm border border-gray-50 bg-white group-hover:scale-110 transition-transform duration-300"
-                >
-                  {{ campaign.icon }}
-                </div>
+                  class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm border border-gray-50 group-hover:scale-110 transition-transform duration-300"
+                  :class="[campaign.iconColor, campaign.iconBgColor]"
+                  v-html="campaign.icon"
+                ></div>
                 <div>
                   <div class="flex items-center gap-2 mb-1">
                     <span
@@ -348,10 +387,10 @@
               <td class="py-4 pl-4">
                 <div class="flex items-center gap-3">
                   <div
-                    class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-lg shadow-sm border border-white"
-                  >
-                    {{ history.icon }}
-                  </div>
+                    class="w-10 h-10 rounded-lg flex items-center justify-center text-lg shadow-sm border border-white"
+                    :class="[history.iconColor, history.iconBgColor]"
+                    v-html="history.icon"
+                  ></div>
                   <div>
                     <div class="font-bold text-[#051960]">
                       {{ history.name }}
@@ -459,7 +498,9 @@ const activeCampaigns = ref([
     id: 101,
     name: "โปรโมชั่น ข้าวมันไก่ + น้ำซุปฟัก",
     type: "Pairing",
-    icon: "🍔",
+    iconColor: "text-blue-600",
+    iconBgColor: "bg-blue-50",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>`,
     badgeColor: "bg-blue-50 text-blue-600 border-blue-100",
     startDate: "2023-10-25",
     endDate: "2023-11-01",
@@ -470,7 +511,9 @@ const activeCampaigns = ref([
     id: 102,
     name: "Happy Hour ลด 20% เมนูเส้น",
     type: "Happy Hour",
-    icon: "⏰",
+    iconColor: "text-red-600",
+    iconBgColor: "bg-red-50",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
     badgeColor: "bg-red-50 text-red-600 border-red-100",
     startDate: "2023-10-20",
     endDate: "2023-10-30",
@@ -482,22 +525,13 @@ const activeCampaigns = ref([
 // Mock Data: History
 const historyCampaigns = ref([
   {
-    id: 99,
-    name: "Buy 1 Get 1 กาแฟส้ม Yuzu",
-    branch: "สาขา สยามสแควร์",
-    type: "Inventory",
-    icon: "📦",
-    startDate: "2023-10-01",
-    endDate: "2023-10-07",
-    revenue: 12500,
-    status: "Completed",
-  },
-  {
     id: 98,
     name: "ทานครบ 500 ฟรีเกี๊ยวซ่า",
     branch: "สาขา เซ็นทรัลเวิลด์",
     type: "Upsell",
-    icon: "🎁",
+    iconColor: "text-purple-600",
+    iconBgColor: "bg-purple-50",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>`,
     startDate: "2023-09-15",
     endDate: "2023-09-30",
     revenue: 45000,
@@ -508,7 +542,9 @@ const historyCampaigns = ref([
     name: "ลด 50% เค้กกล้วยหอม",
     branch: "สาขา สยามสแควร์",
     type: "Slow Moving",
-    icon: "📉",
+    iconColor: "text-orange-600",
+    iconBgColor: "bg-orange-50",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>`,
     startDate: "2023-09-01",
     endDate: "2023-09-03",
     revenue: 2100,
