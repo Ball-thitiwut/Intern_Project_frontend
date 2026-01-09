@@ -140,17 +140,20 @@ onMounted(async () => {
     const response = await api.get('/restaurant-registration-options');
     
     if (response.data && response.data.posSystems) {
+      // แปลงโครงสร้างข้อมูล (Map)
       const rawPosList = response.data.posSystems.map(system => ({
         id: system.pos_systems_id,
         name: system.pos_systems_name 
       }));
 
+      // หา ID ของตัวเลือก "อื่นๆ" หรือ "Standard CSV" เพื่อใช้เป็น fallback
       const fallbackOption = rawPosList.find(pos => 
         ['Standard CSV', 'อื่นๆ', 'Other'].includes(pos.name)
       );
       
       const otherPosId = fallbackOption ? fallbackOption.id : 99;
 
+      // กรอง (Filter) เพื่อแยก Standard CSV และตัวเลือกที่ไม่ต้องการแสดงซ้ำ
       const mainPosList = rawPosList.filter(pos => {
         const name = pos.name.trim();
         const isStandardCsv = name.toLowerCase().includes('standard csv');
@@ -164,16 +167,19 @@ onMounted(async () => {
     }
   } catch (error) {
     console.error("Failed to fetch POS systems:", error);
+    // กรณี Error ให้แสดง "POS อื่นๆ" เป็นค่า Default 
     posList.value = [{ id: 99, name: 'POS อื่นๆ' }];
   } finally {
     isLoading.value = false;
   }
 });
 
+// เลือก POS
 const selectPos = (id) => {
   selectedPosId.value = id;
 };
 
+// ปุ่ม ดำเนินการต่อ
 const handleContinue = () => {
   if (selectedPosId.value) {
     const selected = posList.value.find((p) => p.id === selectedPosId.value);

@@ -106,8 +106,8 @@ import "@vuepic/vue-datepicker/dist/main.css";
 const props = defineProps({
   initialPeriod: { type: String, default: "1m" },
   initialView: { type: String, default: "sales" },
-  dataStart: { type: [Date, String], default: null },
-  dataEnd: { type: [Date, String], default: null }
+  dataStart: { type: [Date, String], default: null }, //  วันที่เริ่มของข้อมูล
+  dataEnd: { type: [Date, String], default: null } // วันที่สิ้นสุดของข้อมูล
 });
 
 const emit = defineEmits(["update:period", "update:date-range", "change-view"]);
@@ -151,6 +151,7 @@ const currentViewName = computed(() => {
   return menuOptions.find((o) => o.id === currentView.value)?.name || "ยอดขาย";
 });
 
+// ฟังก์ชันเลือกช่วงเวลา และคำนวณวันเริ่มต้น-สิ้นสุดอัตโนมัติ
 const selectPeriod = (period) => {
   selectedPeriod.value = period;
   const end = new Date();
@@ -184,6 +185,7 @@ const selectPeriod = (period) => {
   emit("update:date-range", { start, end });
 };
 
+// เมื่อเลือกวันที่เอง
 const onDateChange = (newRange) => {
   if (newRange) {
     selectedPeriod.value = null;
@@ -191,6 +193,7 @@ const onDateChange = (newRange) => {
   }
 };
 
+// เลือกว่าจะดู Tab ไหน (Sales, Bill, Behavior)
 const selectMenu = (item) => {
   currentView.value = item.id;
   isOpen.value = false;

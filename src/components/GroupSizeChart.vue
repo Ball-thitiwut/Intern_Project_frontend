@@ -78,12 +78,14 @@
 <script setup>
 import { computed } from 'vue';
 
+// รับค่าข้อมูลที่ส่งมาจาก DashboardBehaviorView 
 const props = defineProps({
   chartData: { type: Array, default: () => [] }, 
   tableData: Array, 
   totalBills: Number
 })
 
+// หาค่าสูงสุดในข้อมูล เพื่อนำไปกำหนดสเกลความสูงของกราฟ
 const maxValue = computed(() => {
   if (!props.chartData || props.chartData.length === 0) return 0;
   return Math.max(...props.chartData.map(item => item.value));
@@ -103,6 +105,7 @@ const yTicks = computed(() => {
   return ticks.reverse(); 
 });
 
+// ฟังก์ชันแปลงค่า Value เป็น % ความสูง (CSS Height)
 const calculateHeight = (value) => {
   const maxTick = parseInt(yTicks.value[0]);
   if (maxTick === 0) return 0;

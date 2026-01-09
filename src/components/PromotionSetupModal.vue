@@ -52,20 +52,19 @@
         <div class="p-8 overflow-y-auto custom-scrollbar space-y-6">
           <div
             class="rounded-[1.5rem] p-6 border relative overflow-hidden group shadow-sm transition-colors"
-            :class="[
-              ideaData?.contentBg || 'bg-gray-50',
-              'border-transparent'
-            ]"
+            :class="[ideaData?.contentBg || 'bg-gray-50', 'border-transparent']"
           >
-            <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full opacity-10 pointer-events-none" :class="ideaData?.iconBg?.replace('bg-', 'bg-current text-')"></div>
+            <div
+              class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full opacity-10 pointer-events-none"
+              :class="ideaData?.iconBg?.replace('bg-', 'bg-current text-')"
+            ></div>
 
             <div class="flex items-start gap-4 z-10 relative">
               <div
-  class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-white/50 flex-shrink-0 bg-white"
-  :class="ideaData?.iconBg"
-  v-html="ideaData?.icon"
->
-</div>
+                class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-white/50 flex-shrink-0 bg-white"
+                :class="ideaData?.iconBg"
+                v-html="ideaData?.icon"
+              ></div>
               <div class="min-w-0 flex-1">
                 <div class="flex items-center justify-between mb-2">
                   <span
@@ -74,14 +73,24 @@
                   >
                     {{ ideaData?.type || "Campaign" }}
                   </span>
-                  
-                  <div class="flex items-center gap-1.5 bg-white/90 px-2.5 py-1 rounded-lg shadow-sm border border-white/50">
-                     <span class="text-[10px] text-gray-400 font-medium">Impact</span>
-                     <span class="text-sm font-bold" :class="ideaData?.scoreColor">+{{ suggestionData?.score || 0 }}%</span>
+
+                  <div
+                    class="flex items-center gap-1.5 bg-white/90 px-2.5 py-1 rounded-lg shadow-sm border border-white/50"
+                  >
+                    <span class="text-[10px] text-gray-400 font-medium"
+                      >Impact</span
+                    >
+                    <span
+                      class="text-sm font-bold"
+                      :class="ideaData?.scoreColor"
+                      >+{{ suggestionData?.score || 0 }}%</span
+                    >
                   </div>
                 </div>
-                
-                <h4 class="text-[#051960] font-bold text-lg truncate pr-2 leading-tight">
+
+                <h4
+                  class="text-[#051960] font-bold text-lg truncate pr-2 leading-tight"
+                >
                   {{ suggestionData?.name }}
                 </h4>
                 <p class="text-sm text-gray-600 font-medium mt-1 truncate">
@@ -93,7 +102,9 @@
 
           <form @submit.prevent="handleConfirm" class="space-y-6">
             <div class="space-y-2">
-              <label class="text-sm font-bold text-[#051960] ml-1">ชื่อแคมเปญ</label>
+              <label class="text-sm font-bold text-[#051960] ml-1"
+                >ชื่อแคมเปญ</label
+              >
               <div class="relative">
                 <input
                   v-model="form.name"
@@ -102,9 +113,22 @@
                   placeholder="ระบุชื่อแคมเปญ..."
                   required
                 />
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                <span
+                  class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                    />
                   </svg>
                 </span>
               </div>
@@ -112,7 +136,9 @@
 
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="text-sm font-bold text-[#051960] ml-1">วันที่เริ่ม</label>
+                <label class="text-sm font-bold text-[#051960] ml-1"
+                  >วันที่เริ่ม</label
+                >
                 <div class="relative">
                   <input
                     v-model="form.startDate"
@@ -120,15 +146,30 @@
                     class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
                     required
                   />
-                  <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <span
+                    class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </span>
                 </div>
               </div>
               <div class="space-y-2">
-                <label class="text-sm font-bold text-[#051960] ml-1">วันที่สิ้นสุด</label>
+                <label class="text-sm font-bold text-[#051960] ml-1"
+                  >วันที่สิ้นสุด</label
+                >
                 <div class="relative">
                   <input
                     v-model="form.endDate"
@@ -136,9 +177,22 @@
                     class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
                     required
                   />
-                  <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <span
+                    class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </span>
                 </div>
@@ -147,7 +201,9 @@
           </form>
         </div>
 
-        <div class="p-8 pt-4 border-t border-gray-50 bg-white shrink-0 flex gap-3">
+        <div
+          class="p-8 pt-4 border-t border-gray-50 bg-white shrink-0 flex gap-3"
+        >
           <button
             @click="close"
             class="flex-1 py-3.5 rounded-full border-2 border-gray-100 text-gray-500 font-bold text-sm hover:bg-gray-50 hover:border-gray-200 hover:text-gray-700 transition-all"
@@ -205,13 +261,13 @@ const handleConfirm = () => {
 
 <style scoped>
 input[type="date"]::-webkit-calendar-picker-indicator {
-    opacity: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }
 
 .custom-scrollbar::-webkit-scrollbar {

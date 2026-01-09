@@ -102,21 +102,26 @@ import "@/assets/css/auth.css";
 const router = useRouter();
 const userStore = useUserStore();
 
+// ตัวแปรเก็บค่าจาก Form
 const email = ref("");
 const password = ref("");
-const isLoading = ref(false);
-const showPassword = ref(false);
 
+const isLoading = ref(false); 
+const showPassword = ref(false); 
+
+// เก็บข้อความ Error ของแต่ละ field
 const errors = reactive({
   email: "",
   password: ""
 });
 
+// ตรวจสอบความถูกต้องของข้อมูลก่อนส่ง
 const validateForm = () => {
   let isValid = true;
   errors.email = "";
   errors.password = "";
 
+  // ตรวจสอบ Email ว่าว่างไหม หรือรูปแบบถูกต้องไหม
   if (!email.value) {
     errors.email = "Please enter your email address";
     isValid = false;
@@ -125,6 +130,7 @@ const validateForm = () => {
     isValid = false;
   }
 
+  // ตรวจสอบ Password (ความยาวต้องมากกว่า 8)
   if (!password.value) {
     errors.password = "Please enter your password";
     isValid = false;
@@ -140,6 +146,7 @@ const clearError = (field) => {
   errors[field] = "";
 };
 
+// ปุ่ม Login
 const handleLogin = async () => {
   if (!validateForm()) return;
 
@@ -150,7 +157,8 @@ const handleLogin = async () => {
     router.push("/dashboard");
   } catch (error) {
     console.error("Login Error:", error);
-    
+
+    // ดึงข้อความ Error จาก Server
     const serverMsg = error.response?.data?.message || "Login failed";
     const msgLower = serverMsg.toLowerCase();
 
@@ -183,17 +191,16 @@ const handleLogin = async () => {
 .password-wrapper input {
   width: 100%;
   padding-right: 40px;
-  transition: border-color 0.2s, box-shadow 0.2s; /* เพิ่ม transition */
+  transition: border-color 0.2s, box-shadow 0.2s; 
 }
 
-/* เพิ่ม CSS สำหรับสถานะ Error */
 .input-error {
-  border-color: #ef4444 !important; /* สีแดง */
-  background-color: #fef2f2; /* พื้นหลังสีแดงจางๆ (Optional) */
+  border-color: #ef4444 !important; 
+  background-color: #fef2f2; 
 }
 
 .input-error:focus {
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2); /* เงาสีแดงเวลา focus */
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2); 
 }
 
 .toggle-password {
@@ -215,7 +222,6 @@ const handleLogin = async () => {
   height: 20px;
 }
 
-/* ปรับ Error Text ให้ชิดซ้ายใต้ Input */
 .error-text {
   color: #ef4444;
   font-size: 0.8rem;

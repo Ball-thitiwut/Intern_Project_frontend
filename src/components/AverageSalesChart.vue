@@ -35,6 +35,7 @@ const props = defineProps({
   values: { type: Array, required: true } 
 });
 
+// คำนวณว่ากำลังดูมุมมองรายเดือนหรือไม่ (เช็คจากความยาว String ของวันที่)
 const isMonthlyView = computed(() => {
     return props.dates.length > 0 && props.dates[0].length > 5;
 });
@@ -59,6 +60,7 @@ const chartData = computed(() => {
   };
 });
 
+// ตั้งค่าหน้าตากราฟ
 const chartOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,

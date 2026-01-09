@@ -187,28 +187,33 @@ import api from "@/utils/axios";
 import "@/assets/css/auth.css";
 
 const router = useRouter();
-const registerStore = useRegisterStore();
+const registerStore = useRegisterStore(); 
 
+// เก็บค่า input
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
-const isLoading = ref(false);
 
+// เก็บสถานะ UI
+const isLoading = ref(false);
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
+// เก็บข้อความ error
 const errors = reactive({
   email: "",
   password: "",
   confirmPassword: "",
 });
 
+// ตรวจสอบความถูกต้องข้อมูลพื้นฐาน
 const validateForm = () => {
   let isValid = true;
   errors.email = "";
   errors.password = "";
   errors.confirmPassword = "";
 
+  // ตรวจ email
   if (!email.value) {
     errors.email = "Please enter your email address";
     isValid = false;
@@ -217,6 +222,7 @@ const validateForm = () => {
     isValid = false;
   }
 
+  // ตรวจความยาวรหัสผ่าน
   if (!password.value) {
     errors.password = "Please create a password";
     isValid = false;
@@ -237,6 +243,7 @@ const clearError = (field) => {
   errors[field] = "";
 };
 
+// เช็คกับ Server ว่า Email นี้ถูกใช้ไปหรือยัง
 const checkEmailAvailability = async (emailToCheck) => {
   try {
     const response = await api.post("/auth/check-email", {
@@ -258,6 +265,7 @@ const checkEmailAvailability = async (emailToCheck) => {
   }
 };
 
+// ปุ่ม Next Step
 const handleNextStep = async () => {
   if (!validateForm()) return;
 

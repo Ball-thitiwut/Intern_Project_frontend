@@ -57,6 +57,8 @@ watch([() => props.dateRange, () => props.period], async () => {
     await fetchData();
 });
 
+// -- แปลงข้อมูลจาก Store เพื่อใส่กราฟ --
+// แปลงข้อมูลสำหรับกราฟขนาดกลุ่มลูกค้า
 const groupSizeChartData = computed(() => {
     const raw = dashboardStore.customerInsights.group_size_analysis || [];
     const maxVal = Math.max(...raw.map(i => i.count), 0);
@@ -72,6 +74,7 @@ const groupSizeChartData = computed(() => {
     });
 });
 
+// ข้อมูลสำหรับตาราง
 const groupSizeTableData = computed(() => {
     const raw = dashboardStore.customerInsights.group_size_analysis || [];
     const sorted = [...raw].sort((a, b) => b.count - a.count);
@@ -86,6 +89,7 @@ const groupSizeTableData = computed(() => {
     });
 });
 
+// แปลงข้อมูลสำหรับกราฟช่วงยอดขาย
 const salesPerBillChartData = computed(() => {
     const raw = dashboardStore.customerInsights.spending_analysis || [];
     const maxVal = Math.max(...raw.map(i => i.count), 0);
@@ -98,6 +102,7 @@ const salesPerBillChartData = computed(() => {
     }));
 });
 
+// คำนวณสถิติสรุปด้านบนกราฟ
 const salesPerBillStats = computed(() => {
     const avgBill = dashboardStore.overviewData.summary.average_bill || 0;
     

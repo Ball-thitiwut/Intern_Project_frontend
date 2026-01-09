@@ -382,6 +382,7 @@ import { useDashboardStore } from "@/stores/dashboard";
 import SalesChart from "@/components/SalesChart.vue";
 import PromotionPieChart from "@/components/PromotionPieChart.vue";
 
+// รับ Props จาก MainDashboard (ช่วงวันที่, Period)
 const props = defineProps({
   dateRange: { type: Array, default: () => [new Date(), new Date()] },
   period: { type: String, default: "1m" },
@@ -389,12 +390,14 @@ const props = defineProps({
 
 const dashboardStore = useDashboardStore();
 
+// ดึงข้อมูล Overview
 const fetchData = async () => {
   await dashboardStore.fetchDashboardOverview(props.period, props.dateRange);
 };
 
 onMounted(() => fetchData());
 
+// ถ้าวันที่ หรือ Period เปลี่ยน ให้ดึงข้อมูลใหม่
 watch([() => props.dateRange, () => props.period], async () => {
   await fetchData();
 });

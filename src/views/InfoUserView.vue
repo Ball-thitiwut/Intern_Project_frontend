@@ -119,6 +119,7 @@ import "@/assets/css/infoForm.css";
 const router = useRouter();
 const registerStore = useRegisterStore();
 
+// ตัวแปรเก็บค่าจาก Form
 const firstName = ref("");
 const lastName = ref("");
 const phoneNumber = ref("");
@@ -129,17 +130,16 @@ const errors = reactive({
   phoneNumber: "",
 });
 
-// [เพิ่มฟังก์ชันนี้] สำหรับจัดรูปแบบเบอร์โทร (xxx-xxx-xxxx)
+// สำหรับจัดรูปแบบเบอร์โทร (xxx-xxx-xxxx)
 const formatPhoneNumber = (value) => {
   if (!value) return value;
 
-  // 1. เอาเฉพาะตัวเลขออกมา
   const phoneNumber = value.replace(/[^\d]/g, "");
 
-  // 2. จำกัดความยาวไม่เกิน 10 ตัวเลข
+  // จำกัดความยาวไม่เกิน 10 ตัวเลข
   const phoneNumberLength = phoneNumber.length;
 
-  // 3. จัดรูปแบบตามความยาว
+  // จัดรูปแบบตามความยาว
   if (phoneNumberLength < 4) return phoneNumber;
   if (phoneNumberLength < 7) {
     return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
@@ -150,7 +150,7 @@ const formatPhoneNumber = (value) => {
   )}-${phoneNumber.slice(6, 10)}`;
 };
 
-// [เพิ่มฟังก์ชันนี้] รับ event input แล้วจัดรูปแบบ + เคลียร์ error
+// Event Handler เมื่อมีการพิมพ์เบอร์โทร
 const handlePhoneInput = (event) => {
   // รับค่า input แล้วส่งไป format ทันที
   const formatted = formatPhoneNumber(event.target.value);
@@ -158,6 +158,7 @@ const handlePhoneInput = (event) => {
   clearError("phoneNumber");
 };
 
+// เช็คว่ามีข้อมูลเก่าใน Store ไหม (กรณีกดย้อนกลับมาแก้ไข)
 onMounted(() => {
   if (registerStore.formData.first_name) {
     firstName.value = registerStore.formData.first_name;
@@ -166,11 +167,11 @@ onMounted(() => {
     lastName.value = registerStore.formData.last_name;
   }
   if (registerStore.formData.phone_number) {
-    // [แก้ไข] จัดรูปแบบเบอร์โทรที่ดึงมาจาก Store ด้วย
     phoneNumber.value = formatPhoneNumber(registerStore.formData.phone_number);
   }
 });
 
+// ตรวจสอบความถูกต้อง
 const validateForm = () => {
   let isValid = true;
   errors.firstName = "";
@@ -187,8 +188,7 @@ const validateForm = () => {
     isValid = false;
   }
 
-  // Logic เดิมของคุณดีอยู่แล้ว เพราะมัน replace(/-/g, '') ก่อนเช็ค
-  // ดังนั้นมันจะทำงานกับเบอร์ที่มีขีด (-) ได้ถูกต้องครับ
+  // ตรวจเบอร์โทร: ตัดขีดออกก่อนเช็ค แล้วดูว่าเป็นตัวเลข 9-10 หลักไหม
   if (!phoneNumber.value.trim()) {
     errors.phoneNumber = "Phone number is required";
     isValid = false;
@@ -204,17 +204,17 @@ const clearError = (field) => {
   errors[field] = "";
 };
 
+// ปุ่ม Back
 const handleBack = () => {
   router.push("/signup");
 };
 
+// ปุ่ม Next
 const handleNext = () => {
   if (!validateForm()) return;
 
   registerStore.formData.first_name = firstName.value;
   registerStore.formData.last_name = lastName.value;
-  // ส่งค่าแบบมี - หรือไม่มี - ก็ได้ แต่ปกติ Database มักเก็บแบบไม่มี -
-  // บรรทัดนี้จะส่งแบบมีขีดไปครับ (ถ้าอยากส่งแบบไม่มีขีด ให้ใช้ phoneNumber.value.replace(/-/g, ''))
   registerStore.formData.phone_number = phoneNumber.value;
 
   router.push("/info-restaurant");

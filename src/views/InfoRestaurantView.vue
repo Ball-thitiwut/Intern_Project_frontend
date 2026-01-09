@@ -189,6 +189,7 @@ import '@/assets/css/infoForm.css';
 const router = useRouter();
 const registerStore = useRegisterStore();
 
+// ตัวแปรเก็บค่าจาก Form
 const restaurantName = ref('');
 const category = ref(null);
 const monthlySales = ref(null);
@@ -197,6 +198,7 @@ const menuItems = ref(null);
 const yearsInBusiness = ref(null);
 const posSystem = ref(null);
 
+// ตัวแปรเก็บตัวเลือก Dropdown
 const restaurantTypes = ref([]);
 const incomeRanges = ref([]);
 const branchRanges = ref([]);
@@ -204,6 +206,7 @@ const menuRanges = ref([]);
 const ageRanges = ref([]);
 const posSystems = ref([]);
 
+// State สำหรับ UI และ Modal
 const isLoading = ref(false);
 const errors = reactive({});
 const showModal = ref(false);
@@ -211,6 +214,7 @@ const modalType = ref('success');
 const modalTitle = ref('');
 const modalMessage = ref('');
 
+// โหลดข้อมูล Dropdown เมื่อเข้าหน้าเว็บ
 onMounted(async () => {
   try {
     const response = await api.get('/restaurant-registration-options');
@@ -236,6 +240,7 @@ onMounted(async () => {
   }
 });
 
+// ตรวจสอบความถูกต้องของ Form
 const validateForm = () => {
   let isValid = true;
   Object.keys(errors).forEach(key => delete errors[key]);
@@ -293,6 +298,7 @@ const closeModal = () => {
   }
 };
 
+// ปุ่ม Back
 const handleBack = () => {
   registerStore.formData.restaurant_name = restaurantName.value;
   registerStore.formData.restaurant_types_id = category.value;
@@ -305,6 +311,7 @@ const handleBack = () => {
   router.push('/info-user');
 };
 
+// ปุ่ม Done
 const handleSubmit = async () => {
   if (!validateForm()) return;
 

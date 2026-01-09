@@ -8,7 +8,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const isLoading = ref(false);
 
-// --- Notification State ---
+// จัดการสถานะแจ้งเตือน
 const toast = reactive({
   show: false,
   message: "",
@@ -24,7 +24,7 @@ const showToast = (message, type = "success") => {
   }, 3000);
 };
 
-// --- Data ---
+// เก็บข้อมูลตัวเลือกใน Dropdown
 const masterData = reactive({
   restaurantTypes: [],
   incomeRanges: [],
@@ -34,6 +34,7 @@ const masterData = reactive({
   posSystems: [],
 });
 
+// ข้อมูลหลักในฟอร์ม
 const form = reactive({
   firstName: "",
   lastName: "",
@@ -51,6 +52,7 @@ const form = reactive({
 
 const originalForm = reactive({});
 
+// เช็คว่า Form มีการเปลี่ยนแปลงหรือไม่? ถ้าเปลี่ยนปุ่ม Save จะทำงาน
 const isFormChanged = computed(() => {
   return JSON.stringify(form) !== JSON.stringify(originalForm);
 });
@@ -67,6 +69,7 @@ onMounted(async () => {
     const opts = optionsRes.data;
     Object.assign(masterData, opts);
 
+    // Map ข้อมูล User ใส่ Form
     const userData = userRes.data.profile.user;
     if (userData) {
       form.firstName = userData.first_name || "";
@@ -76,6 +79,7 @@ onMounted(async () => {
       form.avatarSeed =
         userData.avatar_seed || userStore.avatarSeed || userData.first_name;
 
+      // อัปเดต Store ให้ตรงกัน
       userStore.updateState({
         firstName: form.firstName,
         lastName: form.lastName,
@@ -83,6 +87,7 @@ onMounted(async () => {
       });
     }
 
+    // Map ข้อมูลร้านอาหาร ใส่ Form
     const restData = restaurantRes.data.restaurant;
     if (restData) {
       form.restaurantName = restData.restaurant_name || "";
@@ -116,6 +121,7 @@ onMounted(async () => {
   }
 });
 
+// บันทึกข้อมูล
 const saveProfile = async () => {
   if (!isFormChanged.value) return;
 

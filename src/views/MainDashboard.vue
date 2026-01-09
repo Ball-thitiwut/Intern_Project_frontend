@@ -33,10 +33,13 @@ import DashboardBillView from "@/views/DashboardBillView.vue";
 import DashboardBehaviorView from "@/views/DashboardBehaviorView.vue";
 
 const dashboardStore = useDashboardStore();
-const currentView = ref("sales");
-const currentPeriod = ref("1m");
-const dateRange = ref([new Date(), new Date()]);
 
+// State สำหรับเก็บค่าตัวกรอง filter bar 
+const currentView = ref("sales"); 
+const currentPeriod = ref("1m"); 
+const dateRange = ref([new Date(), new Date()]); 
+
+// ฟังก์ชันดึงข้อมูลจาก API ผ่าน Store
 const fetchData = () => {
   dashboardStore.fetchDashboardOverview(currentPeriod.value, dateRange.value);
 };
@@ -49,6 +52,7 @@ watch([currentPeriod, dateRange], () => {
   fetchData();
 });
 
+// เลือกว่าจะดู Tab ไหน (Sales, Bill, Behavior)
 const currentComponent = computed(() => {
   switch (currentView.value) {
     case "sales": return DashboardView;
@@ -66,6 +70,7 @@ const handlePeriodChange = (period) => {
   currentPeriod.value = period;
 };
 
+// ฟังก์ชันอัปเดตช่วงวันที่
 const handleDateChange = (range) => {
   let newStart, newEnd;
 

@@ -18,6 +18,7 @@ const isDeleting = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
 
+// ฟังก์ชันจัดรูปแบบวันที่ (เช่น 01/01/2024 12:00)
 const formatDate = (dateString) => {
   if (!dateString) return "-";
   const date = new Date(dateString);
@@ -30,6 +31,7 @@ const formatDate = (dateString) => {
   }).format(date);
 };
 
+// ฟังก์ชันจัดรูปแบบเงิน (ใส่ลูกน้ำ และทศนิยม 2 ตำแหน่ง)
 const formatCurrency = (amount) => {
   return Number(amount).toLocaleString("en-US", {
     minimumFractionDigits: 2,
@@ -37,6 +39,7 @@ const formatCurrency = (amount) => {
   });
 };
 
+// ดึงประวัติการนำเข้าไฟล์จาก Server
 const fetchHistory = async () => {
   isLoading.value = true;
   try {
@@ -52,6 +55,7 @@ const fetchHistory = async () => {
   }
 };
 
+// เพิ่มไฟล์
 const goToUpload = () => {
   router.push("/select-pos");
 };
@@ -61,6 +65,7 @@ const confirmDelete = (file) => {
   isDeleteModalOpen.value = true;
 };
 
+// สั่งลบไฟล์ผ่าน API
 const handleDelete = async () => {
   if (!fileToDelete.value) return;
 

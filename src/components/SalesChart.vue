@@ -75,6 +75,7 @@ const props = defineProps({
 const chartRef = ref(null);
 const seriesVisibility = ref([true, true]);
 
+// ฟังก์ชัน Toggle เปิด/ปิด เส้นกราฟ
 const toggleSeries = (index) => {
   seriesVisibility.value[index] = !seriesVisibility.value[index];
   
@@ -86,11 +87,13 @@ const toggleSeries = (index) => {
 
 const normalizedPeriod = computed(() => props.period ? props.period.toLowerCase() : '');
 
+// -- Logic จัดการข้อมูลก่อนนำไปพลอตกราฟ --
 const processedData = computed(() => {
     const rawData = props.data || [];
     const forecastData = props.forecast || [];
     const p = normalizedPeriod.value;
     
+    // กรณี '1m': ต้องรวมข้อมูลจริงและพยากรณ์เข้าด้วยกัน
     if (p === '1m') {
         const dateMap = new Map();
         const getDateKey = (item) => item.date_iso || item.date;
@@ -193,6 +196,7 @@ const processedData = computed(() => {
     };
 });
 
+// -- Config ข้อมูล Dataset ของ Chart.js --
 const chartData = computed(() => {
   const p = normalizedPeriod.value;
   const isForecastMode = p === '1m';
@@ -234,6 +238,7 @@ const chartData = computed(() => {
   };
 });
 
+// -- Config ตัวเลือกกราฟ (แกน X, Y, Tooltip) --
 const chartOptions = computed(() => {
     let xAxisLabel = 'ช่วงเวลา (วัน/เดือน)';
     const p = normalizedPeriod.value;

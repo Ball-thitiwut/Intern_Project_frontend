@@ -258,6 +258,7 @@ const isCollapsed = ref(false);
 const isIdeasOpen = ref(true);
 const isPosOpen = ref(true); // Default เปิดไว้ตาม Requirement
 
+// เช็คว่า Route ปัจจุบันอยู่ในกลุ่มเมนูไหน เพื่อ Highlight หัวข้อหลัก
 const isIdeasActive = computed(() => {
   return route.path.startsWith("/ideas") || route.path.startsWith("/history");
 });
@@ -271,6 +272,7 @@ const isPosActive = computed(() => {
   );
 });
 
+// ฟังก์ชันสลับสถานะ ย่อ/ขยาย Sidebar
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value;
 };
