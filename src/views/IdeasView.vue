@@ -1,13 +1,17 @@
 <template>
-  <div class="w-full min-h-screen px-6 md:px-10 py-8 font-sans bg-[#F3F5F9]">
+  <div
+    class="w-full min-h-screen px-4 md:px-6 lg:px-10 py-8 font-sans bg-[#F3F5F9]"
+  >
     <div
-      class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10"
+      class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-10"
     >
       <div>
-        <h1 class="text-3xl font-bold text-[#051960] tracking-tight mb-2">
+        <h1
+          class="text-2xl md:text-3xl font-bold text-[#051960] tracking-tight mb-2"
+        >
           ไอเดียเพิ่มยอดขาย
         </h1>
-        <p class="text-gray-500 text-sm md:text-base font-light">
+        <p class="text-gray-500 text-xs md:text-base font-light">
           ค้นหาโอกาสในการเพิ่มยอดขายด้วย
           <span class="text-[#F97316] font-medium"
             >AI Matching Intelligence</span
@@ -17,24 +21,23 @@
     </div>
 
     <div
-      class="bg-[#F8FAFC] rounded-[3.5rem] p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white mb-10 relative z-20"
+      class="bg-transparent md:bg-[#F8FAFC] md:rounded-[3.5rem] md:p-4 md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:border md:border-white mb-6 md:mb-10 relative z-20"
     >
       <div class="flex flex-col xl:flex-row items-center gap-3 xl:gap-4">
         <div
-          class="flex-1 w-full grid grid-cols-1 md:grid-cols-2 gap-3 xl:gap-4"
+          class="flex-1 w-full grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-3 xl:gap-4"
         >
           <div class="relative group z-30">
             <div
-              class="relative w-full h-[48px] rounded-[2rem] border border-gray-200 bg-white flex items-center px-6 cursor-default"
+              class="relative w-full h-[42px] md:h-[48px] rounded-2xl md:rounded-[2rem] border border-gray-200 bg-white flex items-center px-4 md:px-6 cursor-default"
             >
               <label
-                class="absolute -top-2.5 left-6 bg-white px-2 text-[12px] font-semibold uppercase tracking-wider text-gray-400 z-10"
+                class="hidden md:block absolute -top-2.5 left-6 bg-white px-2 text-[12px] font-semibold uppercase tracking-wider text-gray-400 z-10"
               >
                 สาขา
               </label>
-
               <div
-                class="w-full font-semibold text-sm md:text-base truncate pr-8 select-none text-[#051960]"
+                class="w-full font-semibold text-xs md:text-sm md:text-base truncate md:pr-8 select-none text-[#051960]"
               >
                 {{ getSelectedBranchName || "-- เลือกสาขา --" }}
               </div>
@@ -44,15 +47,15 @@
           <div class="relative group z-20">
             <div
               @click="!isAnalyzing ? toggleChannel() : null"
-              class="relative w-full h-[48px] rounded-[2rem] border bg-white transition-all duration-300 cursor-pointer flex items-center px-6"
+              class="relative w-full h-[42px] md:h-[48px] rounded-2xl md:rounded-[2rem] border bg-white transition-all duration-300 cursor-pointer flex items-center px-4 md:px-6"
               :class="[
                 isChannelOpen
-                  ? 'border-orange-500 ring-2 ring-orange-100'
+                  ? 'border-orange-500 ring-1 md:ring-2 ring-orange-100'
                   : 'border-gray-200 hover:border-orange-400 hover:shadow-md',
               ]"
             >
               <label
-                class="absolute -top-2.5 left-6 bg-white px-2 text-[12px] font-semibold uppercase tracking-wider transition-colors z-10"
+                class="hidden md:block absolute -top-2.5 left-6 bg-white px-2 text-[12px] font-semibold uppercase tracking-wider transition-colors z-10"
                 :class="
                   isChannelOpen
                     ? 'text-orange-500'
@@ -61,20 +64,18 @@
               >
                 ประเภทการขาย
               </label>
-
               <div
-                class="w-full text-[#051960] font-semibold text-sm md:text-base truncate pr-8 select-none"
+                class="w-full text-[#051960] font-semibold text-xs md:text-sm md:text-base truncate pr-6 md:pr-8 select-none"
               >
                 {{ getSelectedChannelName || "ทั้งหมด" }}
               </div>
-
               <div
-                class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 transition-transform duration-300 pointer-events-none"
+                class="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 text-gray-400 transition-transform duration-300 pointer-events-none"
                 :class="{ 'rotate-180 text-orange-500': isChannelOpen }"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
+                  class="h-4 w-4 md:h-5 md:w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -99,13 +100,13 @@
             >
               <div
                 v-if="isChannelOpen"
-                class="absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden py-2 z-50"
+                class="absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white rounded-xl md:rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden py-2 z-50"
               >
                 <div
                   v-for="option in channelOptions"
                   :key="option.value"
                   @click="selectChannel(option.value)"
-                  class="px-6 py-3 hover:bg-orange-50 cursor-pointer transition-colors text-[#051960] text-sm md:text-base font-medium flex items-center justify-between"
+                  class="px-4 md:px-6 py-2 md:py-3 hover:bg-orange-50 cursor-pointer transition-colors text-[#051960] text-xs md:text-base font-medium flex items-center justify-between"
                   :class="{
                     'bg-orange-50/50 text-orange-600':
                       selectedChannel === option.value,
@@ -115,7 +116,6 @@
                 </div>
               </div>
             </transition>
-
             <div
               v-if="isChannelOpen"
               @click="isChannelOpen = false"
@@ -125,12 +125,12 @@
         </div>
 
         <div
-          class="flex-shrink-0 flex flex-col items-center md:items-end w-full md:w-auto mt-3 md:mt-0 xl:mt-0"
+          class="flex-shrink-0 flex flex-col items-center md:items-end w-full md:w-auto mt-1 md:mt-0 xl:mt-0"
         >
           <button
             @click="handleAnalyzeClick"
             :disabled="isButtonDisabled"
-            class="group relative flex items-center gap-4 pl-6 pr-1 h-[48px] rounded-full shadow-lg transition-all duration-300 w-full md:w-auto md:min-w-[260px]"
+            class="group relative flex items-center justify-center md:justify-start gap-2 md:gap-4 px-4 md:pl-6 md:pr-1 h-[36px] md:h-[48px] rounded-full shadow-lg transition-all duration-300 w-full md:w-auto md:min-w-[260px]"
             :class="[
               isAnalyzing
                 ? 'bg-orange-300 border-2 border-orange-300 cursor-wait'
@@ -141,9 +141,11 @@
                 : 'bg-gray-100 border-2 border-gray-200 cursor-not-allowed',
             ]"
           >
-            <div class="flex flex-col items-start flex-1 pl-2">
+            <div
+              class="flex flex-col items-center md:items-start flex-1 md:pl-2"
+            >
               <span
-                class="text-base font-bold tracking-wide transition-all duration-300 whitespace-nowrap"
+                class="text-sm md:text-base font-bold tracking-wide transition-all duration-300 whitespace-nowrap"
                 :class="
                   isButtonDisabled &&
                   !isAnalyzing &&
@@ -160,7 +162,7 @@
                   isAnalyzing ||
                   (isAnalyzed && !hasFilterChanged)
                 "
-                class="text-[9px] transition-all duration-300 font-medium -mt-0.5"
+                class="hidden md:block text-[9px] transition-all duration-300 font-medium -mt-0.5"
                 :class="
                   isButtonDisabled &&
                   !isAnalyzing &&
@@ -174,7 +176,7 @@
             </div>
 
             <div
-              class="w-10 h-10 rounded-full flex items-center justify-center shadow-inner relative overflow-hidden transition-transform duration-300"
+              class="hidden md:flex w-10 h-10 rounded-full items-center justify-center shadow-inner relative overflow-hidden transition-transform duration-300"
               :class="[
                 { 'animate-spin': isAnalyzing },
                 isButtonDisabled &&
@@ -284,11 +286,13 @@
         </div>
       </div>
 
-      <div v-if="isAnalyzed" class="mt-4 p-4">
+      <div v-if="isAnalyzed" class="mt-4 pb-20 md:pb-4 md:p-4">
         <div
-          class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 animate-fade-in-up"
+          class="flex flex-row items-center justify-between gap-4 mb-4 md:mb-8 animate-fade-in-up"
         >
-          <h3 class="text-xl font-bold text-[#051960] flex items-center gap-3">
+          <h3
+            class="text-lg md:text-xl font-bold text-[#051960] flex items-center gap-3"
+          >
             <span class="flex h-3 w-3 relative">
               <span
                 class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"
@@ -300,45 +304,45 @@
             ผลลัพธ์การวิเคราะห์
           </h3>
           <span
-            class="text-xs text-gray-500 font-medium bg-white px-4 py-1.5 rounded-full border border-gray-200 shadow-sm self-start md:self-auto"
+            class="text-[10px] md:text-xs text-gray-500 font-medium bg-white px-3 md:px-4 py-1.5 rounded-full border border-gray-200 shadow-sm"
           >
             ข้อมูลล่าสุด: {{ lastUpdated }}
           </span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div
             v-for="(idea, index) in ideas"
             :key="index"
-            class="group relative bg-white rounded-[2rem] p-6 border border-gray-200/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500"
+            class="group relative bg-white rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-6 border border-gray-200/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500"
             :style="{ animationDelay: `${index * 100}ms` }"
           >
             <div
-              class="absolute top-0 right-0 px-5 py-2 rounded-bl-3xl text-[10px] font-bold uppercase tracking-wider border-l border-b"
+              class="absolute top-0 right-0 px-4 md:px-5 py-1.5 md:py-2 rounded-bl-2xl md:rounded-bl-3xl text-[9px] md:text-[10px] font-bold uppercase tracking-wider border-l border-b"
               :class="idea.badgeColor"
             >
               {{ idea.type }}
             </div>
 
-            <div class="flex items-start gap-4 mb-5 mt-2">
+            <div class="flex items-start gap-3 md:gap-4 mb-4 md:mb-5 mt-2">
               <div
-                class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm border border-gray-50 flex-shrink-0"
+                class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm border border-gray-50 flex-shrink-0"
                 :class="idea.iconBg"
                 v-html="idea.icon"
               ></div>
               <div class="min-w-0">
                 <h4
-                  class="text-lg font-bold text-[#051960] group-hover:text-[#F97316] transition-colors truncate pr-20"
+                  class="text-base md:text-lg font-bold text-[#051960] group-hover:text-[#F97316] transition-colors truncate pr-16 md:pr-20 leading-tight"
                 >
                   {{ idea.title }}
                 </h4>
-                <p class="text-sm text-gray-400 font-light mt-0.5">
+                <p class="text-xs md:text-sm text-gray-400 font-light mt-0.5">
                   {{ idea.subtitle }}
                 </p>
               </div>
             </div>
 
-            <div class="space-y-3 mb-6">
+            <div class="space-y-3 mb-4 md:mb-6">
               <div
                 v-for="(item, idx) in idea.suggestions"
                 :key="idx"
@@ -347,17 +351,16 @@
                 <div
                   v-if="idx === 0"
                   @click="openSetupModal(idea, item)"
-                  class="rounded-xl p-4 border transition-colors duration-300 relative overflow-hidden cursor-pointer"
+                  class="rounded-xl p-3 md:p-4 border transition-colors duration-300 relative overflow-hidden cursor-pointer"
                   :class="[idea.contentBg, 'border-transparent']"
                 >
                   <div
                     class="absolute -right-4 -top-4 w-16 h-16 bg-white/20 rounded-full blur-xl"
                   ></div>
-
                   <div class="flex items-center gap-2 mb-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-yellow-500 fill-yellow-500"
+                      class="h-4 w-4 md:h-5 md:w-5 text-yellow-500 fill-yellow-500"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -366,30 +369,34 @@
                       />
                     </svg>
                     <span
-                      class="text-xs font-bold uppercase tracking-wide opacity-70"
+                      class="text-[10px] md:text-xs font-bold uppercase tracking-wide opacity-70"
                       :class="idea.textColor"
                     >
                       แนะนำสูงสุด (Top Pick)
                     </span>
                   </div>
-
-                  <div class="flex items-start justify-between gap-4">
-                    <div>
+                  <div class="flex items-start justify-between gap-2 md:gap-4">
+                    <div class="min-w-0">
                       <h5
-                        class="text-base font-bold text-[#051960] leading-tight mb-1"
+                        class="text-sm md:text-base font-bold text-[#051960] leading-tight mb-1 truncate"
                       >
                         {{ item.name }}
                       </h5>
-                      <p class="text-xs text-gray-600 font-medium">
+                      <p
+                        class="text-[10px] md:text-xs text-gray-600 font-medium truncate"
+                      >
                         {{ item.detail }}
                       </p>
                     </div>
                     <div class="text-right flex-shrink-0">
-                      <div class="text-lg font-bold" :class="idea.scoreColor">
+                      <div
+                        class="text-base md:text-lg font-bold"
+                        :class="idea.scoreColor"
+                      >
                         {{ item.score }}%
                       </div>
                       <div
-                        class="text-[10px] text-gray-400 flex items-center justify-end gap-1 group/tooltip relative"
+                        class="text-[8px] md:text-[10px] text-gray-400 flex items-center justify-end gap-1 group/tooltip relative"
                       >
                         โอกาสเพิ่มยอดขาย
                       </div>
@@ -400,31 +407,38 @@
                 <div
                   v-else
                   @click="openSetupModal(idea, item)"
-                  class="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 cursor-pointer"
+                  class="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 cursor-pointer animate-fade-in-up"
+                  :class="[!idea.isOpen ? 'hidden md:flex' : 'flex']"
                 >
                   <div class="flex items-center gap-3 min-w-0">
                     <div
-                      class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-gray-500 bg-gray-100 flex-shrink-0"
+                      class="w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-gray-500 bg-gray-100 flex-shrink-0"
                     >
                       {{ idx + 1 }}
                     </div>
                     <div class="min-w-0">
-                      <p class="text-sm font-semibold text-[#051960] truncate">
+                      <p
+                        class="text-xs md:text-sm font-semibold text-[#051960] truncate"
+                      >
                         {{ item.name }}
                       </p>
-                      <p class="text-[10px] text-gray-400 truncate">
+                      <p
+                        class="text-[9px] md:text-[10px] text-gray-400 truncate"
+                      >
                         {{ item.detail }}
                       </p>
                     </div>
                   </div>
-                  <div class="text-sm font-bold text-gray-400 pl-2">
+                  <div class="text-xs md:text-sm font-bold text-gray-400 pl-2">
                     {{ item.score }}%
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="pt-4 border-t border-gray-50 text-center">
+            <div
+              class="hidden md:block pt-4 border-t border-gray-50 text-center"
+            >
               <button
                 @click="openSetupModal(idea, idea.suggestions[0])"
                 class="w-full py-2.5 rounded-3xl bg-white border border-gray-200 text-[#051960] text-sm font-bold hover:bg-[#051960] hover:text-white hover:border-transparent transition-all active:scale-95 shadow-sm flex items-center justify-center gap-2"
@@ -433,6 +447,53 @@
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div
+              class="md:hidden pt-3 border-t border-gray-50 flex items-center gap-2"
+            >
+              <button
+                @click.stop="toggleIdea(index)"
+                class="h-9 px-3 rounded-full bg-gray-50 text-gray-500 hover:bg-gray-100 transition-colors flex items-center justify-center gap-1 text-[10px] font-semibold"
+              >
+                <span>{{ idea.isOpen ? "ย่อลง" : "ดูเพิ่ม" }}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3 transition-transform duration-300"
+                  :class="{ 'rotate-180': idea.isOpen }"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <button
+                @click="openSetupModal(idea, idea.suggestions[0])"
+                class="flex-1 h-9 rounded-full bg-[#051960] text-white text-[10px] font-bold hover:bg-orange-500 transition-colors shadow-sm flex items-center justify-center gap-2"
+              >
+                <span>สร้างโปรนี้</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -551,11 +612,17 @@ const selectChannel = (value) => {
   isChannelOpen.value = false;
 };
 
+// ฟังก์ชันสำหรับ Mobile Toggle Card
+const toggleIdea = (index) => {
+  ideas.value[index].isOpen = !ideas.value[index].isOpen;
+};
+
 const ideas = ref([
   {
     type: "Pairing",
     title: "จับคู่เซ็ตเมนู",
     subtitle: "เพิ่มยอดต่อบิลด้วยเมนูที่คู่กัน",
+    isOpen: false, // เพิ่ม isOpen
     badgeColor: "bg-blue-50 text-blue-600 border-blue-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>`,
     iconBg: "bg-blue-50 text-blue-500",
@@ -580,6 +647,7 @@ const ideas = ref([
     type: "Happy Hour",
     title: "โปรช่วงเวลาพิเศษ",
     subtitle: "กระตุ้นยอดขายช่วงคนน้อย",
+    isOpen: false, // เพิ่ม isOpen
     badgeColor: "bg-red-50 text-red-600 border-red-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
     iconBg: "bg-red-50 text-red-500",
@@ -596,6 +664,7 @@ const ideas = ref([
     type: "Upsell",
     title: "จัดโปรของแถม",
     subtitle: "ดันยอดบิลเฉลี่ยให้สูงขึ้น",
+    isOpen: false, // เพิ่ม isOpen
     badgeColor: "bg-purple-50 text-purple-600 border-purple-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>`,
     iconBg: "bg-purple-50 text-purple-500",
@@ -616,6 +685,7 @@ const ideas = ref([
     type: "Slow Moving",
     title: "กระตุ้นเมนูยอดน้อย",
     subtitle: "เพิ่มยอดสั่งเมนูที่ลูกค้ามองข้าม",
+    isOpen: false, // เพิ่ม isOpen
     badgeColor: "bg-orange-50 text-orange-600 border-orange-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>`,
     iconBg: "bg-orange-50 text-orange-500",

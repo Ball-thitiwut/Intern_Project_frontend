@@ -1,76 +1,80 @@
 <template>
-  <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100" style="font-family: 'Prompt', 'Kanit', 'Sarabun', sans-serif;">
-    <h3 class="text-xl font-bold text-[#051960] mb-4">จำนวนบิลตามขนาดกลุ่มลูกค้า</h3>
+  <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-gray-100" style="font-family: 'Prompt', 'Kanit', 'Sarabun', sans-serif;">
+    <h3 class="text-lg md:text-xl font-bold text-[#051960] mb-4">จำนวนบิลตามขนาดกลุ่มลูกค้า</h3>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       
       <div class="lg:col-span-7 flex flex-col justify-center">
         
-        <div class="h-72 relative w-full mb-12">
+        <div class="h-60 md:h-72 relative w-full mb-10 md:mb-12">
           
-          <div class="absolute -left-4 top-1/2 -translate-y-1/2 -rotate-90 text-sm text-[#64748b] font-medium whitespace-nowrap z-20">
+          <div class="hidden md:block absolute -left-2 md:-left-4 top-1/2 -translate-y-1/2 -rotate-90 text-xs md:text-sm text-[#64748b] font-medium whitespace-nowrap z-20">
             จำนวนบิล
           </div>
           
-          <div class="absolute left-10 top-0 bottom-0 flex flex-col justify-between text-[13px] text-[#64748b] font-medium z-10 pb-[1px]">
+          <div class="hidden md:flex absolute left-6 md:left-10 top-0 bottom-0 flex-col justify-between text-[11px] md:text-[13px] text-[#64748b] font-medium z-10 pb-[1px]">
             <span v-for="tick in yTicks" :key="tick">{{ tick }}</span>
           </div>
 
-          <div class="ml-20 h-full border-b border-[#f3f4f6] relative">
+          <div class="ml-0 md:ml-20 h-full border-b border-[#f3f4f6] relative">
              <div class="absolute inset-0 flex flex-col justify-between pointer-events-none z-0 pb-[1px]">
               <div v-for="i in yTicks.length" :key="i" class="w-full h-0 border-t border-[#f3f4f6] border-dashed" :class="{ 'border-transparent': i === yTicks.length }"></div>
             </div>
             
-            <div class="flex items-end justify-around h-full relative z-10 px-2">
+            <div class="flex items-end justify-around h-full relative z-10 px-1 md:px-2">
               <div v-for="(item, index) in chartData" :key="index" class="flex flex-col items-center w-full relative group h-full justify-end">
+                
                 <div 
-                  class="mb-2 bg-[#051960] text-white text-[13px] font-medium px-2 py-1 rounded-md shadow-sm relative -top-1 z-20 transition-all duration-200 ease-out transform"
+                  class="mb-1 md:mb-2 bg-[#051960] text-white text-[10px] md:text-[13px] font-medium px-1.5 py-0.5 md:px-2 md:py-1 rounded-md shadow-sm relative -top-1 z-20 transition-all duration-200 ease-out transform"
                   :class="item.highlight ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'"
                 >
-                  {{ item.value.toLocaleString() }}
+                  {{ item.value.toLocaleString() }} <span class="md:hidden">บิล</span>
                   <div class="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-[#051960]"></div>
                 </div>
                 
-                <div class="w-full max-w-[40px] rounded-t-[4px] transition-all duration-300 relative" 
+                <div class="w-full max-w-[24px] md:max-w-[40px] rounded-t-[3px] md:rounded-t-[4px] transition-all duration-300 relative" 
                   :class="item.highlight ? 'bg-[#F47122] shadow-md z-10' : 'bg-[#002683]/20 hover:bg-[#002683]/40'" 
                   :style="{ height: calculateHeight(item.value) + '%' }">
                 </div>
                 
-                <span class="absolute top-full mt-3 text-[13px] text-[#64748b] font-medium text-center w-full">{{ item.label }}</span>
+                <span class="absolute top-full mt-2 md:mt-3 text-[11px] md:text-[13px] text-[#64748b] font-medium text-center w-full break-words leading-tight">{{ item.label }}</span>
               </div>
             </div>
           </div>
-          <div class="absolute -bottom-12 left-0 right-0 text-center text-sm text-[#64748b] font-medium ml-20">
-            ขนาดกลุ่ม
+
+          <div class="absolute -bottom-10 md:-bottom-12 left-0 right-0 text-center text-xs md:text-sm text-[#64748b] font-medium ml-0 md:ml-20">
+            ขนาดกลุ่ม <span class="md:hidden"> (คน)</span>
           </div>
         </div>
       
       </div> 
-      <div class="lg:col-span-5 flex flex-col justify-center pl-4 border-l border-gray-100"> 
-        <div class="w-full">
-          <table class="w-full text-sm mb-2">
+
+      <div class="lg:col-span-5 flex flex-col justify-center lg:pl-4 lg:border-l border-gray-100 pt-4 lg:pt-0 border-t lg:border-t-0"> 
+        <div class="w-full overflow-x-auto">
+          <table class="w-full text-sm mb-2 min-w-[300px]">
             <thead>
-              <tr class="text-sm text-[#051960] bg-gray-100/80">
-                <th class="py-3 pl-3 text-center font-bold rounded-l-lg">อันดับ</th>
-                <th class="py-3 text-center font-bold">ขนาดกลุ่ม</th>
-                <th class="py-3 text-right font-bold">จำนวนบิล</th>
-                <th class="py-3 pr-3 text-right font-bold rounded-r-lg">สัดส่วน(%)</th>
+              <tr class="text-xs md:text-sm text-[#051960] bg-gray-100/80">
+                <th class="py-2 md:py-3 pl-2 md:pl-3 text-center font-bold rounded-l-lg">อันดับ</th>
+                <th class="py-2 md:py-3 text-center font-bold">ขนาดกลุ่ม</th>
+                <th class="py-2 md:py-3 text-right font-bold">จำนวนบิล</th>
+                <th class="py-2 md:py-3 pr-2 md:pr-3 text-right font-bold rounded-r-lg">สัดส่วน(%)</th>
               </tr>
             </thead>
-            <tbody class="text-sm text-gray-600">
+            <tbody class="text-xs md:text-sm text-gray-600">
               <tr v-for="(row, idx) in tableData" :key="idx" class="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition group">
-                <td class="py-3 pl-3 text-center font-medium text-gray-400 group-hover:text-[#051960]">{{ idx + 1 }}</td>
-                <td class="py-3 text-center font-medium">{{ row.size }} คน</td>
-                <td class="py-3 text-right font-bold text-[#051960]">{{ row.count }} บิล</td>
-                <td class="py-3 pr-3 text-right">{{ row.percent }}%</td>
+                <td class="py-2 md:py-3 pl-2 md:pl-3 text-center font-medium text-gray-400 group-hover:text-[#051960]">{{ idx + 1 }}</td>
+                <td class="py-2 md:py-3 text-center font-medium">{{ row.size }} คน</td>
+                <td class="py-2 md:py-3 text-right font-bold text-[#051960]">{{ row.count }} บิล</td>
+                <td class="py-2 md:py-3 pr-2 md:pr-3 text-right">{{ row.percent }}%</td>
               </tr>
             </tbody>
           </table>
-          <div class="pt-4 text-right text-base font-bold text-[#051960] border-t border-gray-100 mt-2">
+          <div class="pt-4 text-right text-sm md:text-base font-bold text-[#051960] border-t border-gray-100 mt-2">
             รวมทั้งหมด: {{ totalBills }} บิล
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>

@@ -428,4 +428,89 @@ const handleSubmit = async () => {
   margin-top: 0.25rem;
   margin-bottom: 0;
 }
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .info-container {
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .content-wrapper {
+    width: 100%;
+    max-width: 340px !important; 
+    margin: 0 auto;
+    gap: 0.5rem; 
+  }
+
+  :deep(.info-card), .info-card {
+    width: 100%;
+    padding: 1.5rem !important; 
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  :deep(.info-title), .info-title {
+    font-size: 1.4rem !important;
+    text-align: left !important;
+    margin-bottom: 0.25rem;
+  }
+
+  :deep(.info-description), .info-description {
+    font-size: 0.85rem !important;
+    text-align: left !important;
+    margin-bottom: 1.25rem; 
+  }
+
+  :deep(.form-group) {
+    margin-bottom: 0.85rem !important; 
+  }
+
+  :deep(.form-row), .form-row {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0.75rem !important; 
+    margin-bottom: 0.85rem !important; 
+  }
+
+  .form-row :deep(.form-group), .form-row .form-group {
+    width: 50% !important;
+    margin-bottom: 0 !important; 
+  }
+
+  label {
+    font-size: 0.75rem !important; 
+    margin-bottom: 0.35rem !important;
+    display: block !important;
+  }
+
+  :deep(.form-input), .form-input, select {
+    font-size: 13px !important; 
+    padding: 0 10px !important; 
+    padding-right: 25px !important; 
+    height: 36px !important;
+    width: 100% !important;
+    
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+  }
+
+  .action-buttons {
+    padding: 0 0.25rem;
+    margin-top: 0.5rem;
+  }
+  
+  .btn-nav {
+    padding: 0 1.2rem;
+    font-size: 0.9rem;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 </style>

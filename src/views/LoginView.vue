@@ -240,4 +240,55 @@ input::-webkit-password-toggle-button {
   display: none;
   -webkit-appearance: none;
 }
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  :deep(.left-panel), .left-panel {
+    display: none !important;
+  }
+
+  :deep(.login-container), .login-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    padding: 0;
+  }
+
+  :deep(.right-panel), .right-panel {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    padding: 2rem; 
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+  }
+
+  :deep(.login-wrapper), .login-wrapper {
+    width: 100%;
+    max-width: 350px; 
+  }
+
+  :deep(.login-title), .login-title {
+    text-align: left !important; 
+    font-size: 2rem !important; 
+    margin-bottom: 0.5rem;
+  }
+
+  :deep(.login-description), .login-description {
+    text-align: left !important; 
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+
+  :deep(.input-group input), .input-group input {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  :deep(.btn-login), .btn-login,
+  :deep(.btn-google), .btn-google {
+    padding: 12px;
+  }
+}
 </style>

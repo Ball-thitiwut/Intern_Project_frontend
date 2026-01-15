@@ -1,9 +1,9 @@
 <template>
   <div class="w-full h-full relative">
-    <div v-if="normalizedPeriod === '1m'" class="absolute top-0 right-0 z-10 flex bg-slate-100 p-1 rounded-lg gap-1">
+    <div v-if="normalizedPeriod === '1m' && hasForecastData.value" class="absolute top-0 right-0 z-10 flex bg-slate-100 p-0.5 md:p-1 rounded-md md:rounded-lg gap-1">
       <button 
         @click="toggleSeries(0)"
-        class="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200"
+        class="flex items-center gap-1 md:gap-2 px-2 py-1 md:px-3 md:py-1.5 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200"
         :class="seriesVisibility[0] ? 'bg-[#F47122] text-white shadow-sm' : 'text-slate-400 hover:bg-slate-200'"
       >
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
@@ -12,7 +12,7 @@
 
       <button 
         @click="toggleSeries(1)"
-        class="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200"
+        class="flex items-center gap-1 md:gap-2 px-2 py-1 md:px-3 md:py-1.5 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200"
         :class="seriesVisibility[1] ? 'bg-[#3b82f6] text-white shadow-sm' : 'text-slate-400 hover:bg-slate-200'"
       >
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted, onUnmounted, nextTick } from 'vue';
 import { Line } from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -74,11 +74,52 @@ const props = defineProps({
 
 const chartRef = ref(null);
 const seriesVisibility = ref([true, true]);
+const windowWidth = ref(window.innerWidth);
 
-// ฟังก์ชัน Toggle เปิด/ปิด เส้นกราฟ
+// ตรวจจับขนาดหน้าจอเพื่อแยก UI Mobile/Desktop
+const updateWidth = () => {
+  windowWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+  // 1. Listener เดิม
+  window.addEventListener('resize', updateWidth);
+
+  // 2. Logic สั่งโชว์จุดสูงสุดตอนเริ่ม (เหมือน BillCountChart)
+  nextTick(() => {
+    if (chartRef.value && chartRef.value.chart) {
+      const chart = chartRef.value.chart;
+      
+      // ดึงข้อมูลยอดขายจริง (Dataset 0)
+      // ต้องระวังค่า null หรือ undefined
+      const actualSalesData = processedData.value.actualValues || [];
+      const validData = actualSalesData.map(v => (v === null || v === undefined) ? -Infinity : v);
+      
+      const maxVal = Math.max(...validData);
+      const maxIndex = validData.indexOf(maxVal);
+
+      // ถ้าเจอค่าสูงสุด และค่ามากกว่า 0
+      if (maxIndex !== -1 && maxVal > 0) {
+        chart.setActiveElements([
+          { datasetIndex: 0, index: maxIndex }
+        ]);
+        
+        chart.tooltip.setActiveElements([
+          { datasetIndex: 0, index: maxIndex }
+        ]);
+
+        chart.update();
+      }
+    }
+  });
+});
+
+onUnmounted(() => window.removeEventListener('resize', updateWidth));
+
+const isMobile = computed(() => windowWidth.value < 768);
+
 const toggleSeries = (index) => {
   seriesVisibility.value[index] = !seriesVisibility.value[index];
-  
   if (chartRef.value && chartRef.value.chart) {
     chartRef.value.chart.setDatasetVisibility(index, seriesVisibility.value[index]);
     chartRef.value.chart.update();
@@ -87,14 +128,18 @@ const toggleSeries = (index) => {
 
 const normalizedPeriod = computed(() => props.period ? props.period.toLowerCase() : '');
 
-// -- Logic จัดการข้อมูลก่อนนำไปพลอตกราฟ --
+// เช็คว่ามีข้อมูลพยากรณ์ส่งมาจริงไหม 
+const hasForecastData = computed(() => {
+  return Array.isArray(props.forecast) && props.forecast.length > 0;
+});
+
+// -- Logic การประมวลผลข้อมูล (Logic เดิม 100%) --
 const processedData = computed(() => {
     const rawData = props.data || [];
     const forecastData = props.forecast || [];
     const p = normalizedPeriod.value;
     
-    // กรณี '1m': ต้องรวมข้อมูลจริงและพยากรณ์เข้าด้วยกัน
-    if (p === '1m') {
+    if (p === '1m' && hasForecastData.value) {
         const dateMap = new Map();
         const getDateKey = (item) => item.date_iso || item.date;
 
@@ -115,19 +160,16 @@ const processedData = computed(() => {
         });
 
         const sortedKeys = Array.from(dateMap.keys()).sort();
-        
         const combinedData = sortedKeys.map(key => dateMap.get(key));
         
         let lastActualIndex = -1;
         let lastActualValue = 0;
-
         for (let i = 0; i < combinedData.length; i++) {
             if (combinedData[i].actual !== null) {
                 lastActualIndex = i;
                 lastActualValue = combinedData[i].actual;
             }
         }
-
         if (lastActualIndex !== -1 && lastActualIndex < combinedData.length - 1) {
             combinedData[lastActualIndex].forecast = lastActualValue;
         }
@@ -146,7 +188,6 @@ const processedData = computed(() => {
 
     if (p === '1y' || p === 'all' || rawData.length > 35) {
         const groupedData = {};
-
         rawData.forEach(item => {
             const dateStr = item.date_iso || item.date;
             if (dateStr) {
@@ -155,7 +196,6 @@ const processedData = computed(() => {
                     const year = d.getFullYear();
                     const month = d.getMonth() + 1;
                     const key = `${year}-${String(month).padStart(2, '0')}`;
-                    
                     if (!groupedData[key]) {
                         groupedData[key] = {
                             total_sales: 0,
@@ -166,7 +206,6 @@ const processedData = computed(() => {
                 }
             }
         });
-
         const sortedKeys = Object.keys(groupedData).sort();
         return {
             labels: sortedKeys.map(key => groupedData[key].displayLabel),
@@ -186,36 +225,52 @@ const processedData = computed(() => {
         }
         return item.label || '';
     });
-
     const values = rawData.map(item => item.amount || item.sales || item.total_sales || 0);
-    
-    return { 
-        labels, 
-        actualValues: values, 
-        forecastValues: [] 
-    };
+    return { labels, actualValues: values, forecastValues: [] };
 });
 
-// -- Config ข้อมูล Dataset ของ Chart.js --
+// -- Config Chart Data (ปรับแต่งการแสดงผลจุด) --
 const chartData = computed(() => {
   const p = normalizedPeriod.value;
-  const isForecastMode = p === '1m';
+  const isForecastMode = p === '1m' && hasForecastData.value;
+  const actualData = processedData.value.actualValues;
+
+  // หาค่าสูงสุด (Peak) สำหรับ Mobile
+  const maxVal = Math.max(...(actualData.filter(v => v !== null) || [0]));
+
+  // Helper สร้าง Gradient (เฉพาะ Mobile)
+  const getBackground = (context) => {
+    if (!isMobile.value) return 'rgba(244, 113, 34, 0.1)'; 
+    
+    const ctx = context.chart.ctx;
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(244, 113, 34, 0.4)'); // บนเข้ม
+    gradient.addColorStop(1, 'rgba(244, 113, 34, 0.0)'); // ล่างจาง
+    return gradient;
+  };
 
   return {
     labels: processedData.value.labels,
     datasets: [
       {
         label: 'ยอดขายจริง', 
-        data: processedData.value.actualValues,
+        data: actualData,
         borderColor: '#F47122',       
-        backgroundColor: 'rgba(244, 113, 34, 0.1)', 
+        backgroundColor: (ctx) => getBackground(ctx),
         fill: true,
-        tension: 0.3, 
-        pointRadius: 4, 
-        pointBackgroundColor: '#F47122', 
-        pointBorderColor: '#ffffff',
+        tension: 0.4, 
+
+        pointRadius: (ctx) => {
+            return !isMobile.value ? 4 : 0;
+        },
+        pointBackgroundColor: '#F47122',
+        pointBorderColor: '#F47122',
         pointBorderWidth: 2,
+        
+        // เมื่อเอานิ้วลาก (Hover) ให้จุดโผล่ขึ้นมา
         pointHoverRadius: 6,
+        pointHoverBackgroundColor: '#FFFFFF',
+        pointHoverBorderColor: '#F47122',
         spanGaps: false 
       },
       {
@@ -228,6 +283,8 @@ const chartData = computed(() => {
         tension: 0.3,
         borderWidth: 2.5,
         pointRadius: 4,
+        
+        pointRadius: isMobile.value ? 0 : 4,
         pointBackgroundColor: '#3b82f6',
         pointBorderColor: '#ffffff',
         pointHoverRadius: 5,
@@ -249,24 +306,29 @@ const chartOptions = computed(() => {
     return {
         responsive: true,
         maintainAspectRatio: false,
+        
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
+        
         layout: {
-            padding: {
-                top: 40,  
-            }
+            padding: { top: 40 }
         },
         plugins: {
-            legend: { 
-                display: false
-            },
+            legend: { display: false },
             tooltip: {
                 backgroundColor: '#051960', 
                 titleColor: '#fff',
                 bodyColor: '#fff',
-                padding: 12,
+                padding: isMobile.value ? 8 : 12,
                 cornerRadius: 8,
-                titleFont: { size: 14, weight: 'bold', family: "'Prompt', sans-serif" },
-                bodyFont: { size: 14, family: "'Prompt', sans-serif" },
-                displayColors: true, 
+                titleFont: { size: isMobile.value ? 12 : 14, weight: 'bold', family: "'Prompt', sans-serif" },
+                bodyFont: { size: isMobile.value ? 12 : 14, family: "'Prompt', sans-serif" },
+                displayColors: true,
+                boxWidth: isMobile.value ? 8 : 10,
+                boxHeight: isMobile.value ? 8 : 10,
+                boxPadding: isMobile.value ? 3 : 6,
                 callbacks: {
                     title: (context) => `เวลา: ${context[0].label}`,
                     label: (ctx) => {
@@ -282,25 +344,30 @@ const chartOptions = computed(() => {
             y: {
                 beginAtZero: true, 
                 title: {
-                    display: true,
+                    display: !isMobile.value, 
                     text: 'ยอดขาย (บาท)', 
                     align: 'center',
                     color: '#64748b', 
                     font: { size: 14, weight: 500 },
                     padding: { bottom: 8 }
                 },
-                grid: { color: '#f3f4f6', drawBorder: false },
+                grid: { 
+                    color: '#f3f4f6', 
+                    drawBorder: false,
+                    display: !isMobile.value
+                },
                 ticks: {
                     color: '#64748b',
                     padding: 10,
                     font: { size: 12, weight: 500 },
-                    callback: (value) => value.toLocaleString() 
+                    callback: (value) => isMobile.value ? (value/1000) + 'k' : value.toLocaleString(),
+                    maxTicksLimit: 5
                 },
                 border: { display: false } 
             },
             x: {
                 title: {
-                    display: true,
+                    display: !isMobile.value, 
                     text: xAxisLabel, 
                     align: 'center',
                     color: '#64748b', 
@@ -314,7 +381,7 @@ const chartOptions = computed(() => {
                     font: { size: 12, weight: 500 },
                     maxRotation: 0, 
                     autoSkip: true, 
-                    maxTicksLimit: 12 
+                    maxTicksLimit: isMobile.value ? 5 : 12 
                 },
                 border: { display: false }
             }

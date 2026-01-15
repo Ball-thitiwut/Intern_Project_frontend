@@ -631,4 +631,92 @@ const handleContinue = async () => {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+@media (max-width: 767px) {
+  .w-full.h-full.px-6.md\:px-10 {
+    padding-left: 1rem !important;  
+    padding-right: 1rem !important;
+  }
+
+  .mb-8.flex-none {
+    margin-bottom: 1.5rem !important;
+  }
+  h1.text-3xl {
+    font-size: 1.5rem !important; 
+    margin-bottom: 0.5rem !important;
+  }
+
+  .bg-\[\#051960\].px-8.py-6 {
+    padding: 1rem 1.25rem !important;
+  }
+  h2.text-xl {
+    font-size: 1.125rem !important;
+  }
+
+  .px-6.md\:px-10.py-10 {
+    padding: 1.25rem !important; 
+  }
+
+  .flex.flex-col.gap-8.mb-8 {
+    gap: 1.5rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  input[type="text"] {
+    height: 2.75rem !important; 
+    font-size: 0.875rem !important;
+  }
+
+  button.group.w-full.md\:w-auto.h-12 {
+    height: 2.75rem !important; 
+  }
+
+  .mt-3.grid.grid-cols-1.md\:grid-cols-2 {
+    margin-top: 0.75rem !important;
+    gap: 0.5rem !important;
+  }
+  
+  .text-xs.px-3.py-1\.5 {
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .flex.justify-between.items-center.pt-2.pb-10 {
+    flex-direction: row !important;            
+    justify-content: space-between !important; 
+    align-items: center !important;
+    gap: 1rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  button.bg-\[\#F97316\] {
+    width: auto !important;  
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    font-size: 0.875rem !important; 
+  }
+  button.bg-\[\#F97316\] svg {
+    width: 1.125rem !important;
+    height: 1.125rem !important;
+  }
+
+  button.text-gray-400 {
+    width: auto !important;   
+    border: none !important;  
+    padding: 0 !important;    
+    justify-content: flex-start !important;
+    background: transparent !important;
+  }
+
+  .relative.bg-white.rounded-3xl.p-8 {
+    padding: 1.5rem !important;
+    width: 90% !important;
+  }
+  .w-20.h-20.rounded-full {
+    width: 4rem !important;
+    height: 4rem !important;
+    margin-bottom: 1rem !important;
+  }
+}
 </style>

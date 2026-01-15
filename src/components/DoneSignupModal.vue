@@ -124,4 +124,44 @@ defineEmits(['close']);
   from { transform: scale(0.95); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .modal-card {
+    padding: 1.5rem !important; 
+    width: 80% !important; 
+    max-width: 320px !important; 
+    border-radius: 1.5rem !important; 
+  }
+
+  .modal-icon {
+    width: 3rem !important; 
+    height: 3rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .modal-icon svg {
+    width: 1.5rem !important; 
+    height: 1.5rem !important;
+  }
+
+  .modal-title {
+    font-size: 1.15rem !important; 
+  }
+
+  .modal-message {
+    font-size: 0.9rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .modal-btn {
+    padding: 0.6rem 1.5rem !important; 
+    font-size: 0.95rem !important;
+    border-radius: 9999px !important; 
+    height: 38px !important; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 </style>

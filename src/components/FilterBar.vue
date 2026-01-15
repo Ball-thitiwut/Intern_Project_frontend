@@ -1,16 +1,16 @@
 <template>
   <div
-    class="bg-white border border-gray-200 shadow-sm rounded-full p-2 flex flex-wrap items-center justify-between text-sm"
+    class="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center justify-between text-sm gap-y-2 md:gap-y-0 p-0 md:p-2 bg-transparent md:bg-white border-none md:border md:border-gray-200 shadow-none md:shadow-sm rounded-none md:rounded-full"
   >
     <div
-      class="flex items-center bg-[#F8FAFC] rounded-full p-1 shadow-sm border border-gray-200"
+      class="order-1 md:order-none flex items-center bg-[#F8FAFC] rounded-full p-0.5 md:p-1 shadow-sm border border-gray-200 overflow-x-auto w-full md:w-auto md:max-w-none scrollbar-hide"
     >
       <button
         v-for="period in ['24h', '7d', '1m', '1y', 'All']"
         :key="period"
         @click="selectPeriod(period)"
         :class="[
-          'px-4 py-1 rounded-full transition duration-200',
+          'px-0 py-0.5 md:px-4 md:py-1 rounded-full transition duration-200 whitespace-nowrap text-xs md:text-sm flex-1 md:flex-none',
           selectedPeriod === period
             ? 'bg-[#051960] font-bold text-white shadow-md'
             : 'text-gray-600 hover:bg-gray-100',
@@ -20,7 +20,7 @@
       </button>
     </div>
 
-    <div class="hidden md:block">
+    <div class="order-2 md:order-none w-full md:w-auto block">
       <VueDatePicker
         v-model="dateRange"
         range
@@ -29,19 +29,17 @@
       >
         <template #trigger>
           <div
-            class="flex items-center gap-4 text-[#031350] font-medium cursor-pointer hover:opacity-80 transition"
+            class="hidden md:flex items-center gap-4 text-[#031350] font-medium cursor-pointer hover:opacity-80 transition"
           >
             <div
-              class="flex items-center gap-2 bg-[#F8FAFC] px-4 py-1.5 rounded-full shadow-sm border border-gray-200 hover:ring-1 hover:ring-gray-300"
+              class="flex items-center gap-2 bg-[#F8FAFC] px-4 py-1.5 rounded-full shadow border border-gray-200 hover:ring-1 hover:ring-gray-300"
             >
               <span>{{ displayDateRange.start }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-
             <span class="text-gray-400">to</span>
-
             <div
               class="flex items-center gap-2 bg-[#F8FAFC] px-4 py-1.5 rounded-full shadow-sm border border-gray-200 hover:ring-1 hover:ring-gray-300"
             >
@@ -51,22 +49,32 @@
               </svg>
             </div>
           </div>
+
+          <div class="flex md:hidden items-center justify-between gap-2 w-full">
+              <div class="flex-1 bg-white py-1.5 px-2 rounded-full text-center shadow-sm border border-gray-200 text-xs font-medium text-[#031350]">
+                {{ displayDateRange.start }}
+              </div>
+              <span class="text-gray-400 text-xs">to</span>
+              <div class="flex-1 bg-white py-1.5 px-2 rounded-full text-center shadow-sm border border-gray-200 text-xs font-medium text-[#031350]">
+                {{ displayDateRange.end }}
+              </div>
+          </div>
         </template>
       </VueDatePicker>
     </div>
 
-    <div class="relative">
+    <div class="hidden md:block relative md:flex-none pl-0 min-w-0">
       <div
         @click="isOpen = !isOpen"
-        class="min-w-[250px] bg-white px-4 py-2 rounded-full border transition-all duration-300 cursor-pointer flex items-center justify-between"
+        class="w-full md:w-auto md:min-w-[250px] bg-white px-2 py-1.5 md:px-4 md:py-2 rounded-full border transition-all duration-300 cursor-pointer flex items-center justify-between"
         :class="[
           isOpen
             ? 'border-orange-500 ring-2 ring-orange-100'
             : 'border-gray-200 hover:border-orange-400 hover:shadow-md',
         ]"
       >
-        <span class="font-medium text-[#051960] truncate">{{ currentViewName }}</span>
-        <div class="text-gray-400 transition-transform duration-300 pointer-events-none" :class="{ 'rotate-180 text-orange-500': isOpen }">
+        <span class="font-medium text-[#051960] truncate text-[11px] md:text-sm">{{ currentViewName }}</span>
+        <div class="text-gray-400 transition-transform duration-300 pointer-events-none flex-shrink-0 ml-1" :class="{ 'rotate-180 text-orange-500': isOpen }">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
@@ -81,12 +89,12 @@
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <div v-if="isOpen" class="absolute right-0 mt-2 w-full bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden py-1 z-50">
+        <div v-if="isOpen" class="absolute right-0 mt-2 w-full md:w-[250px] bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden py-1 z-50">
           <div
             v-for="item in menuOptions"
             :key="item.id"
             @click="selectMenu(item)"
-            class="px-4 py-2 cursor-pointer transition-colors text-sm font-medium flex items-center justify-between"
+            class="px-4 py-2 cursor-pointer transition-colors text-[11px] md:text-sm font-medium flex items-center justify-between"
             :class="[currentView === item.id ? 'bg-orange-50/50 text-orange-600' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600']"
           >
             <span>{{ item.name }}</span>
@@ -189,6 +197,7 @@ const selectPeriod = (period) => {
 const onDateChange = (newRange) => {
   if (newRange) {
     selectedPeriod.value = null;
+    emit("update:period", null); 
     emit("update:date-range", { start: newRange[0], end: newRange[1] });
   }
 };
@@ -204,3 +213,13 @@ onMounted(() => {
   selectPeriod(props.initialPeriod);
 });
 </script>
+
+<style scoped>
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+</style>

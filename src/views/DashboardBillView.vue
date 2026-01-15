@@ -1,23 +1,24 @@
 <template>
   <div
-    class="flex flex-col gap-6 rounded-xl font-sans text-[#051960] animate-fade-in h-full"
+    class="flex flex-col gap-4 md:gap-6 rounded-xl font-sans text-[#051960] animate-fade-in"
   >
     <div
       v-if="dashboardStore.isLoading"
-      class="flex justify-center items-center h-full min-h-[400px]"
+      class="flex justify-center items-center h-[60vh] min-h-[400px]"
     >
       <div
         class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#051960]"
       ></div>
     </div>
 
-    <div v-else class="flex flex-col gap-6 w-full">
-      <div class="bg-white rounded-3xl p-6 pb-10 shadow-sm w-full">
-        <div class="text-xl font-bold text-[#051960] mb-6">
+    <div v-else class="flex flex-col gap-4 md:gap-6 w-full">
+      <div
+        class="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 md:pb-10 shadow-sm w-full"
+      >
+        <div class="text-base md:text-xl font-bold text-[#051960] mb-4 md:mb-6">
           ยอดขายเฉลี่ยต่อบิลรายวัน
         </div>
-
-        <div class="h-72 w-full pl-4">
+        <div class="h-60 md:h-72 w-full pl-0 md:pl-4">
           <AverageSalesChart
             v-if="dashboardStore.billAnalytics.dates.length > 0"
             :dates="dashboardStore.billAnalytics.dates"
@@ -25,17 +26,20 @@
           />
           <div
             v-else
-            class="flex items-center justify-center h-full text-gray-400"
+            class="flex items-center justify-center h-full text-gray-400 text-sm md:text-base"
           >
             ยังไม่มีข้อมูลสำหรับช่วงเวลานี้
           </div>
         </div>
       </div>
 
-      <div class="bg-white rounded-3xl p-6 pb-10 shadow-sm w-full">
-        <div class="text-xl font-bold text-[#051960] mb-6">จำนวนบิลรายวัน</div>
-
-        <div class="h-72 w-full pl-4">
+      <div
+        class="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 md:pb-10 shadow-sm w-full"
+      >
+        <div class="text-base md:text-xl font-bold text-[#051960] mb-4 md:mb-6">
+          จำนวนบิลรายวัน
+        </div>
+        <div class="h-60 md:h-72 w-full pl-0 md:pl-4">
           <BillCountChart
             v-if="dashboardStore.billAnalytics.dates.length > 0"
             :dates="dashboardStore.billAnalytics.dates"
@@ -43,7 +47,7 @@
           />
           <div
             v-else
-            class="flex items-center justify-center h-full text-gray-400"
+            class="flex items-center justify-center h-full text-gray-400 text-sm md:text-base"
           >
             ยังไม่มีข้อมูลสำหรับช่วงเวลานี้
           </div>

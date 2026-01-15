@@ -1,11 +1,12 @@
 <template>
-  <div class="space-y-8 font-sans text-[#051960] animate-fade-in h-full">
+  <div class="space-y-4 md:space-y-8 font-sans text-[#051960] animate-fade-in h-full">
     
     <div v-if="dashboardStore.isLoading" class="flex justify-center items-center h-full min-h-[400px]">
         <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#051960]"></div>
     </div>
 
-    <div v-else class="space-y-8">
+    <div v-else class="space-y-4 md:space-y-8">
+        
         <GroupSizeChart 
           :chart-data="groupSizeChartData"
           :table-data="groupSizeTableData"

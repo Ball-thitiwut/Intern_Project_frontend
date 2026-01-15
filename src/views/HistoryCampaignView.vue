@@ -623,3 +623,239 @@ const calculateDuration = (start, end) => {
   return diffDays;
 };
 </script>
+
+<style scoped>
+@media (max-width: 767px) {
+  .flex.items-end.justify-between.gap-4.mb-8 {
+    flex-direction: column !important;
+    align-items: stretch !important; 
+    gap: 0.75rem;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .flex.items-end.justify-between.gap-4.mb-8 > div {
+    width: 100%;
+  }
+
+  .flex.items-end.justify-between.gap-4.mb-8 button {
+    width: auto !important; 
+    align-self: flex-end; 
+    justify-content: center;
+    margin-top: 0.5rem;
+
+    padding-top: 0.4rem !important;
+    padding-bottom: 0.4rem !important;
+
+    font-weight: 600 !important;
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10 > div {
+    padding: 1rem !important;
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between; 
+    align-items: flex-start;
+    min-height: 7rem; 
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10 > div > div:first-child {
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10 > div p {
+    font-size: 0.65rem;
+    line-height: 1.2;
+    color: #9ca3af;
+    margin-bottom: 0.25rem;
+  }
+  .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10 > div h3 {
+    font-size: 1.1rem; 
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10 > div:last-child {
+    grid-column: span 2; 
+    flex-direction: row !important; 
+    align-items: center; 
+
+    justify-content: flex-start !important;
+    gap: 1rem; 
+
+    min-height: auto; 
+    padding: 1rem 1.25rem !important;
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10
+    > div:last-child
+    > div:first-child {
+    margin-bottom: 0; 
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10
+    > div:last-child
+    > div:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .grid.grid-cols-1.xl\:grid-cols-2 > div .flex.justify-between.items-start {
+    display: grid;
+    grid-template-areas:
+      "tags tags tags"
+      "icon name menu";
+    grid-template-columns: auto 1fr auto;
+    column-gap: 0.75rem;
+    row-gap: 0.5rem;
+    align-items: center;
+  }
+
+  .grid.grid-cols-1.xl\:grid-cols-2
+    > div
+    .flex.justify-between.items-start
+    > .flex.items-center.gap-4,
+  .grid.grid-cols-1.xl\:grid-cols-2
+    > div
+    .flex.justify-between.items-start
+    > .flex.items-center.gap-4
+    > div:nth-child(2) {
+    display: contents;
+  }
+
+  .grid.grid-cols-1.xl\:grid-cols-2 > div .flex.items-center.gap-2.mb-1 {
+    grid-area: tags;
+    margin-bottom: 0;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .grid.grid-cols-1.xl\:grid-cols-2 > div .w-14.h-14 {
+    grid-area: icon;
+    width: 3rem !important;
+    height: 3rem !important;
+    min-width: 3rem !important;
+    font-size: 1.5rem;
+    margin: 0;
+    align-self: flex-start;
+    margin-top: 0.25rem;
+  }
+  .grid.grid-cols-1.xl\:grid-cols-2 > div .w-14.h-14 svg {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+
+  .grid.grid-cols-1.xl\:grid-cols-2 > div h3 {
+    grid-area: name;
+    font-size: 1rem;
+    line-height: 1.4;
+    margin: 0;
+
+    white-space: normal;
+    overflow: visible;
+    word-break: break-word;
+
+    align-self: center;
+    padding-right: 0.5rem;
+  }
+
+  .grid.grid-cols-1.xl\:grid-cols-2 > div .relative {
+    grid-area: menu;
+    position: static;
+    margin-left: auto;
+    align-self: center;
+  }
+
+  .grid.grid-cols-1.xl\:grid-cols-2 > div {
+    padding: 1rem !important;
+  }
+
+  table thead {
+    display: none;
+  }
+
+  table,
+  table tbody,
+  table tr,
+  table td {
+    display: block;
+    width: 100%;
+  }
+
+  table tbody tr {
+    margin-bottom: 1rem;
+    background-color: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+
+  table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: right;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f8fafc;
+  }
+
+  table tbody td:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    padding-top: 1rem;
+    justify-content: center;
+  }
+
+  table tbody td:first-child {
+    display: block;
+    text-align: left;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f1f5f9;
+    margin-bottom: 0.5rem;
+  }
+
+  table tbody td:nth-child(2)::before {
+    content: "ประเภท";
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #9ca3af;
+    text-transform: uppercase;
+  }
+  table tbody td:nth-child(3)::before {
+    content: "ระยะเวลา";
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #9ca3af;
+    text-transform: uppercase;
+  }
+  table tbody td:nth-child(4)::before {
+    content: "ยอดขายที่ทำได้";
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #9ca3af;
+    text-transform: uppercase;
+  }
+  table tbody td:nth-child(5)::before {
+    content: "สถานะ";
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #9ca3af;
+    text-transform: uppercase;
+  }
+
+  table tbody td:last-child button {
+    width: 100%;
+    justify-content: center;
+    background-color: #f8fafc;
+    padding: 0.75rem;
+  }
+}
+</style>

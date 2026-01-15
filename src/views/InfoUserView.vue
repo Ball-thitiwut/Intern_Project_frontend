@@ -305,4 +305,60 @@ const handleNext = () => {
   text-align: left;
   display: block;
 }
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .info-container {
+    padding: 1rem;
+    display: flex;
+    justify-content: center; 
+    align-items: center;   
+    min-height: 100vh;
+  }
+
+  .content-wrapper {
+    width: 100%;
+    max-width: 340px !important; 
+    margin: 0 auto;
+    gap: 1rem; 
+  }
+
+  :deep(.info-card), .info-card {
+    width: 100%;
+    padding: 1.5rem !important;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  :deep(.info-title), .info-title {
+    font-size: 1.5rem !important;
+    text-align: left !important; 
+    margin-bottom: 0.5rem;
+  }
+
+  :deep(.info-description), .info-description {
+    font-size: 0.9rem !important;
+    text-align: left !important; 
+    margin-bottom: 1.5rem;
+  }
+
+  :deep(.form-input), .form-input {
+    font-size: 16px !important;
+    padding: 10px 12px !important;
+  }
+  
+  :deep(.form-group), .form-group {
+    margin-bottom: 1rem !important;
+  }
+
+  .action-buttons {
+    padding: 0 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .btn-nav {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
 </style>

@@ -1,7 +1,12 @@
 <template>
   <aside
-    class="shrink-0 bg-slate-50 min-h-screen flex flex-col font-sans border-r border-gray-200 transition-all duration-300 ease-in-out"
-    :class="isCollapsed ? 'w-20' : 'w-72'"
+    class="fixed inset-y-0 left-0 z-50 bg-slate-50 min-h-screen flex flex-col font-sans border-r border-gray-200 transition-all duration-300 ease-in-out md:static md:translate-x-0"
+    :class="[
+      isCollapsed ? 'md:w-20' : 'md:w-72',
+      isMobileOpen
+        ? 'translate-x-0 w-64 shadow-2xl'
+        : '-translate-x-full w-64 md:w-auto',
+    ]"
   >
     <div
       class="h-20 flex items-center px-5 pt-4 pb-2 transition-all duration-300"
@@ -10,6 +15,7 @@
       <RouterLink
         v-if="!isCollapsed"
         to="/dashboard"
+        @click="closeMobileMenu"
         class="flex items-center gap-3 overflow-hidden whitespace-nowrap cursor-pointer transition-opacity duration-200 hover:opacity-80"
       >
         <img
@@ -21,10 +27,32 @@
           RESSELF
         </span>
       </RouterLink>
+
+      <button
+        v-if="!isCollapsed"
+        @click="isMobileOpen = false"
+        class="md:hidden p-2 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-[#051960] transition-colors"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-6 h-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+
       <button
         v-if="!isCollapsed"
         @click="toggleSidebar"
-        class="p-2 rounded-lg text-gray-400 hover:bg-white hover:text-[#051960] hover:shadow-sm transition-all flex items-center justify-center"
+        class="hidden md:flex p-2 rounded-lg text-gray-400 hover:bg-white hover:text-[#051960] hover:shadow-sm transition-all items-center justify-center"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -70,6 +98,7 @@
     <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto overflow-x-hidden">
       <RouterLink
         to="/dashboard"
+        @click="closeMobileMenu"
         class="group w-full flex items-center px-3 py-3 text-left font-semibold rounded-lg transition-all duration-200 min-h-[48px] text-slate-600 hover:bg-gray-100 hover:text-[#051960]"
         active-class="bg-blue-50 text-[#051960]"
       >
@@ -152,6 +181,7 @@
         >
           <RouterLink
             to="/ideas"
+            @click="closeMobileMenu"
             class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
             active-class="text-[#051960] bg-blue-50/50"
           >
@@ -159,6 +189,7 @@
           </RouterLink>
           <RouterLink
             to="/history"
+            @click="closeMobileMenu"
             class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
             active-class="text-[#051960] bg-blue-50/50"
           >
@@ -223,6 +254,7 @@
         >
           <RouterLink
             to="/pos-info"
+            @click="closeMobileMenu"
             class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
             active-class="text-[#051960] bg-blue-50/50"
           >
@@ -230,6 +262,7 @@
           </RouterLink>
           <RouterLink
             to="/data-management"
+            @click="closeMobileMenu"
             class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
             active-class="text-[#051960] bg-blue-50/50"
           >
@@ -246,6 +279,11 @@
       <span v-else>v1.0</span>
     </div>
   </aside>
+  <div
+    v-if="isMobileOpen"
+    @click="isMobileOpen = false"
+    class="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
+  ></div>
 </template>
 
 <script setup>
@@ -254,6 +292,10 @@ import { useRoute } from "vue-router";
 import logo from "@/assets/images/logo.png";
 
 const route = useRoute();
+
+// เพิ่มตัวแปรใหม่สำหรับมือถือ
+const isMobileOpen = ref(false);
+
 const isCollapsed = ref(false);
 const isIdeasOpen = ref(true);
 const isPosOpen = ref(true); // Default เปิดไว้ตาม Requirement
@@ -276,6 +318,17 @@ const isPosActive = computed(() => {
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value;
 };
+
+const toggleMobileMenu = () => {
+  isMobileOpen.value = !isMobileOpen.value;
+};
+
+// ฟังก์ชันสำหรับปิด Sidebar เมื่อกดลิงก์ (สำหรับมือถือ)
+const closeMobileMenu = () => {
+  isMobileOpen.value = false;
+};
+
+defineExpose({ toggleMobileMenu });
 </script>
 
 <style scoped>

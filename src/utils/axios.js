@@ -22,7 +22,15 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+    const targetUrl = error.config ? (error.config.url || '') : '';
+    
+    const isLoginRequest = targetUrl.includes('/login') || targetUrl.includes('auth/login');
+
+    if (
+      error.response && 
+      (error.response.status === 401 || error.response.status === 403) &&
+      !isLoginRequest 
+    ) {
       console.error("Session expired or unauthorized");
       
       localStorage.removeItem("access_token");
@@ -50,6 +58,7 @@ api.interceptors.response.use(
         }
       });
     }
+    
     return Promise.reject(error);
   }
 );

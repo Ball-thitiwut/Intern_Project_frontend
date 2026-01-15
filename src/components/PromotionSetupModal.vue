@@ -283,4 +283,66 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* Responsive Mobile */
+@media (max-width: 767px) {
+  .bg-white.rounded-\[2\.5rem\] {
+    border-radius: 1.5rem !important; 
+    width: 90% !important; 
+    max-height: 85vh !important;
+  }
+
+  .bg-white.px-8.pt-8.pb-4 {
+    padding: 1.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  h3.text-2xl {
+    font-size: 1.1rem !important; 
+  }
+
+  .p-8.overflow-y-auto {
+    padding: 1rem !important;
+    padding-top: 0.5rem !important;
+  }
+
+  .rounded-\[1\.5rem\].p-6 {
+    padding: 0.75rem !important; 
+    border-radius: 0.75rem !important;
+  }
+  
+  .w-14.h-14 {
+    width: 2.5rem !important; 
+    height: 2.5rem !important;
+    border-radius: 0.5rem !important;
+    font-size: 1rem !important;
+  }
+  .w-32.h-32 {
+    width: 5rem !important;
+    height: 5rem !important;
+  }
+
+  input {
+    padding-top: 0.5rem !important;    
+    padding-bottom: 0.5rem !important; 
+    font-size: 0.85rem !important;
+    border-radius: 0.75rem !important; 
+  }
+  .absolute.top-1\/2 {
+    transform: translateY(-50%) scale(0.8) !important; 
+  }
+
+  .p-8.pt-4.border-t {
+    padding: 1.5rem !important;
+  }
+  
+  button.py-3\.5 {
+    padding-top: 0.6rem !important;
+    padding-bottom: 0.6rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1rem !important; 
+  }
+}
 </style>

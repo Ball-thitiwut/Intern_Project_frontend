@@ -1,7 +1,8 @@
 <template>
-  <div class="w-full h-full flex flex-col">
-    <div class="px-6 md:px-10 pt-6 pb-4 flex-none">
-      <h1 class="text-3xl font-bold text-[#051960] tracking-tight mb-3">
+  <div class="w-full flex flex-col">
+    
+    <div class="px-4 md:px-10 pt-4 md:pt-6 pb-2 md:pb-4 flex-none">
+      <h1 class="text-2xl md:text-3xl font-bold text-[#051960] tracking-tight mb-2 md:mb-3">
         เลือก POS
       </h1>
       <p class="text-gray-500 text-sm md:text-base font-light">
@@ -9,9 +10,8 @@
       </p>
     </div>
 
-    <div
-      class="flex-1 overflow-y-auto px-6 md:px-10 py-6 scroll-smooth custom-scrollbar"
-    >
+    <div class="px-4 md:px-10 pt-4 pb-0 md:py-6">
+      
       <div v-if="isLoading" class="flex justify-center items-center h-40">
         <p class="text-gray-400">Loading POS systems...</p>
       </div>
@@ -20,12 +20,12 @@
         <p class="text-gray-400">No POS systems found.</p>
       </div>
 
-      <div v-else class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      <div v-else class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6">
         <div
           v-for="pos in posList"
           :key="pos.id"
           @click="selectPos(pos.id)"
-          class="group relative rounded-[1.5rem] overflow-hidden aspect-square cursor-pointer transition-all duration-300 ease-out flex flex-col bg-white"
+          class="group relative rounded-2xl md:rounded-[1.5rem] overflow-hidden aspect-square cursor-pointer transition-all duration-300 ease-out flex flex-col bg-white"
           :class="[
             selectedPosId === pos.id
               ? 'ring-[3px] ring-[#F97316] shadow-xl scale-[1.02] z-10'
@@ -34,11 +34,11 @@
         >
           <div
             v-if="selectedPosId === pos.id"
-            class="absolute top-3 right-3 z-20 bg-[#F97316] text-white rounded-full w-7 h-7 flex items-center justify-center shadow-md animate-pop-in"
+            class="absolute top-1.5 right-1.5 md:top-3 md:right-3 z-20 bg-[#F97316] text-white rounded-full w-5 h-5 md:w-7 md:h-7 flex items-center justify-center shadow-md animate-pop-in"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
+              class="h-3 w-3 md:h-4 md:w-4"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -51,20 +51,20 @@
           </div>
 
           <div
-            class="flex-1 bg-gradient-to-b from-gray-50 to-white flex items-center justify-center p-6 relative overflow-hidden group-hover:from-blue-50/50 transition-all duration-500"
+            class="flex-1 bg-gradient-to-b from-gray-50 to-white flex items-center justify-center p-2 md:p-4 relative overflow-hidden group-hover:from-blue-50/50 transition-all duration-500"
           >
             <div
-              class="z-10 w-16 h-16 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-300 group-hover:scale-110 transition-transform duration-300"
+              class="z-10 w-10 h-10 md:w-16 md:h-16 bg-white rounded-lg md:rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-300 group-hover:scale-110 transition-transform duration-300"
             >
-              <span class="text-2xl font-bold text-[#051960]">{{ pos.name.charAt(0) }}</span>
+              <span class="text-base md:text-2xl font-bold text-[#051960]">{{ pos.name.charAt(0) }}</span>
             </div>
           </div>
 
           <div
-            class="h-12 flex items-center justify-center border-t border-gray-50 bg-white group-hover:bg-[#051960] transition-colors duration-300 px-2"
+            class="h-8 md:h-12 flex items-center justify-center border-t border-gray-50 bg-white group-hover:bg-[#051960] transition-colors duration-300 px-1 md:px-2"
           >
             <span
-              class="font-medium text-sm transition-colors duration-300 truncate w-full text-center"
+              class="font-medium text-[10px] md:text-sm transition-colors duration-300 truncate w-full text-center"
               :class="
                 selectedPosId === pos.id
                   ? 'text-[#F97316] font-bold group-hover:text-white'
@@ -77,10 +77,10 @@
         </div>
       </div>
 
-      <div class="flex justify-between items-center mt-10 mb-6">
+      <div class="flex justify-between items-center mt-4 md:mt-10 mb-4 md:mb-6">
         <button
           @click="router.back()"
-          class="text-gray-400 hover:text-[#051960] font-medium px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2 text-sm md:text-base"
+          class="text-gray-400 hover:text-[#051960] font-medium px-3 py-2 md:px-4 md:py-2 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-1 md:gap-2 text-sm md:text-base"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +102,7 @@
         <button
           @click="handleContinue"
           :disabled="!selectedPosId"
-          class="bg-[#F97316] hover:bg-[#ea580c] text-white font-bold text-base px-8 py-3 rounded-full shadow-lg shadow-orange-200 disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none transition-all transform active:scale-95 flex items-center gap-2"
+          class="bg-[#F97316] hover:bg-[#ea580c] text-white font-bold text-sm md:text-base px-6 py-2.5 md:px-8 md:py-3 rounded-full shadow-lg shadow-orange-200 disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none transition-all transform active:scale-95 flex items-center gap-2"
         >
           ดำเนินการต่อ
           <svg
@@ -209,19 +209,5 @@ const handleContinue = () => {
 }
 .animate-pop-in {
   animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
 }
 </style>

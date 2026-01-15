@@ -677,11 +677,91 @@ const saveProfile = async () => {
 
 <style scoped>
 @keyframes progress {
-  from {
-    width: 100%;
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@media (max-width: 767px) {
+  .min-h-screen.p-6.pb-10 {
+    padding: 1rem !important;       
+    padding-bottom: 5rem !important; 
   }
-  to {
-    width: 0%;
+
+  .max-w-4xl.mx-auto.mb-6 {
+    margin-bottom: 1rem !important;
+  }
+  
+  h1.text-2xl {
+    font-size: 1.25rem !important; 
+  }
+
+  .max-w-4xl.mx-auto.mb-6 > .flex.gap-3 {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .max-w-4xl.mx-auto.mb-6 > .flex.gap-3 button {
+    flex: 1;
+    justify-content: center;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
+  .bg-white.rounded-xl {
+    padding: 1rem !important; 
+  }
+
+  .flex.items-center.gap-3.mb-6 {
+    margin-bottom: 1rem !important;
+  }
+
+  .flex.flex-col.md\:flex-row.gap-8 {
+    gap: 0.4rem !important;
+  }
+
+  .flex.flex-col.md\:flex-row.gap-8 > div:first-child {
+    width: 100%;
+    margin-bottom: 0 !important;
+  }
+  
+  .w-32.h-32 {
+    width: 6rem !important;  
+    height: 6rem !important;
+    margin: 0 auto;          
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  select {
+    padding-top: 0.5rem !important;   
+    padding-bottom: 0.5rem !important; 
+    font-size: 0.85rem !important;    
+    height: auto !important;
+  }
+
+  .max-w-4xl.mx-auto.mb-6 > .flex.gap-3 button {
+    padding-top: 0.375rem !important;
+    padding-bottom: 0.375rem !important;
+    font-size: 0.85rem !important;
+    height: auto !important;           
+  }
+
+  .grid.gap-5 {
+    gap: 0.75rem !important; 
+  }
+  
+  label.block.text-sm {
+    margin-bottom: 0.25rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  .grid.gap-x-6 {
+    gap: 0.75rem !important;
+  }
+
+  .grid.gap-x-6 > div.border-t {
+    display: none !important;
   }
 }
 </style>

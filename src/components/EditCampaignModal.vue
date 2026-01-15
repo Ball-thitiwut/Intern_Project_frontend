@@ -172,4 +172,57 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+@media (max-width: 767px) {
+  .bg-white.rounded-\[2\.5rem\] {
+    border-radius: 1.5rem !important; 
+    width: 95% !important;           
+    max-height: 85vh !important;     
+  }
+
+  .bg-white.px-8.pt-8.pb-4 {
+    padding-left: 1.25rem !important;  
+    padding-right: 1.25rem !important;
+    padding-top: 1.25rem !important;   
+    padding-bottom: 0.75rem !important;
+  }
+
+  h3.text-2xl {
+    font-size: 1.25rem !important; 
+  }
+
+  .p-8.space-y-6 {
+    padding: 1.25rem !important; 
+  }
+
+  .p-8.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1rem !important;
+  }
+
+  input[type="text"], 
+  input[type="date"] {
+    padding-top: 0.75rem !important;    
+    padding-bottom: 0.75rem !important;
+    font-size: 0.875rem !important;     
+    padding-left: 1rem !important;      
+  }
+  
+  .relative span.absolute {
+    right: 1rem !important;
+  }
+
+  .grid.grid-cols-2.gap-4 {
+    gap: 0.75rem !important; 
+  }
+
+  .p-8.pt-4 {
+    padding: 1.25rem !important;
+    padding-top: 1rem !important;
+  }
+
+  button.py-3\.5 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+}
 </style>

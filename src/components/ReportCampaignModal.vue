@@ -201,4 +201,122 @@ const formatDate = (dateString) => {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+@media (max-width: 767px) {
+  .bg-white.rounded-\[2\.5rem\] {
+    border-radius: 1.5rem !important; 
+    width: 95% !important;           
+    max-height: 85vh !important;
+  }
+
+  .bg-white.px-8.pt-8.pb-2 {
+    padding-left: 1.25rem !important;  
+    padding-right: 1.25rem !important;
+    padding-top: 1.25rem !important;  
+    padding-bottom: 0.5rem !important;
+  }
+
+  h3.text-2xl {
+    font-size: 1.25rem !important;
+  }
+
+  .p-8.pt-6.space-y-8 {
+    padding: 1.25rem !important;
+    padding-top: 1rem !important;
+  }
+
+  .p-8.pt-6.space-y-8 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1.5rem !important; 
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-3.gap-5 {
+    gap: 0.75rem !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; 
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-3.gap-5 > div:last-child {
+    grid-column: span 2;
+  }
+
+  .rounded-\[1\.5rem\].p-5 {
+    padding: 1rem !important;
+    border-radius: 1rem !important;
+  }
+
+  h4.text-2xl {
+    font-size: 1.25rem !important;
+  }
+
+  .h-56.flex.items-end {
+    height: 10rem !important; 
+    padding-bottom: 0 !important; 
+    border-bottom: 1px solid #f3f4f6 !important; 
+    overflow: visible !important;
+    margin-bottom: 1.5rem !important; 
+  }
+
+  .mt-3.text-\[10px\] {
+    font-size: 9px !important;
+    position: absolute !important;
+    bottom: -1.25rem !important; 
+    left: 0 !important;
+    width: 100% !important;
+    text-align: center !important;
+    margin-top: 0 !important; 
+  }
+
+  button.p-2\.5 {
+    padding: 0.5rem !important;
+  }
+  .bg-white.px-8.pt-8.pb-2 > div > .flex.items-center.gap-3.mb-2 {
+    flex-direction: column !important; 
+    align-items: flex-start !important; 
+    gap: 0.25rem !important; 
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .bg-white.px-8.pt-8.pb-2 > div > .flex.items-center.gap-3.mb-2 span {
+    margin: 0 !important;
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-3.gap-5 > div:first-child .flex.items-center.gap-1.mt-2 {
+    white-space: nowrap !important; 
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .grid.grid-cols-1.md\:grid-cols-3.gap-5 > div:first-child .flex.items-center.gap-1.mt-2 span {
+    font-size: 0.6rem !important; 
+  }
+
+  .bg-\[\#FFF7ED\] .relative.z-10 {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    row-gap: 0.25rem !important; 
+  }
+
+  .bg-\[\#FFF7ED\] p {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+  }
+
+  .bg-\[\#FFF7ED\] h4 {
+    margin-right: 0.5rem !important; 
+    margin-bottom: 0 !important;
+  }
+
+  .bg-\[\#FFF7ED\] .flex.items-center.gap-1.mt-2 {
+    margin-top: 0 !important;
+  }
+
+  .p-8.pt-6.space-y-8 {
+    padding-bottom: 2rem !important; 
+  }
+
+  .flex.items-center.justify-between.mb-6 {
+    flex-wrap: wrap; 
+    gap: 0.5rem;    
+  }
+}
 </style>

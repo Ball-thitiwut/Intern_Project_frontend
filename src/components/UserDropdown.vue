@@ -78,3 +78,48 @@ const handleLogout = () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+@media (max-width: 767px) {
+  button.group {
+    padding: 0 !important;
+    padding-right: 0 !important;
+    gap: 0 !important;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    justify-content: center !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+  button.group > div.flex.flex-col,
+  button.group > svg {
+    display: none !important;
+  }
+
+  .absolute.right-0.top-full {
+    width: max-content !important;
+    min-width: auto !important;   
+    right: 0 !important;
+    
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+  }
+
+  .px-4.py-2.border-b {
+    padding: 0.5rem 1rem !important; 
+    margin-bottom: 0.125rem !important;
+  }
+
+  .absolute.right-0.top-full a.group, 
+  .absolute.right-0.top-full button.w-full {
+    padding-top: 0.375rem !important;    
+    padding-bottom: 0.375rem !important;
+    white-space: nowrap !important;    
+  }
+
+  .border-t.my-1 {
+    margin-top: 0.125rem !important;
+    margin-bottom: 0.125rem !important;
+  }
+}
+</style>

@@ -361,4 +361,55 @@ button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  :deep(.left-panel), .left-panel {
+    display: none !important;
+  }
+
+  :deep(.login-container), .login-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    padding: 0;
+  }
+
+  :deep(.right-panel), .right-panel {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    padding: 2rem; 
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+  }
+
+  :deep(.login-wrapper), .login-wrapper {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  :deep(.login-title), .login-title {
+    text-align: left !important;
+    font-size: 1.75rem !important; 
+    margin-bottom: 0.5rem;
+  }
+
+  :deep(.login-subtitle), .login-subtitle {
+    text-align: left !important;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+
+  :deep(.input-group input), .input-group input {
+    font-size: 16px; 
+    padding: 12px;
+  }
+
+  :deep(.btn-login), .btn-login {
+    padding: 12px;
+    margin-top: 1.5rem; 
+  }
+}
 </style>
