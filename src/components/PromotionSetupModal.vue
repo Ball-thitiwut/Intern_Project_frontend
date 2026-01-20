@@ -19,6 +19,41 @@
       <div
         class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg relative z-10 overflow-hidden flex flex-col max-h-[90vh]"
       >
+        <transition
+          enter-active-class="transform ease-out duration-300 transition"
+          enter-from-class="translate-y-[-100%] opacity-0"
+          enter-to-class="translate-y-0 opacity-100"
+          leave-active-class="transition ease-in duration-100"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+        >
+          <div
+            v-if="showToast"
+            class="absolute top-4 left-0 right-0 flex justify-center z-50 pointer-events-none"
+          >
+            <div
+              class="toast-wrapper bg-[#051960] text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3 backdrop-blur-md bg-opacity-95"
+            >
+              <div class="toast-icon bg-green-400 rounded-full p-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3 text-[#051960]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <span class="toast-text text-sm font-bold">สร้างแคมเปญสำเร็จ!</span>
+            </div>
+          </div>
+        </transition>
         <div
           class="bg-white px-8 pt-8 pb-4 flex justify-between items-start shrink-0 border-b border-gray-50"
         >
@@ -212,9 +247,34 @@
           </button>
           <button
             @click="handleConfirm"
-            class="flex-[2] py-3.5 rounded-full bg-[#051960] text-white font-bold text-sm hover:bg-[#0a237a] shadow-xl shadow-blue-900/20 hover:shadow-blue-900/30 hover:-translate-y-0.5 transition-all active:scale-95 active:translate-y-0 flex items-center justify-center gap-2"
+            :disabled="isLoading"
+            class="flex-[2] py-3.5 rounded-full bg-[#051960] text-white font-bold text-sm hover:bg-[#0a237a] shadow-xl shadow-blue-900/20 hover:shadow-blue-900/30 hover:-translate-y-0.5 transition-all active:scale-95 active:translate-y-0 flex items-center justify-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
           >
-            ยืนยันสร้างแคมเปญ
+            <span v-if="!isLoading">ยืนยันสร้างแคมเปญ</span>
+
+            <div v-else class="flex items-center gap-2">
+              <svg
+                class="animate-spin -ml-1 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <span>กำลังสร้าง...</span>
+            </div>
           </button>
         </div>
       </div>
@@ -232,6 +292,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["close", "confirm"]);
+
+const isLoading = ref(false);
+const showToast = ref(false);
 
 const form = ref({
   name: "",
@@ -251,11 +314,35 @@ watch(
 );
 
 const close = () => {
+  if (isLoading.value) return;
   emit("close");
+  setTimeout(() => {
+    showToast.value = false;
+  }, 300);
 };
 
-const handleConfirm = () => {
-  emit("confirm", form.value);
+const handleConfirm = async () => {
+  if (!form.value.name) return;
+
+  isLoading.value = true;
+
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    isLoading.value = false;
+    showToast.value = true;
+
+    setTimeout(() => {
+      showToast.value = false;
+
+      emit("confirm", form.value);
+
+      close();
+    }, 1500);
+  } catch (error) {
+    console.error(error);
+    isLoading.value = false;
+  }
 };
 </script>
 
@@ -287,8 +374,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* Responsive Mobile */
 @media (max-width: 767px) {
   .bg-white.rounded-\[2\.5rem\] {
-    border-radius: 1.5rem !important; 
-    width: 90% !important; 
+    border-radius: 1.5rem !important;
+    width: 90% !important;
     max-height: 85vh !important;
   }
 
@@ -297,7 +384,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding-bottom: 0.5rem !important;
   }
   h3.text-2xl {
-    font-size: 1.1rem !important; 
+    font-size: 1.1rem !important;
   }
 
   .p-8.overflow-y-auto {
@@ -306,12 +393,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 
   .rounded-\[1\.5rem\].p-6 {
-    padding: 0.75rem !important; 
+    padding: 0.75rem !important;
     border-radius: 0.75rem !important;
   }
-  
+
   .w-14.h-14 {
-    width: 2.5rem !important; 
+    width: 2.5rem !important;
     height: 2.5rem !important;
     border-radius: 0.5rem !important;
     font-size: 1rem !important;
@@ -322,19 +409,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 
   input {
-    padding-top: 0.5rem !important;    
-    padding-bottom: 0.5rem !important; 
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
     font-size: 0.85rem !important;
-    border-radius: 0.75rem !important; 
+    border-radius: 0.75rem !important;
   }
   .absolute.top-1\/2 {
-    transform: translateY(-50%) scale(0.8) !important; 
+    transform: translateY(-50%) scale(0.8) !important;
   }
 
   .p-8.pt-4.border-t {
     padding: 1.5rem !important;
   }
-  
+
   button.py-3\.5 {
     padding-top: 0.6rem !important;
     padding-bottom: 0.6rem !important;
@@ -342,7 +429,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 
   .space-y-6 > :not([hidden]) ~ :not([hidden]) {
-    margin-top: 1rem !important; 
+    margin-top: 1rem !important;
+  }
+
+  .toast-wrapper {
+    padding-left: 1rem !important;  
+    padding-right: 1rem !important; 
+    padding-top: 0.5rem !important; 
+    padding-bottom: 0.5rem !important; 
+    gap: 0.5rem !important; 
+  }
+
+  .toast-icon {
+    padding: 0.125rem !important; 
+  }
+
+  .toast-text {
+    font-size: 0.75rem !important; 
   }
 }
 </style>
