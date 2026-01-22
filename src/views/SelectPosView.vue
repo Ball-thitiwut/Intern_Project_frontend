@@ -3,21 +3,21 @@
     
     <div class="px-4 md:px-10 pt-4 md:pt-6 pb-2 md:pb-4 flex-none">
       <h1 class="text-2xl md:text-3xl font-bold text-[#051960] tracking-tight mb-2 md:mb-3">
-        เลือก POS
+        {{ $t('select_pos_view.title') }}
       </h1>
       <p class="text-gray-500 text-sm md:text-base font-light">
-        เลือก POS ที่คุณใช้เพื่อให้ RESSELF ช่วยวิเคราะห์
+        {{ $t('select_pos_view.subtitle') }}
       </p>
     </div>
 
     <div class="px-4 md:px-10 pt-4 pb-0 md:py-6">
       
       <div v-if="isLoading" class="flex justify-center items-center h-40">
-        <p class="text-gray-400">Loading POS systems...</p>
+        <p class="text-gray-400">{{ $t('select_pos_view.status.loading') }}</p>
       </div>
 
       <div v-else-if="posList.length === 0" class="flex justify-center items-center h-40">
-        <p class="text-gray-400">No POS systems found.</p>
+        <p class="text-gray-400">{{ $t('select_pos_view.status.no_data') }}</p>
       </div>
 
       <div v-else class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6">
@@ -96,7 +96,7 @@
               d="M10 19l-7-7m0 0l7-7m-7 7h18"
             />
           </svg>
-          ย้อนกลับ
+          {{ $t('select_pos_view.buttons.back') }}
         </button>
 
         <button
@@ -104,7 +104,7 @@
           :disabled="!selectedPosId"
           class="bg-[#F97316] hover:bg-[#ea580c] text-white font-bold text-sm md:text-base px-6 py-2.5 md:px-8 md:py-3 rounded-full shadow-lg shadow-orange-200 disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none transition-all transform active:scale-95 flex items-center gap-2"
         >
-          ดำเนินการต่อ
+          {{ $t('select_pos_view.buttons.continue') }}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5"
@@ -127,10 +127,12 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import api from "@/utils/axios";
 
 const router = useRouter();
+const { t } = useI18n();
 const selectedPosId = ref(null);
 const posList = ref([]);
 const isLoading = ref(true);
@@ -162,7 +164,7 @@ onMounted(async () => {
 
       posList.value = [
         ...mainPosList,
-        { id: otherPosId, name: 'POS อื่นๆ' } 
+        { id: otherPosId, name: t('select_pos_view.other_pos_label') } 
       ];
     }
   } catch (error) {

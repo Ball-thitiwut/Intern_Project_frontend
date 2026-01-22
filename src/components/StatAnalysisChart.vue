@@ -68,8 +68,8 @@ defineProps({
   title: String,
   stats: Array,
   chartData: Array,
-  yAxisLabel: { type: String, default: 'จำนวนบิล' },
-  xAxisLabel: { type: String, default: 'บาท' },
+  yAxisLabel: { type: String, default: '' },
+  xAxisLabel: { type: String, default: '' },
   yTicks: { type: Array, default: () => ['70','60','50','40','30','20','10','0'] }
 })
 </script>

@@ -2,10 +2,10 @@
   <div class="w-full h-full px-6 md:px-10 flex flex-col relative">
     <div class="mb-8 flex-none">
       <h1 class="text-3xl font-bold text-[#051960] tracking-tight mb-3">
-        เชื่อมต่อข้อมูลสาขา
+        {{ $t("branch_connect_view.header.title") }}
       </h1>
       <p class="text-gray-500 text-sm md:text-base font-light">
-        ระบุข้อมูลสาขาของคุณเพื่อให้ RESSELF ช่วยวิเคราะห์
+        {{ $t("branch_connect_view.header.subtitle") }}
       </p>
     </div>
 
@@ -31,7 +31,7 @@
                   <label
                     class="block text-[#051960] text-base font-semibold pl-1"
                   >
-                    ข้อมูลสาขา
+                    {{ $t("branch_connect_view.form.branch_label") }}
                   </label>
                 </div>
 
@@ -40,7 +40,9 @@
                     <input
                       v-model="branch.name"
                       type="text"
-                      placeholder="ระบุชื่อสาขา (เช่น สาขาสยาม)"
+                      :placeholder="
+                        $t('branch_connect_view.form.branch_name_placeholder')
+                      "
                       class="w-full h-12 px-4 text-sm rounded-xl border-transparent bg-[#F3F4F6] focus:bg-white focus:border-[#051960]/50 focus:ring-2 focus:ring-[#051960]/20 outline-none transition-all duration-200 text-gray-800 placeholder-gray-400 shadow-sm"
                     />
                   </div>
@@ -101,14 +103,19 @@
                         </svg>
                       </template>
 
-                      <span v-if="branch.files.length === 0">อัปโหลดไฟล์</span>
+                      <span v-if="branch.files.length === 0">{{
+                        $t("branch_connect_view.upload.button_initial")
+                      }}</span>
                       <span v-else>
                         <span class="inline-block group-hover:hidden"
-                          >{{ branch.files.length }} ไฟล์แนบแล้ว</span
+                          >{{ branch.files.length }}
+                          {{
+                            $t("branch_connect_view.upload.files_attached")
+                          }}</span
                         >
                         <span
                           class="hidden group-hover:inline-block font-semibold"
-                          >เพิ่มไฟล์อีก</span
+                          >{{ $t("branch_connect_view.upload.add_more") }}</span
                         >
                       </span>
                     </button>
@@ -281,7 +288,7 @@
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            ย้อนกลับ
+            {{ $t("branch_connect_view.buttons.back") }}
           </button>
 
           <button
@@ -289,8 +296,12 @@
             :disabled="isSubmitting"
             class="bg-[#F97316] hover:bg-[#ea580c] text-white font-bold text-base px-8 py-3 rounded-full shadow-lg shadow-orange-200 transition-all transform active:scale-95 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span v-if="!isSubmitting">ดำเนินการต่อ</span>
-            <span v-else>กำลังประมวลผล...</span>
+            <span v-if="!isSubmitting">{{
+              $t("branch_connect_view.buttons.continue")
+            }}</span>
+            <span v-else>{{
+              $t("branch_connect_view.buttons.processing")
+            }}</span>
             <svg
               v-if="!isSubmitting"
               xmlns="http://www.w3.org/2000/svg"
@@ -405,7 +416,7 @@
 
           <div v-if="modalState.type === 'success'">
             <p class="text-[#F97316] text-sm font-medium animate-pulse">
-              กำลังนำคุณไปที่ Dashboard...
+              {{ $t("branch_connect_view.modal.redirecting") }}
             </p>
           </div>
           <div v-else class="w-full">
@@ -413,7 +424,7 @@
               @click="modalState.show = false"
               class="w-full py-2.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors"
             >
-              ตกลง
+              {{ $t("branch_connect_view.modal.ok") }}
             </button>
           </div>
         </div>
@@ -424,11 +435,13 @@
 
 <script setup>
 import { ref, reactive, computed } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import api from "@/utils/axios";
 
 const router = useRouter();
 const route = useRoute();
+const { t } = useI18n();
 
 const posName = ref(route.query.posName || "My Own POS");
 const posId = ref(route.query.posId || "99");
@@ -437,10 +450,10 @@ const isSubmitting = ref(false);
 
 const modalState = reactive({
   show: false,
-  type: "success", 
+  type: "success",
   title: "",
   message: "",
-  details: [], 
+  details: [],
 });
 
 // เช็คว่าเป็น RESSELF POS หรือไม่ (ถ้าใช่ ไม่ต้องอัปโหลด)
@@ -471,7 +484,7 @@ const handleFileUpload = (event, index) => {
   if (selectedFiles.length > 0) {
     selectedFiles.forEach((file) => {
       const isDuplicate = branches[index].files.some(
-        (f) => f.file.name === file.name
+        (f) => f.file.name === file.name,
       );
       if (!isDuplicate) {
         branches[index].files.push({
@@ -497,7 +510,11 @@ const handleContinue = async () => {
   const validBranches = branches.filter((b) => b.name.trim() !== "");
 
   if (validBranches.length === 0) {
-    showModal("error", "ข้อมูลไม่ครบถ้วน", "กรุณากรอกชื่อสาขา");
+    showModal(
+      "error",
+      t("branch_connect_view.alerts.incomplete_info"),
+      t("branch_connect_view.alerts.enter_branch_name"),
+    );
     return;
   }
 
@@ -506,8 +523,8 @@ const handleContinue = async () => {
     if (!hasFiles) {
       showModal(
         "error",
-        "ไม่พบไฟล์ข้อมูล",
-        "กรุณาอัปโหลดไฟล์อย่างน้อย 1 ไฟล์"
+        t("branch_connect_view.alerts.no_files"),
+        t("branch_connect_view.alerts.upload_at_least_one"),
       );
       return;
     }
@@ -529,7 +546,7 @@ const handleContinue = async () => {
           if (fileItem.status === "success") return;
 
           fileItem.status = "uploading";
-          fileItem.message = "กำลังอัปโหลด...";
+          fileItem.message = t("branch_connect_view.upload.status.uploading");
 
           const formData = new FormData();
           formData.append("pos_system_id", posId.value);
@@ -541,12 +558,12 @@ const handleContinue = async () => {
             .then((response) => {
               const resData = response.data;
               if (resData && resData.summary && resData.summary.failed > 0) {
-                 const logicalError = new Error("Business Logic Error");
-                 logicalError.response = response; 
-                 throw logicalError; 
+                const logicalError = new Error("Business Logic Error");
+                logicalError.response = response;
+                throw logicalError;
               }
               fileItem.status = "success";
-              fileItem.message = "นำเข้าข้อมูลสำเร็จ";
+              fileItem.message = t("branch_connect_view.upload.status.success");
               return response;
             })
             .catch((error) => {
@@ -579,8 +596,8 @@ const handleContinue = async () => {
       if (!hasFailure) {
         showModal(
           "success",
-          "นำเข้าข้อมูลสำเร็จ!",
-          "ระบบบันทึกไฟล์ของคุณเรียบร้อยแล้ว"
+          t("branch_connect_view.alerts.import_success_title"),
+          t("branch_connect_view.alerts.import_success_msg"),
         );
         setTimeout(() => {
           router.push("/dashboard");
@@ -600,9 +617,9 @@ const handleContinue = async () => {
 
         showModal(
           "error",
-          "นำเข้าข้อมูลไม่สมบูรณ์",
-          "พบไฟล์ที่ไม่ผ่านการตรวจสอบ:",
-          failedItems
+          t("branch_connect_view.alerts.import_incomplete_title"),
+          t("branch_connect_view.alerts.import_incomplete_msg"),
+          failedItems,
         );
       }
     } else {
@@ -610,7 +627,11 @@ const handleContinue = async () => {
     }
   } catch (error) {
     console.error("Global Submission Error:", error);
-    showModal("error", "เกิดข้อผิดพลาด", "เกิดข้อผิดพลาดในการเชื่อมต่อระบบ");
+    showModal(
+      "error",
+      t("branch_connect_view.alerts.connection_error_title"),
+      t("branch_connect_view.alerts.connection_error_msg"),
+    );
   } finally {
     isSubmitting.value = false;
   }
@@ -634,7 +655,7 @@ const handleContinue = async () => {
 
 @media (max-width: 767px) {
   .w-full.h-full.px-6.md\:px-10 {
-    padding-left: 1rem !important;  
+    padding-left: 1rem !important;
     padding-right: 1rem !important;
   }
 
@@ -642,7 +663,7 @@ const handleContinue = async () => {
     margin-bottom: 1.5rem !important;
   }
   h1.text-3xl {
-    font-size: 1.5rem !important; 
+    font-size: 1.5rem !important;
     margin-bottom: 0.5rem !important;
   }
 
@@ -654,7 +675,7 @@ const handleContinue = async () => {
   }
 
   .px-6.md\:px-10.py-10 {
-    padding: 1.25rem !important; 
+    padding: 1.25rem !important;
   }
 
   .flex.flex-col.gap-8.mb-8 {
@@ -663,38 +684,38 @@ const handleContinue = async () => {
   }
 
   input[type="text"] {
-    height: 2.75rem !important; 
+    height: 2.75rem !important;
     font-size: 0.875rem !important;
   }
 
   button.group.w-full.md\:w-auto.h-12 {
-    height: 2.75rem !important; 
+    height: 2.75rem !important;
   }
 
   .mt-3.grid.grid-cols-1.md\:grid-cols-2 {
     margin-top: 0.75rem !important;
     gap: 0.5rem !important;
   }
-  
+
   .text-xs.px-3.py-1\.5 {
     padding: 0.5rem 0.75rem !important;
   }
 
   .flex.justify-between.items-center.pt-2.pb-10 {
-    flex-direction: row !important;            
-    justify-content: space-between !important; 
+    flex-direction: row !important;
+    justify-content: space-between !important;
     align-items: center !important;
     gap: 1rem !important;
     padding-bottom: 2rem !important;
   }
 
   button.bg-\[\#F97316\] {
-    width: auto !important;  
+    width: auto !important;
     padding-left: 1.25rem !important;
     padding-right: 1.25rem !important;
     padding-top: 0.5rem !important;
     padding-bottom: 0.5rem !important;
-    font-size: 0.875rem !important; 
+    font-size: 0.875rem !important;
   }
   button.bg-\[\#F97316\] svg {
     width: 1.125rem !important;
@@ -702,9 +723,9 @@ const handleContinue = async () => {
   }
 
   button.text-gray-400 {
-    width: auto !important;   
-    border: none !important;  
-    padding: 0 !important;    
+    width: auto !important;
+    border: none !important;
+    padding: 0 !important;
     justify-content: flex-start !important;
     background: transparent !important;
   }

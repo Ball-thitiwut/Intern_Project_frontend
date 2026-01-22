@@ -2,7 +2,7 @@
   <div>
     <div class="flex items-center justify-between mb-4 md:mb-6 px-0 md:px-0">
       <h1 class="text-2xl md:text-4xl font-bold text-[#051960] tracking-tight">
-        Dashboard
+        {{ $t('main_dashboard.title') }}
       </h1>
 
       <div class="relative md:hidden">
@@ -58,7 +58,7 @@
                   : 'text-gray-600 hover:bg-gray-50'
               "
             >
-              {{ item.name }}
+              {{ $t(`main_dashboard.tabs.${item.id}`) }}
               <span v-if="currentView === item.id">✓</span>
             </div>
           </div>
@@ -97,13 +97,14 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import { useDashboardStore } from "@/stores/dashboard";
-
+import { useI18n } from "vue-i18n";
 import FilterBar from "@/components/FilterBar.vue";
 import DashboardView from "@/views/DashboardView.vue";
 import DashboardBillView from "@/views/DashboardBillView.vue";
 import DashboardBehaviorView from "@/views/DashboardBehaviorView.vue";
 
 const dashboardStore = useDashboardStore();
+const { t } = useI18n();
 
 // State สำหรับเก็บค่าตัวกรอง filter bar
 const currentView = ref("sales");
@@ -113,13 +114,13 @@ const dateRange = ref([new Date(), new Date()]);
 // Mobile Dropdown State
 const isMobileDropdownOpen = ref(false);
 const menuOptions = [
-  { id: "sales", name: "ยอดขาย" },
-  { id: "bill", name: "ยอดขายต่อบิลฯ" },
-  { id: "behavior", name: "พฤติกรรมลูกค้า" },
+  { id: "sales" },
+  { id: "bill" },
+  { id: "behavior" },
 ];
 
 const currentViewName = computed(() => {
-  return menuOptions.find((o) => o.id === currentView.value)?.name || "ยอดขาย";
+  return t(`main_dashboard.tabs.${currentView.value}`);
 });
 
 const handleMobileMenuSelect = (id) => {

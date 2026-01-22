@@ -1,0 +1,562 @@
+{
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "growth_ideas": "Growth Ideas",
+    "find_ideas": "Find Ideas",
+    "history": "Campaign History",
+    "pos_info": "POS Info",
+    "connect_pos": "Connect POS",
+    "data_manage": "Data Management"
+  },
+  "main_dashboard": {
+    "title": "Dashboard",
+    "tabs": {
+      "sales": "Sales",
+      "bill": "Sales per Bill",
+      "behavior": "Customer Behavior"
+    }
+  },
+  "filter_bar": {
+    "periods": {
+      "24h": "24h",
+      "7d": "7d",
+      "1m": "1m",
+      "1y": "1y",
+      "all": "All"
+    },
+    "date_range": {
+      "to": "to"
+    },
+    "views": {
+      "sales": "Sales",
+      "bill": "Sales per Bill & Bill Count",
+      "behavior": "Customer Behavior"
+    }
+  },
+  "dashboard_view": {
+    "cards": {
+      "sales_title": "Sales",
+      "from_prev_period": "from previous period",
+      "top_menu_title": "Top Menu",
+      "sold_label": "Sold",
+      "unit_plate": "items",
+      "peak_time_title": "Peak Time",
+      "peak_time_desc": "Time with highest order volume"
+    },
+    "sales_trend": {
+      "title": "Sales Trend"
+    },
+    "summary_stats": {
+      "total_sales": "Total Sales",
+      "avg_bill": "Avg. per Bill",
+      "table_headers": {
+        "status": "Status",
+        "price": "Price",
+        "change_pct": "% Change",
+        "qty": "Qty"
+      },
+      "row_labels": {
+        "sales": "Sales",
+        "average": "Average"
+      }
+    },
+    "promotion_chart": {
+      "title": "Promotion Sales Share",
+      "promo": "Promotion",
+      "regular": "Regular Menu"
+    },
+    "top_menu_table": {
+      "title": "Top Selling Menus",
+      "headers": {
+        "rank": "Rank",
+        "menu": "Menu",
+        "sales": "Sales",
+        "qty": "Qty",
+        "sales_share": "% Share"
+      }
+    }
+  },
+  "dashboard_bill_view": {
+    "avg_sales_title": "Daily Average Sales per Bill",
+    "bill_count_title": "Daily Bill Count",
+    "no_data": "No data available for this period"
+  },
+  "dashboard_behavior_view": {
+    "spending_analysis": {
+      "title": "Average Sales per Bill Analysis",
+      "y_axis_label": "Bill Count",
+      "x_axis_label": "Price Range (THB)"
+    },
+    "stats": {
+      "avg_bill_label": "Average Sales per Bill",
+      "most_common_range_label": "Most Common Price Range"
+    }
+  },
+  "sales_chart": {
+    "series": {
+      "actual": "Actual Sales",
+      "forecast": "Forecast",
+      "default_label": "Sales"
+    },
+    "no_data": "- No sales data for this period -",
+    "axis": {
+      "time_day_month": "Time (Day/Month)",
+      "time_hour": "Time (Hour)",
+      "time_month_year": "Time (Month/Year)",
+      "y_label": "Sales (THB)"
+    },
+    "tooltip": {
+      "time_prefix": "Time"
+    }
+  },
+  "promotion_pie_chart": {
+    "center_label": "Total",
+    "labels": {
+      "promotion": "Promotion",
+      "regular": "Regular Menu"
+    }
+  },
+  "group_size_chart": {
+    "title": "Bill Count by Group Size",
+    "axis": {
+      "y_label": "Bill Count",
+      "x_label": "Group Size",
+      "unit_person_parentheses": "(people)"
+    },
+    "units": {
+      "bill": "bills",
+      "person": "people"
+    },
+    "table": {
+      "rank": "Rank",
+      "group_size": "Group Size",
+      "bill_count": "Bill Count",
+      "proportion": "Proportion(%)",
+      "total": "Total"
+    }
+  },
+  "stat_analysis_chart": {
+    "defaults": {
+      "y_axis": "Bills",
+      "x_axis": "THB"
+    }
+  },
+  "average_sales_chart": {
+    "axis": {
+      "y_unit": "THB",
+      "x_monthly": "Month/Year",
+      "x_daily": "Date"
+    }
+  },
+  "bill_count_chart": {
+    "axis": {
+      "y_unit": "Bills",
+      "x_monthly": "Month/Year",
+      "x_daily": "Date"
+    },
+    "tooltip": {
+      "unit": "Bills"
+    }
+  },
+  "pos_view": {
+    "header": {
+      "title": "Connect POS Data",
+      "subtitle": "Connect with your current POS or",
+      "free_pos_highlight": "Get Free POS!",
+      "subtitle_suffix": "when choosing RESSELF POS"
+    },
+    "cards": {
+      "resself_pos": {
+        "coming_soon_badge": "Coming Soon",
+        "title": "RESSELF POS",
+        "description": "Restaurant management system with AI\nFree sales analysis and stock management",
+        "button_text": "Coming Soon"
+      },
+      "other_pos": {
+        "title": "Other POS / My Own POS",
+        "description": "Import sales data from your existing POS\nSupports Ocha, Wongnai, and others",
+        "button_text": "Connect Other POS"
+      }
+    }
+  },
+  "connect_pos_modal": {
+    "title": "Connect RESSELF POS",
+    "instruction": "Please enter the information provided by your service provider to connect.",
+    "form": {
+      "api_url_label": "API URL",
+      "api_url_placeholder": "https://api.resself.com/...",
+      "ref_code_label": "Reference code",
+      "ref_code_placeholder": "Ex. REF-123456",
+      "key_name_label": "Key name",
+      "key_name_placeholder": "Ex. MyStoreKey",
+      "submit_button": "Connect Data"
+    },
+    "validation": {
+      "incomplete_form": "Please complete all fields"
+    }
+  },
+  "select_pos_view": {
+    "title": "Select POS",
+    "subtitle": "Select the POS you use for RESSELF to analyze",
+    "status": {
+      "loading": "Loading POS systems...",
+      "no_data": "No POS systems found."
+    },
+    "buttons": {
+      "back": "Back",
+      "continue": "Continue"
+    },
+    "other_pos_label": "Other POS"
+  },
+  "branch_connect_view": {
+    "header": {
+      "title": "Connect Branch Data",
+      "subtitle": "Specify your branch information for RESSELF analysis"
+    },
+    "form": {
+      "branch_label": "Branch Info",
+      "branch_name_placeholder": "Enter branch name (e.g. Siam Branch)"
+    },
+    "upload": {
+      "button_initial": "Upload File",
+      "files_attached": "Files Attached",
+      "add_more": "Add More Files",
+      "status": {
+        "uploading": "Uploading...",
+        "success": "Import Successful",
+        "error_default": "An error occurred"
+      }
+    },
+    "buttons": {
+      "back": "Back",
+      "continue": "Continue",
+      "processing": "Processing..."
+    },
+    "modal": {
+      "redirecting": "Redirecting to Dashboard...",
+      "ok": "OK"
+    },
+    "alerts": {
+      "incomplete_info": "Incomplete Information",
+      "enter_branch_name": "Please enter branch name",
+      "no_files": "No files found",
+      "upload_at_least_one": "Please upload at least 1 file",
+      "import_success_title": "Import Successful!",
+      "import_success_msg": "System has saved your file successfully",
+      "import_incomplete_title": "Import Incomplete",
+      "import_incomplete_msg": "Invalid files found:",
+      "connection_error_title": "Error",
+      "connection_error_msg": "Connection error occurred"
+    }
+  },
+  "data_management_view": {
+    "header": {
+      "title": "Data Management",
+      "subtitle": "Manage sales data files and import history",
+      "import_button": "Import More Data"
+    },
+    "state": {
+      "loading": "Loading data...",
+      "empty": {
+        "title": "No Data",
+        "description": "You haven't imported any sales data files yet.",
+        "button": "Start Importing"
+      }
+    },
+    "table": {
+      "headers": {
+        "filename": "Filename",
+        "branch": "Branch",
+        "upload_date": "Upload Date",
+        "bill_count": "Bill Count",
+        "total_sales": "Total Sales",
+        "manage": "Manage"
+      },
+      "labels": {
+        "branch": "Branch",
+        "bill_count": "Bill Count",
+        "total_sales": "Total Sales",
+        "unit_bill": "bills"
+      }
+    },
+    "modals": {
+      "delete": {
+        "title": "Confirm Deletion?",
+        "content_prefix": "Are you sure you want to delete",
+        "content_suffix": "?",
+        "warning": "*All sales data from this file will be lost.",
+        "confirm_button": "Delete",
+        "cancel_button": "Cancel",
+        "loading_text": "Deleting..."
+      },
+      "success": {
+        "title": "Success!",
+        "delete_message": "Data deleted successfully"
+      },
+      "error": {
+        "title": "Error",
+        "default_message": "Error deleting file",
+        "close_button": "Close"
+      }
+    }
+  },
+  "confirm_manage_modal": {
+    "defaults": {
+      "confirm_button": "Confirm",
+      "cancel_button": "Cancel",
+      "loading_text": "Processing..."
+    }
+  },
+  "alert_manage_modal": {
+    "defaults": {
+      "button_ok": "OK"
+    }
+  },
+  "ideas_view": {
+    "header": {
+      "title": "Sales Growth Ideas",
+      "subtitle": "Discover opportunities to increase sales with"
+    },
+    "filters": {
+      "branch_label": "Branch",
+      "branch_placeholder": "-- Select Branch --",
+      "channel_label": "Sales Channel",
+      "channel_placeholder": "All",
+      "channels": {
+        "dinein": "Dine-in",
+        "delivery": "Delivery",
+        "takeaway": "Takeaway"
+      }
+    },
+    "analyze_button": {
+      "text": {
+        "analyzing": "Analyzing...",
+        "completed": "Analysis Complete",
+        "update": "Update Data",
+        "start": "Find Ideas"
+      },
+      "subtext": {
+        "processing": "Processing...",
+        "changed": "Data Changed",
+        "start": "Start AI Analysis"
+      }
+    },
+    "state": {
+      "ai_working": {
+        "title": "AI is Working",
+        "subtitle": "Analyzing customer behavior..."
+      },
+      "waiting": {
+        "title": "Waiting for Input",
+        "subtitle": "Select criteria above and press the button to start finding ideas"
+      }
+    },
+    "results": {
+      "title": "Analysis Results",
+      "last_updated": "Last Updated:"
+    },
+    "card": {
+      "top_pick": "Top Pick",
+      "sales_opportunity": "Sales Opportunity",
+      "view_details_btn": "View Details & Create Promo",
+      "create_btn": "Create Promo",
+      "toggle": {
+        "expand": "Show More",
+        "collapse": "Show Less"
+      }
+    },
+    "demo_ideas": {
+      "pairing": {
+        "title": "Menu Pairing",
+        "subtitle": "Increase bill size with paired menus"
+      },
+      "happy_hour": {
+        "title": "Happy Hour Promo",
+        "subtitle": "Boost sales during off-peak hours"
+      },
+      "upsell": {
+        "title": "Upsell / Freebie Promo",
+        "subtitle": "Push average bill value higher"
+      },
+      "slow_moving": {
+        "title": "Boost Slow Moving Items",
+        "subtitle": "Increase orders for overlooked menus"
+      }
+    }
+  },
+  "promotion_setup_modal": {
+    "toast": {
+      "success": "Campaign created successfully!"
+    },
+    "header": {
+      "title": "Create Promotion",
+      "subtitle": "Define your campaign details"
+    },
+    "card": {
+      "default_type": "Campaign",
+      "impact_label": "Impact"
+    },
+    "form": {
+      "name_label": "Campaign Name",
+      "name_placeholder": "Enter campaign name...",
+      "start_date_label": "Start Date",
+      "end_date_label": "End Date"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "confirm": "Confirm Create",
+      "processing": "Creating..."
+    },
+    "auto_fill": {
+      "promotion_prefix": "Promotion"
+    }
+  },
+  "history_campaign_view": {
+    "header": {
+      "title": "Campaign History",
+      "subtitle": "Track status and results of all your promotions",
+      "create_button": "New Campaign"
+    },
+    "summary": {
+      "active_label": "Active",
+      "sales_label": "Promo Sales (This Month)",
+      "penetration_label": "Avg. Bill Penetration",
+      "unit_campaigns": "campaigns"
+    },
+    "active_section": {
+      "title": "In Progress",
+      "days_left": "{n} days left",
+      "sales_target": "Sales Target",
+      "edit_button": "Edit Info",
+      "menu": {
+        "duplicate": "Duplicate",
+        "pause": "Pause",
+        "delete": "Delete"
+      }
+    },
+    "history_section": {
+      "title": "History",
+      "headers": {
+        "name": "Campaign Name",
+        "type": "Type",
+        "duration": "Duration",
+        "revenue": "Revenue Generated",
+        "status": "Status",
+        "manage": "Manage"
+      },
+      "status": {
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "view_report_button": "View Report",
+      "empty_state": "No campaign history yet",
+      "unit_days": "days"
+    },
+    "alerts": {
+      "duplicate_msg": "Duplicating campaign: {name}",
+      "delete_confirm": "Are you sure you want to delete this campaign?",
+      "delete_success": "Campaign deleted successfully"
+    }
+  },
+  "report_campaign_modal": {
+    "header": {
+      "title": "Campaign Results Summary",
+      "loading": "Loading...",
+      "status": {
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      }
+    },
+    "stats": {
+      "revenue_label": "Total Revenue",
+      "vs_target": "vs Target",
+      "orders_label": "Total Orders",
+      "unit_items": "items",
+      "avg_bill_format": "Avg ฿{n}/bill",
+      "roi_label": "ROI",
+      "impact_high": "Impact High"
+    },
+    "chart": {
+      "title": "Daily Sales Trend",
+      "legend_actual": "Actual Sales",
+      "day_prefix": "Day"
+    }
+  },
+  "edit_campaign_modal": {
+    "toast": {
+      "success": "Changes saved successfully!"
+    },
+    "header": {
+      "title": "Edit Campaign Info",
+      "subtitle": "Update your promotion details"
+    },
+    "form": {
+      "name_label": "Campaign Name",
+      "name_placeholder": "Enter campaign name...",
+      "start_date_label": "Start Date",
+      "end_date_label": "End Date"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "processing": "Saving..."
+    }
+  },
+  "profile_view": {
+    "header": {
+      "title": "Account Settings",
+      "subtitle": "Manage your personal and restaurant information"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "saving": "Saving..."
+    },
+    "personal_info": {
+      "title": "Personal Information",
+      "labels": {
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "phone": "Phone Number",
+        "email": "Email Address"
+      }
+    },
+    "restaurant_info": {
+      "title": "Restaurant Details",
+      "labels": {
+        "name": "Restaurant Name",
+        "category": "Category",
+        "age": "Restaurant Age",
+        "avg_sales": "Average Sales (Monthly)",
+        "branches": "Number of Branches",
+        "menu_items": "Est. Menu Items",
+        "pos_system": "Current POS System"
+      },
+      "placeholders": {
+        "name": "Your Restaurant Name",
+        "select_category": "Select Category",
+        "select_age": "Select Age",
+        "select_sales": "Select Range",
+        "select_branches": "Select Branches",
+        "select_menu": "Select Menu Range",
+        "select_pos": "Select POS"
+      }
+    },
+    "toast": {
+      "titles": {
+        "success": "Success",
+        "error": "Error"
+      },
+      "messages": {
+        "save_success": "Information saved successfully!",
+        "save_error_default": "Error saving information"
+      }
+    }
+  },
+  "user_dropdown": {
+    "alt_avatar": "Avatar",
+    "section_title": "Account",
+    "settings": "Account Settings",
+    "logout": "Sign out"
+  }
+}

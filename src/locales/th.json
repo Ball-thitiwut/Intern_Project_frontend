@@ -1,0 +1,562 @@
+{
+  "sidebar": {
+    "dashboard": "แดชบอร์ด",
+    "growth_ideas": "ไอเดียเพิ่มยอดขาย",
+    "find_ideas": "ค้นหาไอเดีย",
+    "history": "ประวัติแคมเปญ",
+    "pos_info": "ข้อมูล POS",
+    "connect_pos": "เชื่อมต่อ POS",
+    "data_manage": "จัดการข้อมูล"
+  },
+  "main_dashboard": {
+    "title": "แดชบอร์ด",
+    "tabs": {
+      "sales": "ยอดขาย",
+      "bill": "ยอดขายต่อบิลฯ",
+      "behavior": "พฤติกรรมลูกค้า"
+    }
+  },
+  "filter_bar": {
+    "periods": {
+      "24h": "24 ชม.",
+      "7d": "7 วัน",
+      "1m": "1 เดือน",
+      "1y": "1 ปี",
+      "all": "ทั้งหมด"
+    },
+    "date_range": {
+      "to": "ถึง"
+    },
+    "views": {
+      "sales": "ยอดขาย",
+      "bill": "ยอดขายต่อบิลและจำนวนบิล",
+      "behavior": "พฤติกรรมลูกค้า"
+    }
+  },
+  "dashboard_view": {
+    "cards": {
+      "sales_title": "ยอดขาย",
+      "from_prev_period": "จากช่วงก่อนหน้า",
+      "top_menu_title": "เมนูฮิต",
+      "sold_label": "ขายไปแล้ว",
+      "unit_plate": "จาน",
+      "peak_time_title": "ช่วงเวลาพีค",
+      "peak_time_desc": "ช่วงเวลาที่มีออเดอร์หนาแน่น"
+    },
+    "sales_trend": {
+      "title": "แนวโน้มยอดขาย"
+    },
+    "summary_stats": {
+      "total_sales": "ยอดขายทั้งหมด",
+      "avg_bill": "ค่าเฉลี่ยต่อบิล",
+      "table_headers": {
+        "status": "สถานะ",
+        "price": "ราคา",
+        "change_pct": "% เปลี่ยน",
+        "qty": "จำนวน"
+      },
+      "row_labels": {
+        "sales": "แบบขาย",
+        "average": "เฉลี่ย"
+      }
+    },
+    "promotion_chart": {
+      "title": "สัดส่วนยอดขายโปรโมชั่น",
+      "promo": "โปรโมชั่น",
+      "regular": "เมนูทั่วไป"
+    },
+    "top_menu_table": {
+      "title": "เมนูที่ยอดขายสูงที่สุด",
+      "headers": {
+        "rank": "ลำดับ",
+        "menu": "เมนู",
+        "sales": "ยอดขาย",
+        "qty": "จำนวน",
+        "sales_share": "% ยอดขาย"
+      }
+    }
+  },
+  "dashboard_bill_view": {
+    "avg_sales_title": "ยอดขายเฉลี่ยต่อบิลรายวัน",
+    "bill_count_title": "จำนวนบิลรายวัน",
+    "no_data": "ยังไม่มีข้อมูลสำหรับช่วงเวลานี้"
+  },
+  "dashboard_behavior_view": {
+    "spending_analysis": {
+      "title": "ยอดขายเฉลี่ยต่อบิล",
+      "y_axis_label": "จำนวนบิล",
+      "x_axis_label": "ช่วงราคา (บาท)"
+    },
+    "stats": {
+      "avg_bill_label": "ยอดขายต่อบิลเฉลี่ย",
+      "most_common_range_label": "ช่วงยอดขายที่พบบ่อยสุด"
+    }
+  },
+  "sales_chart": {
+    "series": {
+      "actual": "ยอดขายจริง",
+      "forecast": "คาดการณ์",
+      "default_label": "ยอดขาย"
+    },
+    "no_data": "- ไม่มีข้อมูลยอดขายในช่วงเวลานี้ -",
+    "axis": {
+      "time_day_month": "ช่วงเวลา (วัน/เดือน)",
+      "time_hour": "ช่วงเวลา (นาฬิกา)",
+      "time_month_year": "ช่วงเวลา (เดือน/ปี)",
+      "y_label": "ยอดขาย (บาท)"
+    },
+    "tooltip": {
+      "time_prefix": "เวลา"
+    }
+  },
+  "promotion_pie_chart": {
+    "center_label": "ยอดรวม",
+    "labels": {
+      "promotion": "โปรโมชั่น",
+      "regular": "เมนูทั่วไป"
+    }
+  },
+  "group_size_chart": {
+    "title": "จำนวนบิลตามขนาดกลุ่มลูกค้า",
+    "axis": {
+      "y_label": "จำนวนบิล",
+      "x_label": "ขนาดกลุ่ม",
+      "unit_person_parentheses": "(คน)"
+    },
+    "units": {
+      "bill": "บิล",
+      "person": "คน"
+    },
+    "table": {
+      "rank": "อันดับ",
+      "group_size": "ขนาดกลุ่ม",
+      "bill_count": "จำนวนบิล",
+      "proportion": "สัดส่วน(%)",
+      "total": "รวมทั้งหมด"
+    }
+  },
+  "stat_analysis_chart": {
+    "defaults": {
+      "y_axis": "จำนวนบิล",
+      "x_axis": "บาท"
+    }
+  },
+  "average_sales_chart": {
+    "axis": {
+      "y_unit": "บาท",
+      "x_monthly": "เดือน/ปี",
+      "x_daily": "วันที่"
+    }
+  },
+  "bill_count_chart": {
+    "axis": {
+      "y_unit": "บิล",
+      "x_monthly": "เดือน/ปี",
+      "x_daily": "วันที่"
+    },
+    "tooltip": {
+      "unit": "บิล"
+    }
+  },
+  "pos_view": {
+    "header": {
+      "title": "เชื่อมต่อข้อมูล POS",
+      "subtitle": "เลือกเชื่อมต่อข้อมูลกับ POS ที่คุณใช้งาน หรือ",
+      "free_pos_highlight": "รับฟรี! POS",
+      "subtitle_suffix": "เมื่อเลือกใช้งาน RESSELF POS"
+    },
+    "cards": {
+      "resself_pos": {
+        "coming_soon_badge": "เร็วๆ นี้",
+        "title": "RESSELF POS",
+        "description": "ระบบจัดการร้านอาหารที่มาพร้อม AI\nช่วยวิเคราะห์ยอดขายและจัดการสต็อกฟรี",
+        "button_text": "เร็วๆ นี้"
+      },
+      "other_pos": {
+        "title": "POS อื่น / My Own POS",
+        "description": "ดึงข้อมูลยอดขายจากระบบ POS เดิมของคุณ\nรองรับ Ocha, Wongnai และอื่นๆ",
+        "button_text": "เชื่อมกับ POS อื่น"
+      }
+    }
+  },
+  "connect_pos_modal": {
+    "title": "เชื่อมต่อ RESSELF POS",
+    "instruction": "กรุณากรอกข้อมูลที่ได้รับจากผู้ให้บริการเพื่อทำการเชื่อมต่อ",
+    "form": {
+      "api_url_label": "API URL",
+      "api_url_placeholder": "https://api.resself.com/...",
+      "ref_code_label": "Reference code",
+      "ref_code_placeholder": "ตัวอย่าง REF-123456",
+      "key_name_label": "Key name",
+      "key_name_placeholder": "ตัวอย่าง MyStoreKey",
+      "submit_button": "เชื่อมต่อข้อมูล"
+    },
+    "validation": {
+      "incomplete_form": "กรุณากรอกข้อมูลให้ครบถ้วน"
+    }
+  },
+  "select_pos_view": {
+    "title": "เลือก POS",
+    "subtitle": "เลือก POS ที่คุณใช้เพื่อให้ RESSELF ช่วยวิเคราะห์",
+    "status": {
+      "loading": "กำลังโหลดระบบ POS...",
+      "no_data": "ไม่พบระบบ POS"
+    },
+    "buttons": {
+      "back": "ย้อนกลับ",
+      "continue": "ดำเนินการต่อ"
+    },
+    "other_pos_label": "POS อื่นๆ"
+  },
+  "branch_connect_view": {
+    "header": {
+      "title": "เชื่อมต่อข้อมูลสาขา",
+      "subtitle": "ระบุข้อมูลสาขาของคุณเพื่อให้ RESSELF ช่วยวิเคราะห์"
+    },
+    "form": {
+      "branch_label": "ข้อมูลสาขา",
+      "branch_name_placeholder": "ระบุชื่อสาขา (เช่น สาขาสยาม)"
+    },
+    "upload": {
+      "button_initial": "อัปโหลดไฟล์",
+      "files_attached": "ไฟล์แนบแล้ว",
+      "add_more": "เพิ่มไฟล์อีก",
+      "status": {
+        "uploading": "กำลังอัปโหลด...",
+        "success": "นำเข้าข้อมูลสำเร็จ",
+        "error_default": "เกิดข้อผิดพลาด"
+      }
+    },
+    "buttons": {
+      "back": "ย้อนกลับ",
+      "continue": "ดำเนินการต่อ",
+      "processing": "กำลังประมวลผล..."
+    },
+    "modal": {
+      "redirecting": "กำลังนำคุณไปที่ Dashboard...",
+      "ok": "ตกลง"
+    },
+    "alerts": {
+      "incomplete_info": "ข้อมูลไม่ครบถ้วน",
+      "enter_branch_name": "กรุณากรอกชื่อสาขา",
+      "no_files": "ไม่พบไฟล์ข้อมูล",
+      "upload_at_least_one": "กรุณาอัปโหลดไฟล์อย่างน้อย 1 ไฟล์",
+      "import_success_title": "นำเข้าข้อมูลสำเร็จ!",
+      "import_success_msg": "ระบบบันทึกไฟล์ของคุณเรียบร้อยแล้ว",
+      "import_incomplete_title": "นำเข้าข้อมูลไม่สมบูรณ์",
+      "import_incomplete_msg": "พบไฟล์ที่ไม่ผ่านการตรวจสอบ:",
+      "connection_error_title": "เกิดข้อผิดพลาด",
+      "connection_error_msg": "เกิดข้อผิดพลาดในการเชื่อมต่อระบบ"
+    }
+  },
+  "data_management_view": {
+    "header": {
+      "title": "จัดการข้อมูล",
+      "subtitle": "จัดการไฟล์ข้อมูลยอดขายและประวัติการนำเข้า",
+      "import_button": "นำเข้าข้อมูลเพิ่ม"
+    },
+    "state": {
+      "loading": "กำลังโหลดข้อมูล...",
+      "empty": {
+        "title": "ยังไม่มีข้อมูล",
+        "description": "คุณยังไม่ได้นำเข้าไฟล์ข้อมูลยอดขาย",
+        "button": "เริ่มนำเข้าข้อมูล"
+      }
+    },
+    "table": {
+      "headers": {
+        "filename": "ชื่อไฟล์",
+        "branch": "สาขา",
+        "upload_date": "วันที่อัปโหลด",
+        "bill_count": "จำนวนบิล",
+        "total_sales": "ยอดขายรวม",
+        "manage": "จัดการ"
+      },
+      "labels": {
+        "branch": "สาขา",
+        "bill_count": "จำนวนบิล",
+        "total_sales": "ยอดขายรวม",
+        "unit_bill": "บิล"
+      }
+    },
+    "modals": {
+      "delete": {
+        "title": "ยืนยันการลบข้อมูล?",
+        "content_prefix": "คุณต้องการลบข้อมูลไฟล์",
+        "content_suffix": "ใช่หรือไม่?",
+        "warning": "*ข้อมูลยอดขายทั้งหมดจากไฟล์นี้จะหายไป",
+        "confirm_button": "ลบข้อมูล",
+        "cancel_button": "ยกเลิก",
+        "loading_text": "กำลังลบ..."
+      },
+      "success": {
+        "title": "สำเร็จ!",
+        "delete_message": "ลบข้อมูลเรียบร้อยแล้ว"
+      },
+      "error": {
+        "title": "เกิดข้อผิดพลาด",
+        "default_message": "เกิดข้อผิดพลาดในการลบไฟล์",
+        "close_button": "ปิด"
+      }
+    }
+  },
+  "confirm_manage_modal": {
+    "defaults": {
+      "confirm_button": "ยืนยัน",
+      "cancel_button": "ยกเลิก",
+      "loading_text": "กำลังประมวลผล..."
+    }
+  },
+  "alert_manage_modal": {
+    "defaults": {
+      "button_ok": "ตกลง"
+    }
+  },
+  "ideas_view": {
+    "header": {
+      "title": "ไอเดียเพิ่มยอดขาย",
+      "subtitle": "ค้นหาโอกาสในการเพิ่มยอดขายด้วย"
+    },
+    "filters": {
+      "branch_label": "สาขา",
+      "branch_placeholder": "-- เลือกสาขา --",
+      "channel_label": "ประเภทการขาย",
+      "channel_placeholder": "ทั้งหมด",
+      "channels": {
+        "dinein": "ทานที่ร้าน",
+        "delivery": "เดลิเวอรี",
+        "takeaway": "ซื้อกลับบ้าน"
+      }
+    },
+    "analyze_button": {
+      "text": {
+        "analyzing": "กำลังวิเคราะห์...",
+        "completed": "วิเคราะห์เสร็จสิ้น",
+        "update": "อัปเดตข้อมูล",
+        "start": "เริ่มค้นหาไอเดีย"
+      },
+      "subtext": {
+        "processing": "กำลังประมวลผล...",
+        "changed": "ข้อมูลมีการเปลี่ยนแปลง",
+        "start": "เริ่มให้ AI ช่วยวิเคราะห์"
+      }
+    },
+    "state": {
+      "ai_working": {
+        "title": "AI กำลังทำงาน",
+        "subtitle": "กำลังวิเคราะห์พฤติกรรมลูกค้า..."
+      },
+      "waiting": {
+        "title": "รอคำสั่งจากคุณ",
+        "subtitle": "เลือกเงื่อนไขด้านบน แล้วกดปุ่มเพื่อเริ่มค้นหาไอเดีย"
+      }
+    },
+    "results": {
+      "title": "ผลลัพธ์การวิเคราะห์",
+      "last_updated": "ข้อมูลล่าสุด:"
+    },
+    "card": {
+      "top_pick": "แนะนำสูงสุด (Top Pick)",
+      "sales_opportunity": "โอกาสเพิ่มยอดขาย",
+      "view_details_btn": "ดูรายละเอียด & สร้างโปร",
+      "create_btn": "สร้างโปรนี้",
+      "toggle": {
+        "expand": "ดูเพิ่ม",
+        "collapse": "ย่อลง"
+      }
+    },
+    "demo_ideas": {
+      "pairing": {
+        "title": "จับคู่เซ็ตเมนู",
+        "subtitle": "เพิ่มยอดต่อบิลด้วยเมนูที่คู่กัน"
+      },
+      "happy_hour": {
+        "title": "โปรช่วงเวลาพิเศษ",
+        "subtitle": "กระตุ้นยอดขายช่วงคนน้อย"
+      },
+      "upsell": {
+        "title": "จัดโปรของแถม",
+        "subtitle": "ดันยอดบิลเฉลี่ยให้สูงขึ้น"
+      },
+      "slow_moving": {
+        "title": "กระตุ้นเมนูยอดน้อย",
+        "subtitle": "เพิ่มยอดสั่งเมนูที่ลูกค้ามองข้าม"
+      }
+    }
+  },
+  "promotion_setup_modal": {
+    "toast": {
+      "success": "สร้างแคมเปญสำเร็จ!"
+    },
+    "header": {
+      "title": "สร้างโปรโมชั่น",
+      "subtitle": "กำหนดรายละเอียดแคมเปญของคุณ"
+    },
+    "card": {
+      "default_type": "Campaign",
+      "impact_label": "Impact"
+    },
+    "form": {
+      "name_label": "ชื่อแคมเปญ",
+      "name_placeholder": "ระบุชื่อแคมเปญ...",
+      "start_date_label": "วันที่เริ่ม",
+      "end_date_label": "วันที่สิ้นสุด"
+    },
+    "buttons": {
+      "cancel": "ยกเลิก",
+      "confirm": "ยืนยันสร้างแคมเปญ",
+      "processing": "กำลังสร้าง..."
+    },
+    "auto_fill": {
+      "promotion_prefix": "โปรโมชั่น"
+    }
+  },
+  "history_campaign_view": {
+    "header": {
+      "title": "ประวัติแคมเปญ",
+      "subtitle": "ติดตามสถานะและผลลัพธ์ของโปรโมชั่นทั้งหมดของคุณ",
+      "create_button": "สร้างแคมเปญใหม่"
+    },
+    "summary": {
+      "active_label": "กำลังใช้งาน",
+      "sales_label": "ยอดขายจากโปรฯ (เดือนนี้)",
+      "penetration_label": "Bill Penetration เฉลี่ย",
+      "unit_campaigns": "แคมเปญ"
+    },
+    "active_section": {
+      "title": "กำลังดำเนินการ",
+      "days_left": "เหลือเวลา {n} วัน",
+      "sales_target": "เป้าหมายยอดขาย",
+      "edit_button": "แก้ไขข้อมูล",
+      "menu": {
+        "duplicate": "ทำซ้ำ",
+        "pause": "หยุดชั่วคราว",
+        "delete": "ลบแคมเปญ"
+      }
+    },
+    "history_section": {
+      "title": "ประวัติย้อนหลัง",
+      "headers": {
+        "name": "ชื่อแคมเปญ",
+        "type": "ประเภท",
+        "duration": "ระยะเวลา",
+        "revenue": "ยอดขายที่ทำได้",
+        "status": "สถานะ",
+        "manage": "จัดการ"
+      },
+      "status": {
+        "completed": "จบแล้ว",
+        "cancelled": "ยกเลิก"
+      },
+      "view_report_button": "ดูรายงาน",
+      "empty_state": "ยังไม่มีประวัติแคมเปญ",
+      "unit_days": "วัน"
+    },
+    "alerts": {
+      "duplicate_msg": "กำลังทำซ้ำแคมเปญ: {name}",
+      "delete_confirm": "คุณแน่ใจหรือไม่ที่จะลบแคมเปญนี้?",
+      "delete_success": "ลบแคมเปญเรียบร้อย"
+    }
+  },
+  "report_campaign_modal": {
+    "header": {
+      "title": "สรุปผลลัพธ์แคมเปญ",
+      "loading": "กำลังโหลด...",
+      "status": {
+        "completed": "จบแล้ว",
+        "cancelled": "ยกเลิกแล้ว"
+      }
+    },
+    "stats": {
+      "revenue_label": "ยอดขายรวม",
+      "vs_target": "เทียบเป้าหมาย",
+      "orders_label": "จำนวนออเดอร์",
+      "unit_items": "รายการ",
+      "avg_bill_format": "เฉลี่ย ฿{n}/บิล",
+      "roi_label": "ความคุ้มค่า (ROI)",
+      "impact_high": "Impact High"
+    },
+    "chart": {
+      "title": "แนวโน้มยอดขายรายวัน",
+      "legend_actual": "ยอดขายจริง",
+      "day_prefix": "วันที่"
+    }
+  },
+  "edit_campaign_modal": {
+    "toast": {
+      "success": "บันทึกข้อมูลสำเร็จ!"
+    },
+    "header": {
+      "title": "แก้ไขข้อมูลแคมเปญ",
+      "subtitle": "ปรับปรุงรายละเอียดโปรโมชั่นของคุณ"
+    },
+    "form": {
+      "name_label": "ชื่อแคมเปญ",
+      "name_placeholder": "ระบุชื่อแคมเปญ...",
+      "start_date_label": "วันที่เริ่ม",
+      "end_date_label": "วันที่สิ้นสุด"
+    },
+    "buttons": {
+      "cancel": "ยกเลิก",
+      "save": "บันทึกข้อมูล",
+      "processing": "กำลังบันทึก..."
+    }
+  },
+  "profile_view": {
+    "header": {
+      "title": "ตั้งค่าบัญชี",
+      "subtitle": "จัดการข้อมูลส่วนตัวและข้อมูลร้านค้าของคุณ"
+    },
+    "buttons": {
+      "cancel": "ยกเลิก",
+      "save": "บันทึกการเปลี่ยนแปลง",
+      "saving": "กำลังบันทึก..."
+    },
+    "personal_info": {
+      "title": "ข้อมูลส่วนตัว",
+      "labels": {
+        "first_name": "ชื่อจริง",
+        "last_name": "นามสกุล",
+        "phone": "เบอร์โทรศัพท์",
+        "email": "อีเมล"
+      }
+    },
+    "restaurant_info": {
+      "title": "ข้อมูลร้านอาหาร",
+      "labels": {
+        "name": "ชื่อร้านอาหาร",
+        "category": "ประเภทร้าน",
+        "age": "อายุร้าน (ปี)",
+        "avg_sales": "ยอดขายเฉลี่ย (ต่อเดือน)",
+        "branches": "จำนวนสาขา",
+        "menu_items": "จำนวนเมนูโดยประมาณ",
+        "pos_system": "ระบบ POS ที่ใช้ปัจจุบัน"
+      },
+      "placeholders": {
+        "name": "ระบุชื่อร้านอาหารของคุณ",
+        "select_category": "เลือกประเภท",
+        "select_age": "เลือกอายุร้าน",
+        "select_sales": "เลือกช่วงยอดขาย",
+        "select_branches": "เลือกจำนวนสาขา",
+        "select_menu": "เลือกช่วงจำนวนเมนู",
+        "select_pos": "เลือกระบบ POS"
+      }
+    },
+    "toast": {
+      "titles": {
+        "success": "บันทึกสำเร็จ",
+        "error": "เกิดข้อผิดพลาด"
+      },
+      "messages": {
+        "save_success": "บันทึกข้อมูลเรียบร้อยแล้ว!",
+        "save_error_default": "เกิดข้อผิดพลาดในการบันทึกข้อมูล"
+      }
+    }
+  },
+  "user_dropdown": {
+    "alt_avatar": "รูปโปรไฟล์",
+    "section_title": "บัญชี",
+    "settings": "ตั้งค่าบัญชี",
+    "logout": "ออกจากระบบ"
+  }
+}

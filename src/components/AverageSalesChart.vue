@@ -3,7 +3,7 @@
     <div
       class="hidden md:block absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-sm text-[#64748b] font-medium tracking-wide font-sans"
     >
-      บาท
+      {{ $t('average_sales_chart.axis.y_unit') }}
     </div>
 
     <Bar :data="chartData" :options="chartOptions" />
@@ -11,13 +11,14 @@
     <div
       class="hidden md:block text-center text-sm text-[#64748b] font-medium mt-2 font-sans"
     >
-      {{ isMonthlyView ? "เดือน/ปี" : "วันที่" }}
+      {{ isMonthlyView ? $t('average_sales_chart.axis.x_monthly') : $t('average_sales_chart.axis.x_daily') }}
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from "vue";
+import { useI18n } from "vue-i18n";
 import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -41,6 +42,7 @@ ChartJS.register(
 ChartJS.defaults.font.family = "'Prompt', 'Kanit', 'Sarabun', sans-serif";
 ChartJS.defaults.color = "#64748b";
 
+const { t } = useI18n();
 const props = defineProps({
   dates: { type: Array, required: true },
   values: { type: Array, required: true },

@@ -1,7 +1,14 @@
 <script setup>
 import UserDropdown from "@/components/UserDropdown.vue";
+import { useI18n } from "vue-i18n";
 
 const emit = defineEmits(["toggle-sidebar"]);
+const { locale } = useI18n();
+
+const changeLanguage = (lang) => {
+  locale.value = lang;              
+  localStorage.setItem('lang', lang); 
+};
 </script>
 
 <template>
@@ -27,6 +34,25 @@ const emit = defineEmits(["toggle-sidebar"]);
       </svg>
     </button>
 
+    <div class="hidden md:flex items-center gap-1 mr-4 sm:mr-6">
+      <button
+        @click="changeLanguage('TH')" 
+        class="text-sm transition-colors"
+        :class="locale === 'TH' ? 'text-[#051960] font-bold' : 'text-gray-400 font-medium hover:text-gray-600'"
+      >
+        TH
+      </button>
+      
+      <span class="text-gray-300 text-sm">|</span>
+      
+      <button
+        @click="changeLanguage('EN')"
+        class="text-sm transition-colors"
+        :class="locale === 'EN' ? 'text-[#051960] font-bold' : 'text-gray-400 font-medium hover:text-gray-600'"
+      >
+        EN
+      </button>
+    </div>
     <UserDropdown />
   </header>
 </template>

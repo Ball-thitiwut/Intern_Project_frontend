@@ -2,8 +2,11 @@
   <div class="w-full h-full relative flex justify-center items-center">
     <Pie :data="chartData" :options="chartOptions" />
 
-    <div v-if="isMobile" class="absolute flex flex-col items-center justify-center pointer-events-none animate-fade-in">
-      <span class="text-[10px] text-gray-400 font-medium">ยอดรวม</span>
+    <div
+      v-if="isMobile"
+      class="absolute flex flex-col items-center justify-center pointer-events-none animate-fade-in"
+    >
+      <span class="text-[10px] text-gray-400 font-medium">{{ $t('promotion_pie_chart.center_label') }}</span>
       <span class="text-lg font-bold text-[#051960]">{{
         totalAmountFormatted
       }}</span>
@@ -13,11 +16,13 @@
 
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from "vue";
+import { useI18n } from "vue-i18n";
 import { Pie } from "vue-chartjs";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+const { t } = useI18n();
 const props = defineProps({
   promotionAmount: { type: Number, default: 0 },
   regularAmount: { type: Number, default: 0 },
@@ -34,7 +39,7 @@ const updateWidth = () => {
 onMounted(() => window.addEventListener("resize", updateWidth));
 onUnmounted(() => window.removeEventListener("resize", updateWidth));
 
-const isMobile = computed(() => windowWidth.value < 768); 
+const isMobile = computed(() => windowWidth.value < 768);
 
 // คำนวณยอดรวมสำหรับโชว์ตรงกลางรูโดนัท
 const totalAmountFormatted = computed(() => {
@@ -48,7 +53,10 @@ const chartData = computed(() => {
   const hasData = props.promotionAmount > 0 || props.regularAmount > 0;
 
   return {
-    labels: ["โปรโมชั่น", "เมนูทั่วไป"],
+    labels: [
+      t("promotion_pie_chart.labels.promotion"),
+      t("promotion_pie_chart.labels.regular"),
+    ],
     datasets: [
       {
         data: hasData

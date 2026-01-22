@@ -6,7 +6,7 @@
       class="order-1 md:order-none flex items-center bg-[#F8FAFC] rounded-full p-0.5 md:p-1 shadow-sm border border-gray-200 overflow-x-auto w-full md:w-auto md:max-w-none scrollbar-hide"
     >
       <button
-        v-for="period in ['24h', '7d', '1m', '1y', 'All']"
+        v-for="period in ['24h', '7d', '1m', '1y', 'all']"
         :key="period"
         @click="selectPeriod(period)"
         :class="[
@@ -16,7 +16,7 @@
             : 'text-gray-600 hover:bg-gray-100',
         ]"
       >
-        {{ period }}
+        {{ $t(`filter_bar.periods.${period}`) }}
       </button>
     </div>
 
@@ -39,7 +39,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <span class="text-gray-400">to</span>
+            <span class="text-gray-400">{{ $t('filter_bar.date_range.to') }}</span>
             <div
               class="flex items-center gap-2 bg-[#F8FAFC] px-4 py-1.5 rounded-full shadow-sm border border-gray-200 hover:ring-1 hover:ring-gray-300"
             >
@@ -54,7 +54,7 @@
               <div class="flex-1 bg-white py-1.5 px-2 rounded-full text-center shadow-sm border border-gray-200 text-xs font-medium text-[#031350]">
                 {{ displayDateRange.start }}
               </div>
-              <span class="text-gray-400 text-xs">to</span>
+              <span class="text-gray-400 text-xs">{{ $t('filter_bar.date_range.to') }}</span>
               <div class="flex-1 bg-white py-1.5 px-2 rounded-full text-center shadow-sm border border-gray-200 text-xs font-medium text-[#031350]">
                 {{ displayDateRange.end }}
               </div>
@@ -97,7 +97,7 @@
             class="px-4 py-2 cursor-pointer transition-colors text-[11px] md:text-sm font-medium flex items-center justify-between"
             :class="[currentView === item.id ? 'bg-orange-50/50 text-orange-600' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600']"
           >
-            <span>{{ item.name }}</span>
+            <span>{{ $t(`filter_bar.views.${item.id}`) }}</span>
           </div>
         </div>
       </transition>
@@ -108,6 +108,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
@@ -119,6 +120,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:period", "update:date-range", "change-view"]);
+const { t } = useI18n();
 
 const selectedPeriod = ref(props.initialPeriod);
 const isOpen = ref(false);
@@ -126,9 +128,9 @@ const currentView = ref(props.initialView);
 const dateRange = ref([new Date(), new Date()]);
 
 const menuOptions = [
-  { id: "sales", name: "ยอดขาย" },
-  { id: "bill", name: "ยอดขายต่อบิลและจำนวนบิล" },
-  { id: "behavior", name: "พฤติกรรมลูกค้า" },
+  { id: "sales" },
+  { id: "bill" },
+  { id: "behavior" },
 ];
 
 watch([() => props.dataStart, () => props.dataEnd], ([newStart, newEnd]) => {
@@ -156,7 +158,7 @@ const displayDateRange = computed(() => {
 });
 
 const currentViewName = computed(() => {
-  return menuOptions.find((o) => o.id === currentView.value)?.name || "ยอดขาย";
+  return t(`filter_bar.views.${currentView.value}`);
 });
 
 // ฟังก์ชันเลือกช่วงเวลา และคำนวณวันเริ่มต้น-สิ้นสุดอัตโนมัติ
@@ -178,6 +180,7 @@ const selectPeriod = (period) => {
     case "1y":
       start.setFullYear(end.getFullYear() - 1);
       break;
+    case "all":
     case "All":
       if (props.dataStart) {
           start.setTime(new Date(props.dataStart).getTime());

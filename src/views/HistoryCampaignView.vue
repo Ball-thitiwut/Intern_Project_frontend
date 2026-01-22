@@ -6,17 +6,17 @@
     <div class="flex items-end justify-between gap-4 mb-8">
       <div>
         <h1 class="text-3xl font-bold text-[#051960] tracking-tight mb-2">
-          ประวัติแคมเปญ
+          {{ $t('history_campaign_view.header.title') }}
         </h1>
         <p class="text-gray-500 text-sm md:text-base font-light">
-          ติดตามสถานะและผลลัพธ์ของโปรโมชั่นทั้งหมดของคุณ
+          {{ $t('history_campaign_view.header.subtitle') }}
         </p>
       </div>
       <button
         @click="$router.push('/ideas')"
         class="bg-[#051960] text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-lg shadow-blue-900/20 hover:bg-[#0a237a] hover:-translate-y-0.5 transition-all flex items-center gap-2"
       >
-        <span class="text-lg">+</span> สร้างแคมเปญใหม่
+        <span class="text-lg">+</span> {{ $t('history_campaign_view.header.create_button') }}
       </button>
     </div>
 
@@ -44,9 +44,9 @@
         </div>
         <div>
           <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">
-            กำลังใช้งาน
+            {{ $t('history_campaign_view.summary.active_label') }}
           </p>
-          <h3 class="text-2xl font-bold text-[#051960]">3 แคมเปญ</h3>
+          <h3 class="text-2xl font-bold text-[#051960]">3 {{ $t('history_campaign_view.summary.unit_campaigns') }}</h3>
         </div>
       </div>
       <div
@@ -72,7 +72,7 @@
         </div>
         <div>
           <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">
-            ยอดขายจากโปรฯ (เดือนนี้)
+            {{ $t('history_campaign_view.summary.sales_label') }}
           </p>
           <h3 class="text-2xl font-bold text-[#051960]">฿24,500</h3>
         </div>
@@ -106,7 +106,7 @@
         </div>
         <div>
           <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">
-            Bill Penetration เฉลี่ย
+            {{ $t('history_campaign_view.summary.penetration_label') }}
           </p>
           <h3 class="text-2xl font-bold text-[#051960]">12.5%</h3>
         </div>
@@ -118,7 +118,7 @@
         <span
           class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"
         ></span>
-        กำลังดำเนินการ
+        {{ $t('history_campaign_view.active_section.title') }}
       </h2>
 
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -159,7 +159,7 @@
                           clip-rule="evenodd"
                         />
                       </svg>
-                      เหลือเวลา {{ campaign.daysLeft }} วัน
+                      {{ $t('history_campaign_view.active_section.days_left', { n: campaign.daysLeft }) }}
                     </span>
                   </div>
                   <h3
@@ -231,7 +231,7 @@
                               />
                             </svg>
                           </span>
-                          <span class="font-medium">ทำซ้ำ</span>
+                          <span class="font-medium">{{ $t('history_campaign_view.active_section.menu.duplicate') }}</span>
                         </button>
                       </li>
                       <li>
@@ -257,7 +257,7 @@
                               />
                             </svg>
                           </span>
-                          <span class="font-medium">หยุดชั่วคราว</span>
+                          <span class="font-medium">{{ $t('history_campaign_view.active_section.menu.pause') }}</span>
                         </button>
                       </li>
                       <li class="my-1 border-t border-gray-100"></li>
@@ -284,7 +284,7 @@
                               />
                             </svg>
                           </span>
-                          <span class="font-medium">ลบแคมเปญ</span>
+                          <span class="font-medium">{{ $t('history_campaign_view.active_section.menu.delete') }}</span>
                         </button>
                       </li>
                     </ul>
@@ -295,7 +295,7 @@
 
             <div class="mb-6">
               <div class="flex justify-between text-xs mb-2">
-                <span class="text-gray-500">เป้าหมายยอดขาย</span>
+                <span class="text-gray-500">{{ $t('history_campaign_view.active_section.sales_target') }}</span>
                 <span class="font-bold text-[#051960]"
                   >{{ campaign.progress }}%</span
                 >
@@ -331,7 +331,7 @@
                     d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                   />
                 </svg>
-                แก้ไขข้อมูล
+                {{ $t('history_campaign_view.active_section.edit_button') }}
               </button>
             </div>
           </div>
@@ -340,7 +340,7 @@
     </div>
 
     <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
-      <h2 class="text-xl font-bold text-[#051960] mb-6">ประวัติย้อนหลัง</h2>
+      <h2 class="text-xl font-bold text-[#051960] mb-6">{{ $t('history_campaign_view.history_section.title') }}</h2>
 
       <div class="overflow-x-auto">
         <table class="w-full">
@@ -349,32 +349,32 @@
               <th
                 class="pb-4 pl-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-[30%]"
               >
-                ชื่อแคมเปญ
+                {{ $t('history_campaign_view.history_section.headers.name') }}
               </th>
               <th
                 class="pb-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center"
               >
-                ประเภท
+                {{ $t('history_campaign_view.history_section.headers.type') }}
               </th>
               <th
                 class="pb-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center"
               >
-                ระยะเวลา
+                {{ $t('history_campaign_view.history_section.headers.duration') }}
               </th>
               <th
                 class="pb-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right"
               >
-                ยอดขายที่ทำได้
+                {{ $t('history_campaign_view.history_section.headers.revenue') }}
               </th>
               <th
                 class="pb-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center"
               >
-                สถานะ
+                {{ $t('history_campaign_view.history_section.headers.status') }}
               </th>
               <th
                 class="pb-4 pr-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right"
               >
-                จัดการ
+                {{ $t('history_campaign_view.history_section.headers.manage') }}
               </th>
             </tr>
           </thead>
@@ -409,7 +409,7 @@
                 </span>
               </td>
               <td class="py-4 text-center text-gray-500 font-medium">
-                {{ calculateDuration(history.startDate, history.endDate) }} วัน
+                {{ calculateDuration(history.startDate, history.endDate) }} {{ $t('history_campaign_view.history_section.unit_days') }}
               </td>
               <td class="py-4 text-right font-bold text-[#051960]">
                 ฿{{ formatCurrency(history.revenue) }}
@@ -423,7 +423,7 @@
                       : 'bg-gray-100 text-gray-500'
                   "
                 >
-                  {{ history.status === "Completed" ? "จบแล้ว" : "ยกเลิก" }}
+                  {{ history.status === "Completed" ? $t('history_campaign_view.history_section.status.completed') : $t('history_campaign_view.history_section.status.cancelled') }}
                 </span>
               </td>
               <td class="py-4 pr-4 text-right">
@@ -445,7 +445,7 @@
                       d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                     />
                   </svg>
-                  ดูรายงาน
+                  {{ $t('history_campaign_view.history_section.view_report_button') }}
                 </button>
               </td>
             </tr>
@@ -457,7 +457,7 @@
         v-if="historyCampaigns.length === 0"
         class="text-center py-10 text-gray-400"
       >
-        ยังไม่มีประวัติแคมเปญ
+        {{ $t('history_campaign_view.history_section.empty_state') }}
       </div>
     </div>
     <EditCampaignModal
@@ -477,11 +477,13 @@
 
 <script setup>
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import EditCampaignModal from "@/components/EditCampaignModal.vue";
 import ReportCampaignModal from "@/components/ReportCampaignModal.vue";
 
 const router = useRouter();
+const { t, locale } = useI18n();
 
 // State
 const activeMenuId = ref(null);
@@ -587,10 +589,10 @@ const closeAnyOpenMenu = () => {
 const handleMenuAction = (action, campaign) => {
   activeMenuId.value = null;
   if (action === "duplicate") {
-    alert(`กำลังทำซ้ำแคมเปญ: ${campaign.name}`);
+    alert(t('history_campaign_view.alerts.duplicate_msg', { name: campaign.name }));
   } else if (action === "delete") {
-    if (confirm("คุณแน่ใจหรือไม่ที่จะลบแคมเปญนี้?")) {
-      alert("ลบแคมเปญเรียบร้อย");
+    if (confirm(t('history_campaign_view.alerts.delete_confirm'))) {
+      alert(t('history_campaign_view.alerts.delete_success'));
     }
   }
 };
@@ -610,11 +612,11 @@ const viewReport = (id) => {
 // Helpers
 const formatDate = (dateString) => {
   const options = { day: "numeric", month: "short" };
-  return new Date(dateString).toLocaleDateString("th-TH", options);
+  return new Date(dateString).toLocaleDateString(locale.value, options);
 };
 
 const formatCurrency = (value) => {
-  return new Intl.NumberFormat("en-US").format(value);
+  return new Intl.NumberFormat(locale.value).format(value);
 };
 
 const calculateDuration = (start, end) => {

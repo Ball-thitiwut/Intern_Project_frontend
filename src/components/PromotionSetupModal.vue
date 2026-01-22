@@ -50,7 +50,7 @@
                   />
                 </svg>
               </div>
-              <span class="toast-text text-sm font-bold">สร้างแคมเปญสำเร็จ!</span>
+              <span class="toast-text text-sm font-bold">{{ $t('promotion_setup_modal.toast.success') }}</span>
             </div>
           </div>
         </transition>
@@ -58,9 +58,9 @@
           class="bg-white px-8 pt-8 pb-4 flex justify-between items-start shrink-0 border-b border-gray-50"
         >
           <div>
-            <h3 class="text-2xl font-bold text-[#051960]">สร้างโปรโมชั่น</h3>
+            <h3 class="text-2xl font-bold text-[#051960]">{{ $t('promotion_setup_modal.header.title') }}</h3>
             <p class="text-gray-400 text-sm mt-1 font-light">
-              กำหนดรายละเอียดแคมเปญของคุณ
+              {{ $t('promotion_setup_modal.header.subtitle') }}
             </p>
           </div>
           <button
@@ -106,14 +106,14 @@
                     class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border bg-white/90 backdrop-blur-sm shadow-sm"
                     :class="ideaData?.badgeColor"
                   >
-                    {{ ideaData?.type || "Campaign" }}
+                    {{ ideaData?.type || $t('promotion_setup_modal.card.default_type') }}
                   </span>
 
                   <div
                     class="flex items-center gap-1.5 bg-white/90 px-2.5 py-1 rounded-lg shadow-sm border border-white/50"
                   >
                     <span class="text-[10px] text-gray-400 font-medium"
-                      >Impact</span
+                      >{{ $t('promotion_setup_modal.card.impact_label') }}</span
                     >
                     <span
                       class="text-sm font-bold"
@@ -138,14 +138,14 @@
           <form @submit.prevent="handleConfirm" class="space-y-6">
             <div class="space-y-2">
               <label class="text-sm font-bold text-[#051960] ml-1"
-                >ชื่อแคมเปญ</label
+                >{{ $t('promotion_setup_modal.form.name_label') }}</label
               >
               <div class="relative">
                 <input
                   v-model="form.name"
                   type="text"
                   class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-semibold text-[#051960] placeholder-gray-400 shadow-sm"
-                  placeholder="ระบุชื่อแคมเปญ..."
+                  :placeholder="$t('promotion_setup_modal.form.name_placeholder')"
                   required
                 />
                 <span
@@ -172,7 +172,7 @@
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-2">
                 <label class="text-sm font-bold text-[#051960] ml-1"
-                  >วันที่เริ่ม</label
+                  >{{ $t('promotion_setup_modal.form.start_date_label') }}</label
                 >
                 <div class="relative">
                   <input
@@ -203,7 +203,7 @@
               </div>
               <div class="space-y-2">
                 <label class="text-sm font-bold text-[#051960] ml-1"
-                  >วันที่สิ้นสุด</label
+                  >{{ $t('promotion_setup_modal.form.end_date_label') }}</label
                 >
                 <div class="relative">
                   <input
@@ -243,14 +243,14 @@
             @click="close"
             class="flex-1 py-3.5 rounded-full border-2 border-gray-100 text-gray-500 font-bold text-sm hover:bg-gray-50 hover:border-gray-200 hover:text-gray-700 transition-all"
           >
-            ยกเลิก
+            {{ $t('promotion_setup_modal.buttons.cancel') }}
           </button>
           <button
             @click="handleConfirm"
             :disabled="isLoading"
             class="flex-[2] py-3.5 rounded-full bg-[#051960] text-white font-bold text-sm hover:bg-[#0a237a] shadow-xl shadow-blue-900/20 hover:shadow-blue-900/30 hover:-translate-y-0.5 transition-all active:scale-95 active:translate-y-0 flex items-center justify-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
           >
-            <span v-if="!isLoading">ยืนยันสร้างแคมเปญ</span>
+            <span v-if="!isLoading">{{ $t('promotion_setup_modal.buttons.confirm') }}</span>
 
             <div v-else class="flex items-center gap-2">
               <svg
@@ -273,7 +273,7 @@
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              <span>กำลังสร้าง...</span>
+              <span>{{ $t('promotion_setup_modal.buttons.processing') }}</span>
             </div>
           </button>
         </div>
@@ -284,6 +284,7 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
   isOpen: Boolean,
@@ -292,6 +293,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["close", "confirm"]);
+const { t } = useI18n();
 
 const isLoading = ref(false);
 const showToast = ref(false);
@@ -308,7 +310,7 @@ watch(
   () => props.suggestionData,
   (newVal) => {
     if (newVal) {
-      form.value.name = `โปรโมชั่น ${newVal.name}`;
+      form.value.name = t('promotion_setup_modal.auto_fill.promotion_prefix') + ' ' + newVal.name;
     }
   }
 );

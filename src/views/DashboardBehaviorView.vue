@@ -14,11 +14,11 @@
         />
 
         <StatAnalysisChart
-          title="ยอดขายเฉลี่ยต่อบิล"
+          :title="$t('dashboard_behavior_view.spending_analysis.title')"
           :stats="salesPerBillStats"
           :chart-data="salesPerBillChartData"
-          y-axis-label="จำนวนบิล"
-          x-axis-label="ช่วงราคา (บาท)"
+          :y-axis-label="$t('dashboard_behavior_view.spending_analysis.y_axis_label')"
+          :x-axis-label="$t('dashboard_behavior_view.spending_analysis.x_axis_label')"
           :y-ticks="calcYTicks(salesPerBillChartData)"
         />
         
@@ -29,6 +29,7 @@
 
 <script setup>
 import { computed, onMounted, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { useDashboardStore } from "@/stores/dashboard";
 import GroupSizeChart from '@/components/GroupSizeChart.vue';
 import StatAnalysisChart from '@/components/StatAnalysisChart.vue';
@@ -44,6 +45,7 @@ const props = defineProps({
   }
 });
 
+const { t } = useI18n();
 const dashboardStore = useDashboardStore();
 
 const fetchData = async () => {
@@ -115,8 +117,8 @@ const salesPerBillStats = computed(() => {
     }
 
     return [
-        { value: `฿${Number(avgBill).toLocaleString()}`, label: 'ยอดขายต่อบิลเฉลี่ย' },
-        { value: mostCommonRange, label: 'ช่วงยอดขายที่พบบ่อยสุด' }
+        { value: `฿${Number(avgBill).toLocaleString()}`, label: t('dashboard_behavior_view.stats.avg_bill_label') },
+        { value: mostCommonRange, label: t('dashboard_behavior_view.stats.most_common_range_label') }
     ];
 });
 

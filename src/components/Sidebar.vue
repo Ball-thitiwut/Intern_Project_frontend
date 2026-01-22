@@ -2,10 +2,8 @@
   <aside
     class="fixed inset-y-0 left-0 z-50 bg-slate-50 min-h-screen flex flex-col font-sans border-r border-gray-200 transition-all duration-300 ease-in-out md:static md:translate-x-0"
     :class="[
-      isCollapsed ? 'md:w-20' : 'md:w-72',
-      isMobileOpen
-        ? 'translate-x-0 w-64 shadow-2xl'
-        : '-translate-x-full w-64 md:w-auto',
+      isCollapsed ? 'md:w-20' : 'md:w-64',
+      isMobileOpen ? 'translate-x-0 w-56 shadow-2xl' : '-translate-x-full w-56',
     ]"
   >
     <div
@@ -31,11 +29,11 @@
       <button
         v-if="!isCollapsed"
         @click="isMobileOpen = false"
-        class="md:hidden p-2 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-[#051960] transition-colors"
+        class="md:hidden ml-auto -mr-2 p-2 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-[#051960] transition-colors"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="w-6 h-6"
+          class="w-4 h-4"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -52,7 +50,7 @@
       <button
         v-if="!isCollapsed"
         @click="toggleSidebar"
-        class="hidden md:flex p-2 rounded-lg text-gray-400 hover:bg-white hover:text-[#051960] hover:shadow-sm transition-all items-center justify-center"
+        class="hidden md:flex ml-auto p-2 rounded-lg text-gray-400 hover:bg-white hover:text-[#051960] hover:shadow-sm transition-all items-center justify-center"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +118,7 @@
             v-if="!isCollapsed"
             class="text-sm truncate transition-all duration-300"
           >
-            Dashboard
+            {{ $t("sidebar.dashboard") }}
           </span>
         </div>
       </RouterLink>
@@ -155,7 +153,7 @@
               v-if="!isCollapsed"
               class="text-sm truncate transition-all duration-300"
             >
-              ไอเดียเพิ่มยอดขาย
+              {{ $t("sidebar.growth_ideas") }}
             </span>
           </div>
           <svg
@@ -185,7 +183,7 @@
             class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
             active-class="text-[#051960] bg-blue-50/50"
           >
-            ค้นหาไอเดีย
+            {{ $t("sidebar.find_ideas") }}
           </RouterLink>
           <RouterLink
             to="/history"
@@ -193,7 +191,7 @@
             class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
             active-class="text-[#051960] bg-blue-50/50"
           >
-            ประวัติแคมเปญ
+            {{ $t("sidebar.history") }}
           </RouterLink>
         </div>
       </div>
@@ -228,7 +226,7 @@
               v-if="!isCollapsed"
               class="text-sm truncate transition-all duration-300"
             >
-              ข้อมูล POS
+              {{ $t("sidebar.pos_info") }}
             </span>
           </div>
           <svg
@@ -258,7 +256,7 @@
             class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
             active-class="text-[#051960] bg-blue-50/50"
           >
-            เชื่อมต่อ POS
+            {{ $t("sidebar.connect_pos") }}
           </RouterLink>
           <RouterLink
             to="/data-management"
@@ -266,12 +264,40 @@
             class="block px-3 py-2 text-sm font-medium rounded-lg transition-colors truncate text-slate-500 hover:text-[#051960] hover:bg-slate-50"
             active-class="text-[#051960] bg-blue-50/50"
           >
-            จัดการข้อมูล
+            {{ $t("sidebar.data_manage") }}
           </RouterLink>
         </div>
       </div>
     </nav>
+    <div class="px-5 py-6 border-t border-gray-100 md:hidden mt-auto">
+      <div
+        class="flex items-center p-1 bg-gray-50 rounded-xl border border-gray-100"
+      >
+        <button
+          @click="changeLanguage('TH')"
+          class="flex-1 py-2 rounded-lg text-sm font-bold transition-all duration-200"
+          :class="
+            locale === 'TH'
+              ? 'bg-white text-[#051960] shadow-sm'
+              : 'text-gray-400 hover:text-gray-600'
+          "
+        >
+          TH
+        </button>
 
+        <button
+          @click="changeLanguage('EN')"
+          class="flex-1 py-2 rounded-lg text-sm font-bold transition-all duration-200"
+          :class="
+            locale === 'EN'
+              ? 'bg-white text-[#051960] shadow-sm'
+              : 'text-gray-400 hover:text-gray-600'
+          "
+        >
+          EN
+        </button>
+      </div>
+    </div>
     <div
       class="p-5 text-xs text-center text-gray-400 whitespace-nowrap overflow-hidden"
     >
@@ -289,9 +315,16 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 import logo from "@/assets/images/logo.png";
 
 const route = useRoute();
+const { t, locale } = useI18n();
+
+const changeLanguage = (lang) => {
+  locale.value = lang;
+  localStorage.setItem("lang", lang);
+};
 
 // เพิ่มตัวแปรใหม่สำหรับมือถือ
 const isMobileOpen = ref(false);

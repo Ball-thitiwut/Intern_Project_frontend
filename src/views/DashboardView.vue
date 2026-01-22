@@ -16,7 +16,7 @@
         >
           <div class="flex justify-between items-start md:items-center">
             <div class="text-xs md:text-sm font-medium text-gray-500">
-              ยอดขาย
+              {{ $t("dashboard_view.cards.sales_title") }}
             </div>
             <div class="p-1.5 md:p-2 bg-blue-50 rounded-lg text-blue-600">
               <svg
@@ -50,7 +50,7 @@
                 :class="
                   parseFloat(
                     dashboardStore.overviewData?.summary?.growth
-                      ?.sales_growth_pct
+                      ?.sales_growth_pct,
                   ) >= 0
                     ? 'text-green-700 bg-green-100'
                     : 'text-red-700 bg-red-100'
@@ -61,9 +61,9 @@
                     ?.sales_growth_pct || 0
                 }}%
               </span>
-              <span class="hidden md:inline text-xs text-gray-400"
-                >จากช่วงก่อนหน้า</span
-              >
+              <span class="hidden md:inline text-xs text-gray-400">{{
+                $t("dashboard_view.cards.from_prev_period")
+              }}</span>
             </div>
           </div>
         </div>
@@ -73,7 +73,7 @@
         >
           <div class="flex justify-between items-start md:items-center">
             <div class="text-xs md:text-sm font-medium text-gray-500">
-              เมนูฮิต
+              {{ $t("dashboard_view.cards.top_menu_title") }}
             </div>
             <div class="p-1.5 md:p-2 bg-orange-50 rounded-lg text-orange-500">
               <svg
@@ -102,13 +102,17 @@
               }}
             </div>
             <div class="text-[10px] md:text-sm text-gray-500 mt-1 md:mt-2">
-              <span class="hidden md:inline">ขายไปแล้ว</span>
+              <span class="hidden md:inline">{{
+                $t("dashboard_view.cards.sold_label")
+              }}</span>
               <span class="text-[#051960] font-bold text-sm md:text-lg md:ml-1">
                 {{
                   dashboardStore.overviewData?.top_menus?.[0]?.total_qty || 0
                 }}
               </span>
-              <span class="text-[10px] md:text-xs text-gray-400 ml-1">จาน</span>
+              <span class="text-[10px] md:text-xs text-gray-400 ml-1">{{
+                $t("dashboard_view.cards.unit_plate")
+              }}</span>
             </div>
           </div>
         </div>
@@ -136,7 +140,7 @@
             <div
               class="text-xs md:text-sm font-medium text-gray-500 md:order-first"
             >
-              ช่วงเวลาพีค
+              {{ $t("dashboard_view.cards.peak_time_title") }}
             </div>
           </div>
           <div class="text-right md:text-left">
@@ -151,7 +155,7 @@
               class="hidden md:flex text-xs text-gray-400 mt-2 items-center gap-1"
             >
               <span class="w-2 h-2 rounded-full bg-red-400"></span>
-              ช่วงเวลาที่มีออเดอร์หนาแน่น
+              {{ $t("dashboard_view.cards.peak_time_desc") }}
             </div>
           </div>
         </div>
@@ -159,7 +163,7 @@
 
       <div class="bg-white shadow rounded-2xl p-4 md:p-6">
         <div class="text-base md:text-xl font-bold text-[#051960] mb-4">
-          แนวโน้มยอดขาย
+          {{ $t("dashboard_view.sales_trend.title") }}
         </div>
         <div class="w-full h-56 md:h-80 relative">
           <SalesChart
@@ -183,7 +187,7 @@
               <div
                 class="text-xs md:text-base font-medium text-gray-600 md:mb-1"
               >
-                ยอดขายทั้งหมด
+                {{ $t("dashboard_view.summary_stats.total_sales") }}
               </div>
               <div class="flex items-baseline gap-2">
                 <span class="text-lg md:text-2xl font-bold text-[#051960]">
@@ -206,14 +210,22 @@
               <div
                 class="grid grid-cols-3 text-gray-500 mb-1 px-1 text-[10px] md:text-sm"
               >
-                <span class="text-left">สถานะ</span
-                ><span class="text-center">ราคา</span
-                ><span class="text-right">% เปลี่ยน</span>
+                <span class="text-left">{{
+                  $t("dashboard_view.summary_stats.table_headers.status")
+                }}</span
+                ><span class="text-center">{{
+                  $t("dashboard_view.summary_stats.table_headers.price")
+                }}</span
+                ><span class="text-right">{{
+                  $t("dashboard_view.summary_stats.table_headers.change_pct")
+                }}</span>
               </div>
               <div
                 class="grid grid-cols-3 font-medium text-[#051960] bg-white p-2 rounded shadow-sm border border-gray-100 text-[10px] md:text-base"
               >
-                <span class="text-left">แบบขาย</span>
+                <span class="text-left">{{
+                  $t("dashboard_view.summary_stats.row_labels.sales")
+                }}</span>
                 <span class="text-center"
                   >฿{{
                     dashboardStore.overviewData?.summary?.total_sales?.toLocaleString() ||
@@ -237,7 +249,7 @@
               <div
                 class="text-xs md:text-base font-medium text-gray-600 md:mb-1"
               >
-                ค่าเฉลี่ยต่อบิล
+                {{ $t("dashboard_view.summary_stats.avg_bill") }}
               </div>
               <div class="flex items-baseline gap-2">
                 <span class="text-lg md:text-2xl font-bold text-[#051960]">
@@ -249,14 +261,22 @@
               <div
                 class="grid grid-cols-3 text-gray-500 mb-1 px-1 text-[10px] md:text-sm"
               >
-                <span class="text-left">สถานะ</span
-                ><span class="text-center">ราคา</span
-                ><span class="text-right">จำนวน</span>
+                <span class="text-left">{{
+                  $t("dashboard_view.summary_stats.table_headers.qty")
+                }}</span
+                ><span class="text-center">{{
+                  $t("dashboard_view.summary_stats.table_headers.qty")
+                }}</span
+                ><span class="text-right">{{
+                  $t("dashboard_view.summary_stats.table_headers.qty")
+                }}</span>
               </div>
               <div
                 class="grid grid-cols-3 font-medium text-[#051960] bg-white p-2 rounded shadow-sm border border-gray-100 text-[10px] md:text-base"
               >
-                <span class="text-left">เฉลี่ย</span>
+                <span class="text-left">{{
+                  $t("dashboard_view.summary_stats.row_labels.average")
+                }}</span>
                 <span class="text-center"
                   >฿{{
                     dashboardStore.overviewData?.summary?.average_bill || 0
@@ -275,7 +295,7 @@
         >
           <div class="w-full text-center mb-4 z-10">
             <h2 class="text-base md:text-xl font-bold text-[#051960]">
-              สัดส่วนยอดขายโปรโมชั่น
+              {{ $t("dashboard_view.promotion_chart.title") }}
             </h2>
           </div>
           <div
@@ -292,34 +312,14 @@
               />
             </div>
             <div
-              v-if="0 > 0"
-              class="absolute left-4 lg:left-5 top-[40%] -translate-y-1/2 z-20 flex items-center hidden md:flex"
-            >
-              <div
-                class="bg-white px-5 py-2 rounded-xl shadow-md flex flex-col items-start min-w-[100px] border-l-4 border-[#F47122]"
-              >
-                <span class="text-xs font-medium text-gray-400">โปรโมชั่น</span>
-                <span class="text-xl font-bold text-[#F47122]"> 0 </span>
-              </div>
-              <svg width="60" height="40" class="-ml-1">
-                <path
-                  d="M0,25 L30,25 L55,10"
-                  fill="none"
-                  stroke="#E5E7EB"
-                  stroke-width="2"
-                />
-                <circle cx="55" cy="10" r="5" fill="#D9D9D9" />
-              </svg>
-            </div>
-            <div
               class="absolute right-4 lg:right-5 top-[55%] -translate-y-1/2 z-20 flex items-center flex-row-reverse hidden md:flex"
             >
               <div
                 class="bg-white px-5 py-2 rounded-xl shadow-md flex flex-col items-end min-w-[100px] border-r-4 border-[#002683]"
               >
-                <span class="text-xs font-medium text-gray-400"
-                  >เมนูทั่วไป</span
-                >
+                <span class="text-xs font-medium text-gray-400">{{
+                  $t("dashboard_view.promotion_chart.regular")
+                }}</span>
                 <span class="text-xl font-bold text-[#002683]">{{
                   (
                     dashboardStore.overviewData?.summary?.total_sales || 0
@@ -344,9 +344,9 @@
               <span
                 class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-[#F47122]"
               ></span>
-              <span class="text-gray-700 text-xs md:text-sm font-medium"
-                >โปรโมชั่น</span
-              >
+              <span class="text-gray-700 text-xs md:text-sm font-medium">{{
+                $t("dashboard_view.promotion_chart.promo")
+              }}</span>
             </div>
             <div
               class="flex items-center gap-2 bg-gray-50 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-gray-100 shadow-sm"
@@ -354,9 +354,9 @@
               <span
                 class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-[#002683]"
               ></span>
-              <span class="text-gray-700 text-xs md:text-sm font-medium"
-                >เมนูทั่วไป</span
-              >
+              <span class="text-gray-700 text-xs md:text-sm font-medium">{{
+                $t("dashboard_view.promotion_chart.regular")
+              }}</span>
             </div>
           </div>
         </div>
@@ -366,9 +366,9 @@
         <div
           class="bg-gray-100/70 px-4 py-3 md:px-6 md:py-4 border-b border-gray-100"
         >
-          <span class="font-bold text-sm md:text-lg text-[#051960]"
-            >เมนูที่ยอดขายสูงที่สุด</span
-          >
+          <span class="font-bold text-sm md:text-lg text-[#051960]">{{
+            $t("dashboard_view.top_menu_table.title")
+          }}</span>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-600">
@@ -379,25 +379,25 @@
                 <th
                   class="hidden md:table-cell px-3 py-3 md:px-6 md:py-4 whitespace-nowrap"
                 >
-                  ลำดับ
+                  {{ $t("dashboard_view.top_menu_table.headers.rank") }}
                 </th>
                 <th class="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap">
-                  เมนู
+                  {{ $t("dashboard_view.top_menu_table.headers.menu") }}
                 </th>
                 <th
                   class="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap text-right md:text-left"
                 >
-                  ยอดขาย
+                  {{ $t("dashboard_view.top_menu_table.headers.sales") }}
                 </th>
                 <th
                   class="px-3 py-3 md:px-6 md:py-4 text-center whitespace-nowrap"
                 >
-                  จำนวน
+                  {{ $t("dashboard_view.top_menu_table.headers.qty") }}
                 </th>
                 <th
                   class="hidden md:table-cell px-3 py-3 md:px-6 md:py-4 text-right whitespace-nowrap"
                 >
-                  % ยอดขาย
+                  {{ $t("dashboard_view.top_menu_table.headers.sales_share") }}
                 </th>
               </tr>
             </thead>
@@ -443,6 +443,7 @@
 <script setup>
 import { onMounted, watch } from "vue";
 import { useDashboardStore } from "@/stores/dashboard";
+import { useI18n } from "vue-i18n";
 import SalesChart from "@/components/SalesChart.vue";
 import PromotionPieChart from "@/components/PromotionPieChart.vue";
 
@@ -453,6 +454,7 @@ const props = defineProps({
 });
 
 const dashboardStore = useDashboardStore();
+const { t } = useI18n();
 
 // ดึงข้อมูล Overview
 const fetchData = async () => {

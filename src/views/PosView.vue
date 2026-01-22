@@ -3,11 +3,11 @@
     
     <div class="mb-4 md:mb-6 flex-none">
       <h1 class="text-2xl md:text-3xl font-bold text-[#051960] tracking-tight mb-2 md:mb-3">
-        เชื่อมต่อข้อมูล POS
+        {{ $t('pos_view.header.title') }}
       </h1>
       <p class="text-gray-500 text-sm md:text-base font-light">
-        เลือกเชื่อมต่อข้อมูลกับ POS ที่คุณใช้งาน หรือ <span class="text-[#F97316] font-medium">รับฟรี! POS</span>
-        เมื่อเลือกใช้งาน RESSELF POS
+        {{ $t('pos_view.header.subtitle') }} <span class="text-[#F97316] font-medium">{{ $t('pos_view.header.free_pos_highlight') }}</span>
+        {{ $t('pos_view.header.subtitle_suffix') }}
       </p>
     </div>
 
@@ -16,7 +16,7 @@
       <div class="relative bg-gray-50 rounded-2xl md:rounded-[2rem] w-full h-auto md:h-full min-h-[280px] flex flex-col items-center pb-6 md:pb-10 border-2 border-dashed border-gray-300 overflow-hidden cursor-not-allowed select-none">
         
         <div class="absolute top-4 right-4 md:top-6 md:right-6 bg-gray-200 text-gray-500 text-[10px] md:text-xs font-bold px-2 py-0.5 md:px-3 md:py-1 rounded-full z-20 uppercase tracking-wider">
-          Coming Soon
+          {{ $t('pos_view.cards.resself_pos.coming_soon_badge') }}
         </div>
 
         <div class="absolute top-0 w-full h-1/2 bg-gradient-to-b from-gray-200 to-transparent opacity-50 z-0"></div>
@@ -29,10 +29,9 @@
                </div>
             </div>
 
-            <h2 class="text-lg md:text-2xl font-bold text-gray-400 mb-1 md:mb-2">RESSELF POS</h2>
+            <h2 class="text-lg md:text-2xl font-bold text-gray-400 mb-1 md:mb-2">{{ $t('pos_view.cards.resself_pos.title') }}</h2>
             <p class="text-gray-400 font-light text-xs md:text-base">
-              ระบบจัดการร้านอาหารที่มาพร้อม AI<br>
-              ช่วยวิเคราะห์ยอดขายและจัดการสต็อกฟรี
+              {{ $t('pos_view.cards.resself_pos.description') }}
             </p>
         </div>
 
@@ -40,7 +39,7 @@
           disabled
           class="z-10 bg-gray-200 text-gray-400 font-bold text-sm md:text-lg py-2.5 md:py-3 px-6 md:px-10 rounded-full cursor-not-allowed w-auto min-w-[140px] md:min-w-[200px]"
         >
-          เร็วๆ นี้
+          {{ $t('pos_view.cards.resself_pos.button_text') }}
         </button>
       </div>
 
@@ -56,10 +55,9 @@
                </div>
             </div>
 
-            <h2 class="text-lg md:text-2xl font-bold text-[#051960] mb-1 md:mb-2">POS อื่น / My Own POS</h2>
+            <h2 class="text-lg md:text-2xl font-bold text-[#051960] mb-1 md:mb-2">{{ $t('pos_view.cards.other_pos.title') }}</h2>
             <p class="text-gray-500 font-light text-xs md:text-base">
-              ดึงข้อมูลยอดขายจากระบบ POS เดิมของคุณ<br>
-              รองรับ Ocha, Wongnai และอื่นๆ
+              {{ $t('pos_view.cards.other_pos.description') }}
             </p>
         </div>
 
@@ -67,7 +65,7 @@
           @click="handleConnectOther"
           class="z-10 bg-white text-[#051960] border-2 border-[#051960] font-bold text-sm md:text-lg py-2.5 md:py-3 px-6 md:px-10 rounded-full shadow-sm hover:bg-[#051960] hover:text-white active:scale-95 transition-all duration-200 w-auto min-w-[140px] md:min-w-[200px]"
         >
-          เชื่อมกับ POS อื่น
+          {{ $t('pos_view.cards.other_pos.button_text') }}
         </button>
       </div>
 
@@ -85,11 +83,13 @@
 
 <script setup>
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import ConnectPosModal from "@/components/ConnectPosModal.vue";
 
 const router = useRouter();
 const showMyOwnModal = ref(false);
+const { t } = useI18n();
 
 const handleConnectOther = () => {
   router.push({ name: "select-pos" });

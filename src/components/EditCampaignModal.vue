@@ -51,7 +51,7 @@
                 </svg>
               </div>
               <span class="toast-text text-sm font-bold"
-                >บันทึกข้อมูลสำเร็จ!</span
+                >{{ $t('edit_campaign_modal.toast.success') }}</span
               >
             </div>
           </div>
@@ -60,9 +60,9 @@
           class="bg-white px-8 pt-8 pb-4 flex justify-between items-start shrink-0 border-b border-gray-50"
         >
           <div>
-            <h3 class="text-2xl font-bold text-[#051960]">แก้ไขข้อมูลแคมเปญ</h3>
+            <h3 class="text-2xl font-bold text-[#051960]">{{ $t('edit_campaign_modal.header.title') }}</h3>
             <p class="text-gray-400 text-sm mt-1 font-light">
-              ปรับปรุงรายละเอียดโปรโมชั่นของคุณ
+              {{ $t('edit_campaign_modal.header.subtitle') }}
             </p>
           </div>
           <button
@@ -89,7 +89,7 @@
         <div class="p-8 space-y-6 overflow-y-auto custom-scrollbar">
           <div class="space-y-2">
             <label class="text-sm font-bold text-[#051960] ml-1">
-              ชื่อแคมเปญ
+              {{ $t('edit_campaign_modal.form.name_label') }}
             </label>
             <div class="relative">
               <input
@@ -97,7 +97,7 @@
                 :disabled="isLoading"
                 type="text"
                 class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-semibold text-[#051960] placeholder-gray-400 shadow-sm"
-                placeholder="ระบุชื่อแคมเปญ..."
+                :placeholder="$t('edit_campaign_modal.form.name_placeholder')"
               />
               <span
                 class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
@@ -123,7 +123,7 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="text-sm font-bold text-[#051960] ml-1">
-                วันที่เริ่ม
+                {{ $t('edit_campaign_modal.form.start_date_label') }}
               </label>
               <div class="relative">
                 <input
@@ -153,7 +153,7 @@
             </div>
             <div class="space-y-2">
               <label class="text-sm font-bold text-[#051960] ml-1">
-                วันที่สิ้นสุด
+                {{ $t('edit_campaign_modal.form.end_date_label') }}
               </label>
               <div class="relative">
                 <input
@@ -191,14 +191,14 @@
             @click="closeModal"
             class="flex-1 py-3.5 rounded-full border-2 border-gray-100 text-gray-500 font-bold text-sm hover:bg-gray-50 hover:border-gray-200 hover:text-gray-700 transition-all"
           >
-            ยกเลิก
+            {{ $t('edit_campaign_modal.buttons.cancel') }}
           </button>
           <button
             @click="saveChanges"
             :disabled="isLoading"
             class="flex-[2] py-3.5 rounded-full bg-[#051960] text-white font-bold text-sm hover:bg-[#0a237a] shadow-xl shadow-blue-900/20 hover:shadow-blue-900/30 hover:-translate-y-0.5 transition-all active:scale-95 active:translate-y-0 flex items-center justify-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
           >
-            <span v-if="!isLoading">บันทึกข้อมูล</span>
+            <span v-if="!isLoading">{{ $t('edit_campaign_modal.buttons.save') }}</span>
             <div v-else class="flex items-center gap-2">
               <svg
                 class="animate-spin -ml-1 h-5 w-5 text-white"
@@ -220,7 +220,7 @@
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              <span>กำลังบันทึก...</span>
+              <span>{{ $t('edit_campaign_modal.buttons.processing') }}</span>
             </div>
           </button>
         </div>
@@ -231,6 +231,7 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
   isOpen: Boolean,
@@ -238,6 +239,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["close", "save"]);
+const { t } = useI18n();
 
 const isLoading = ref(false);
 const showToast = ref(false);

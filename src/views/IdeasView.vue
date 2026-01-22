@@ -9,10 +9,10 @@
         <h1
           class="text-2xl md:text-3xl font-bold text-[#051960] tracking-tight mb-2"
         >
-          ไอเดียเพิ่มยอดขาย
+          {{ $t('ideas_view.header.title') }}
         </h1>
         <p class="text-gray-500 text-xs md:text-base font-light">
-          ค้นหาโอกาสในการเพิ่มยอดขายด้วย
+          {{ $t('ideas_view.header.subtitle') }}
           <span class="text-[#F97316] font-medium"
             >AI Matching Intelligence</span
           >
@@ -34,12 +34,12 @@
               <label
                 class="hidden md:block absolute -top-2.5 left-6 bg-white px-2 text-[12px] font-semibold uppercase tracking-wider text-gray-400 z-10"
               >
-                สาขา
+                {{ $t('ideas_view.filters.branch_label') }}
               </label>
               <div
                 class="w-full font-semibold text-xs md:text-sm md:text-base truncate md:pr-8 select-none text-[#051960]"
               >
-                {{ getSelectedBranchName || "-- เลือกสาขา --" }}
+                {{ getSelectedBranchName || $t('ideas_view.filters.branch_placeholder') }}
               </div>
             </div>
           </div>
@@ -62,12 +62,12 @@
                     : 'text-gray-400 group-hover:text-orange-500'
                 "
               >
-                ประเภทการขาย
+                {{ $t('ideas_view.filters.channel_label') }}
               </label>
               <div
                 class="w-full text-[#051960] font-semibold text-xs md:text-sm md:text-base truncate pr-6 md:pr-8 select-none"
               >
-                {{ getSelectedChannelName || "ทั้งหมด" }}
+                {{ getSelectedChannelName || $t('ideas_view.filters.channel_placeholder') }}
               </div>
               <div
                 class="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 text-gray-400 transition-transform duration-300 pointer-events-none"
@@ -248,9 +248,9 @@
             </svg>
           </div>
           <div>
-            <h3 class="text-[#051960] font-bold text-lg mb-1">AI กำลังทำงาน</h3>
+            <h3 class="text-[#051960] font-bold text-lg mb-1">{{ $t('ideas_view.state.ai_working.title') }}</h3>
             <p class="text-gray-400 text-sm font-light">
-              กำลังวิเคราะห์พฤติกรรมลูกค้า...
+              {{ $t('ideas_view.state.ai_working.subtitle') }}
             </p>
           </div>
         </div>
@@ -279,9 +279,9 @@
           </svg>
         </div>
         <div class="text-center">
-          <h3 class="text-xl font-bold text-gray-400 mb-2">รอคำสั่งจากคุณ</h3>
+          <h3 class="text-xl font-bold text-gray-400 mb-2">{{ $t('ideas_view.state.waiting.title') }}</h3>
           <p class="font-light text-gray-400">
-            เลือกเงื่อนไขด้านบน แล้วกดปุ่มเพื่อเริ่มค้นหาไอเดีย
+            {{ $t('ideas_view.state.waiting.subtitle') }}
           </p>
         </div>
       </div>
@@ -301,12 +301,12 @@
                 class="relative inline-flex rounded-full h-3 w-3 bg-orange-500"
               ></span>
             </span>
-            ผลลัพธ์การวิเคราะห์
+            {{ $t('ideas_view.results.title') }}
           </h3>
           <span
             class="text-[10px] md:text-xs text-gray-500 font-medium bg-white px-3 md:px-4 py-1.5 rounded-full border border-gray-200 shadow-sm"
           >
-            ข้อมูลล่าสุด: {{ lastUpdated }}
+            {{ $t('ideas_view.results.last_updated') }} {{ lastUpdated }}
           </span>
         </div>
 
@@ -372,7 +372,7 @@
                       class="text-[10px] md:text-xs font-bold uppercase tracking-wide opacity-70"
                       :class="idea.textColor"
                     >
-                      แนะนำสูงสุด (Top Pick)
+                      {{ $t('ideas_view.card.top_pick') }}
                     </span>
                   </div>
                   <div class="flex items-start justify-between gap-2 md:gap-4">
@@ -398,7 +398,7 @@
                       <div
                         class="text-[8px] md:text-[10px] text-gray-400 flex items-center justify-end gap-1 group/tooltip relative"
                       >
-                        โอกาสเพิ่มยอดขาย
+                        {{ $t('ideas_view.card.sales_opportunity') }}
                       </div>
                     </div>
                   </div>
@@ -443,7 +443,7 @@
                 @click="openSetupModal(idea, idea.suggestions[0])"
                 class="w-full py-2.5 rounded-3xl bg-white border border-gray-200 text-[#051960] text-sm font-bold hover:bg-[#051960] hover:text-white hover:border-transparent transition-all active:scale-95 shadow-sm flex items-center justify-center gap-2"
               >
-                <span>ดูรายละเอียด & สร้างโปร</span>
+                <span>{{ $t('ideas_view.card.view_details_btn') }}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-4 w-4"
@@ -468,7 +468,7 @@
                 @click.stop="toggleIdea(index)"
                 class="h-9 px-3 rounded-full bg-gray-50 text-gray-500 hover:bg-gray-100 transition-colors flex items-center justify-center gap-1 text-[10px] font-semibold"
               >
-                <span>{{ idea.isOpen ? "ย่อลง" : "ดูเพิ่ม" }}</span>
+                <span>{{ idea.isOpen ? $t('ideas_view.card.toggle.collapse') : $t('ideas_view.card.toggle.expand') }}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-3 w-3 transition-transform duration-300"
@@ -490,7 +490,7 @@
                 @click="openSetupModal(idea, idea.suggestions[0])"
                 class="flex-1 h-9 rounded-full bg-[#051960] text-white text-[10px] font-bold hover:bg-orange-500 transition-colors shadow-sm flex items-center justify-center gap-2"
               >
-                <span>สร้างโปรนี้</span>
+                <span>{{ $t('ideas_view.card.create_btn') }}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-3 w-3"
@@ -524,10 +524,12 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import PromotionSetupModal from "@/components/PromotionSetupModal.vue";
 
 const router = useRouter();
+const { t } = useI18n();
 
 const isAnalyzing = ref(false);
 const isAnalyzed = ref(false);
@@ -549,9 +551,9 @@ const branches = [
 ];
 
 const channelOptions = [
-  { value: "dinein", label: "ทานที่ร้าน" },
-  { value: "delivery", label: "เดลิเวอรี" },
-  { value: "takeaway", label: "ซื้อกลับบ้าน" },
+  { value: "dinein", label: t('ideas_view.filters.channels.dinein') },
+  { value: "delivery", label: t('ideas_view.filters.channels.delivery') },
+  { value: "takeaway", label: t('ideas_view.filters.channels.takeaway') },
 ];
 
 const getSelectedBranchName = computed(() => {
@@ -581,18 +583,18 @@ const isButtonDisabled = computed(() => {
 });
 
 const buttonText = computed(() => {
-  if (isAnalyzing.value) return "กำลังวิเคราะห์...";
+  if (isAnalyzing.value) return t('ideas_view.analyze_button.text.analyzing');
   if (isAnalyzed.value) {
-    if (!hasFilterChanged.value) return "วิเคราะห์เสร็จสิ้น";
-    return "อัปเดตข้อมูล";
+    if (!hasFilterChanged.value) return t('ideas_view.analyze_button.text.completed');
+    return t('ideas_view.analyze_button.text.update');
   }
-  return "เริ่มค้นหาไอเดีย";
+  return t('ideas_view.analyze_button.text.start');
 });
 
 const buttonSubText = computed(() => {
-  if (isAnalyzing.value) return "Processing...";
-  if (isAnalyzed.value && hasFilterChanged.value) return "Data Changed";
-  return "Start AI Analysis";
+  if (isAnalyzing.value) return t('ideas_view.analyze_button.subtext.processing');
+  if (isAnalyzed.value && hasFilterChanged.value) return t('ideas_view.analyze_button.subtext.changed');
+  return t('ideas_view.analyze_button.subtext.start');
 });
 
 const toggleChannel = () => {
@@ -617,11 +619,11 @@ const toggleIdea = (index) => {
   ideas.value[index].isOpen = !ideas.value[index].isOpen;
 };
 
-const ideas = ref([
+const ideas = computed(() => [ 
   {
     type: "Pairing",
-    title: "จับคู่เซ็ตเมนู",
-    subtitle: "เพิ่มยอดต่อบิลด้วยเมนูที่คู่กัน",
+    title: t('ideas_view.demo_ideas.pairing.title'),
+    subtitle: t('ideas_view.demo_ideas.pairing.subtitle'),
     isOpen: false, // เพิ่ม isOpen
     badgeColor: "bg-blue-50 text-blue-600 border-blue-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>`,
@@ -645,8 +647,8 @@ const ideas = ref([
   },
   {
     type: "Happy Hour",
-    title: "โปรช่วงเวลาพิเศษ",
-    subtitle: "กระตุ้นยอดขายช่วงคนน้อย",
+    title: t('ideas_view.demo_ideas.happy_hour.title'),
+    subtitle: t('ideas_view.demo_ideas.happy_hour.subtitle'),
     isOpen: false, // เพิ่ม isOpen
     badgeColor: "bg-red-50 text-red-600 border-red-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
@@ -662,8 +664,8 @@ const ideas = ref([
   },
   {
     type: "Upsell",
-    title: "จัดโปรของแถม",
-    subtitle: "ดันยอดบิลเฉลี่ยให้สูงขึ้น",
+    title: t('ideas_view.demo_ideas.upsell.title'),
+    subtitle: t('ideas_view.demo_ideas.upsell.subtitle'),
     isOpen: false, // เพิ่ม isOpen
     badgeColor: "bg-purple-50 text-purple-600 border-purple-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>`,
@@ -683,8 +685,8 @@ const ideas = ref([
   },
   {
     type: "Slow Moving",
-    title: "กระตุ้นเมนูยอดน้อย",
-    subtitle: "เพิ่มยอดสั่งเมนูที่ลูกค้ามองข้าม",
+    title: t('ideas_view.demo_ideas.slow_moving.title'),
+    subtitle: t('ideas_view.demo_ideas.slow_moving.subtitle'),
     isOpen: false, // เพิ่ม isOpen
     badgeColor: "bg-orange-50 text-orange-600 border-orange-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>`,

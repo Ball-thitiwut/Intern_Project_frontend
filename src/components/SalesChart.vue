@@ -7,7 +7,7 @@
         :class="seriesVisibility[0] ? 'bg-[#F47122] text-white shadow-sm' : 'text-slate-400 hover:bg-slate-200'"
       >
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-        ยอดขายจริง
+        {{ $t('sales_chart.series.actual') }}
       </button>
 
       <button 
@@ -16,20 +16,21 @@
         :class="seriesVisibility[1] ? 'bg-[#3b82f6] text-white shadow-sm' : 'text-slate-400 hover:bg-slate-200'"
       >
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-        คาดการณ์
+        {{ $t('sales_chart.series.forecast') }}
       </button>
     </div>
 
     <Line ref="chartRef" v-if="chartData.labels.length > 0" :data="chartData" :options="chartOptions" />
     
     <div v-else class="flex items-center justify-center h-full text-gray-400 font-sans">
-        - ไม่มีข้อมูลยอดขายในช่วงเวลานี้ -
+        {{ $t('sales_chart.no_data') }}
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed, ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { Line } from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -72,6 +73,7 @@ const props = defineProps({
   }
 });
 
+const { t } = useI18n();
 const chartRef = ref(null);
 const seriesVisibility = ref([true, true]);
 const windowWidth = ref(window.innerWidth);
@@ -253,7 +255,7 @@ const chartData = computed(() => {
     labels: processedData.value.labels,
     datasets: [
       {
-        label: 'ยอดขายจริง', 
+        label: t('sales_chart.series.actual'),
         data: actualData,
         borderColor: '#F47122',       
         backgroundColor: (ctx) => getBackground(ctx),
@@ -274,7 +276,7 @@ const chartData = computed(() => {
         spanGaps: false 
       },
       {
-        label: 'คาดการณ์',
+        label: t('sales_chart.series.forecast'),
         data: processedData.value.forecastValues,
         borderColor: '#3b82f6', 
         backgroundColor: 'rgba(59, 130, 246, 0.05)', 
@@ -297,11 +299,11 @@ const chartData = computed(() => {
 
 // -- Config ตัวเลือกกราฟ (แกน X, Y, Tooltip) --
 const chartOptions = computed(() => {
-    let xAxisLabel = 'ช่วงเวลา (วัน/เดือน)';
+    let xAxisLabel = t('sales_chart.axis.time_day_month');
     const p = normalizedPeriod.value;
     
-    if (p === '24h') xAxisLabel = 'ช่วงเวลา (นาฬิกา)';
-    else if (p === '1y' || p === 'all' || processedData.value.labels.length > 35) xAxisLabel = 'ช่วงเวลา (เดือน/ปี)';
+    if (p === '24h') xAxisLabel = t('sales_chart.axis.time_hour');
+    else if (p === '1y' || p === 'all' || processedData.value.labels.length > 35) xAxisLabel = t('sales_chart.axis.time_month_year');
 
     return {
         responsive: true,
@@ -330,9 +332,9 @@ const chartOptions = computed(() => {
                 boxHeight: isMobile.value ? 8 : 10,
                 boxPadding: isMobile.value ? 3 : 6,
                 callbacks: {
-                    title: (context) => `เวลา: ${context[0].label}`,
+                    title: (context) => `${t('sales_chart.tooltip.time_prefix')}: ${context[0].label}`,
                     label: (ctx) => {
-                        const labelName = ctx.dataset.label || 'ยอดขาย';
+                        const labelName = ctx.dataset.label || t('sales_chart.series.default_label');
                         const val = ctx.parsed.y;
                         if (val === null || val === undefined) return null;
                         return `${labelName}: ฿${val.toLocaleString()}`;
@@ -345,7 +347,7 @@ const chartOptions = computed(() => {
                 beginAtZero: true, 
                 title: {
                     display: !isMobile.value, 
-                    text: 'ยอดขาย (บาท)', 
+                    text: t('sales_chart.axis.y_label'), 
                     align: 'center',
                     color: '#64748b', 
                     font: { size: 14, weight: 500 },

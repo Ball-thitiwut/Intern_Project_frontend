@@ -21,18 +21,18 @@
         <div class="bg-white px-8 pt-8 pb-2 flex justify-between items-start shrink-0">
           <div>
             <div class="flex items-center gap-3 mb-2">
-              <h3 class="text-2xl font-bold text-[#051960]">สรุปผลลัพธ์แคมเปญ</h3>
+              <h3 class="text-2xl font-bold text-[#051960]">{{ $t('report_campaign_modal.header.title') }}</h3>
               <span 
                 v-if="campaign?.status"
                 class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border"
-                :class="campaign.status === 'Completed' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-gray-50 text-gray-500 border-gray-100'"
+                :class="campaign.status === $t('report_campaign_modal.header.status.completed') ? 'bg-green-50 text-green-600 border-green-100' : 'bg-gray-50 text-gray-500 border-gray-100'"
               >
-                {{ campaign.status === 'Completed' ? 'Completed' : 'Cancelled' }}
+                {{ campaign.status === $t('report_campaign_modal.header.status.completed') ? $t('report_campaign_modal.header.status.completed') : $t('report_campaign_modal.header.status.cancelled') }}
               </span>
             </div>
             
             <p class="text-[#051960] text-base font-medium">
-              {{ campaign?.name || 'Loading...' }}
+              {{ campaign?.name || $t('report_campaign_modal.header.loading') }}
             </p>
 
             <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-400 font-light">
@@ -58,32 +58,32 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div class="bg-[#F8FAFC] rounded-[1.5rem] p-5 border border-slate-100 relative group">
                <div class="relative z-10">
-                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">ยอดขายรวม</p>
+                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">{{ $t('report_campaign_modal.stats.revenue_label') }}</p>
                  <h4 class="text-2xl font-bold text-[#051960]">฿{{ formatNumber(mockStats.totalRevenue) }}</h4>
                  <div class="flex items-center gap-1 mt-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 w-fit px-2 py-0.5 rounded-full">
                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd" /></svg>
-                   <span>+12.5%</span> <span class="text-emerald-400 font-medium ml-1">vs เป้าหมาย</span>
+                   <span>+12.5%</span> <span class="text-emerald-400 font-medium ml-1">{{ $t('report_campaign_modal.stats.vs_target') }}</span>
                  </div>
                </div>
             </div>
 
             <div class="bg-[#F8FAFC] rounded-[1.5rem] p-5 border border-slate-100 relative group">
                <div class="relative z-10">
-                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">จำนวนออเดอร์</p>
-                 <h4 class="text-2xl font-bold text-[#051960]">{{ mockStats.totalOrders }} <span class="text-sm font-normal text-slate-400">รายการ</span></h4>
+                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">{{ $t('report_campaign_modal.stats.orders_label') }}</p>
+                 <h4 class="text-2xl font-bold text-[#051960]">{{ mockStats.totalOrders }} <span class="text-sm font-normal text-slate-400">{{ $t('report_campaign_modal.stats.unit_items') }}</span></h4>
                  <div class="flex items-center gap-1 mt-2 text-[10px] font-medium text-slate-400 bg-slate-100 w-fit px-2 py-0.5 rounded-full">
-                   <span>เฉลี่ย ฿{{ Math.round(mockStats.totalRevenue / (mockStats.totalOrders || 1)) }}/บิล</span>
+                   <span>{{ $t('report_campaign_modal.stats.avg_bill_format', { n: Math.round(mockStats.totalRevenue / (mockStats.totalOrders || 1)) }) }}</span>
                  </div>
                </div>
             </div>
 
             <div class="bg-[#FFF7ED] rounded-[1.5rem] p-5 border border-orange-100 relative group">
                <div class="relative z-10">
-                 <p class="text-[10px] font-bold text-orange-400 uppercase tracking-wider mb-2">ความคุ้มค่า (ROI)</p>
+                 <p class="text-[10px] font-bold text-orange-400 uppercase tracking-wider mb-2">{{ $t('report_campaign_modal.stats.roi_label') }}</p>
                  <h4 class="text-2xl font-bold text-[#051960]">{{ mockStats.roi }}%</h4>
                  <div class="flex items-center gap-1 mt-2 text-[10px] font-bold text-orange-600 bg-orange-100 w-fit px-2 py-0.5 rounded-full">
                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" /></svg>
-                   <span>Impact High</span>
+                   <span>{{ $t('report_campaign_modal.stats.impact_high') }}</span>
                  </div>
                </div>
             </div>
@@ -91,10 +91,10 @@
 
           <div>
             <div class="flex items-center justify-between mb-6">
-              <h4 class="font-bold text-[#051960] text-lg">แนวโน้มยอดขายรายวัน</h4>
+              <h4 class="font-bold text-[#051960] text-lg">{{ $t('report_campaign_modal.chart.title') }}</h4>
               <div class="flex gap-2 items-center">
                  <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                 <span class="text-xs text-gray-500 font-medium">ยอดขายจริง</span>
+                 <span class="text-xs text-gray-500 font-medium">{{ $t('report_campaign_modal.chart.legend_actual') }}</span>
               </div>
             </div>
             
@@ -135,6 +135,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
   isOpen: Boolean,
@@ -142,6 +143,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close']);
+const { t, locale } = useI18n();
 
 const mockStats = ref({
   totalRevenue: 0,
@@ -164,7 +166,7 @@ watch(() => props.isOpen, (newVal) => {
     mockChartData.value = Array.from({ length: 7 }, (_, i) => {
       const val = Math.floor(Math.random() * (baseRevenue / 2));
       return {
-        day: `Day ${i + 1}`,
+        day: `${t('report_campaign_modal.chart.day_prefix')} ${i + 1}`,
         value: val,
         percent: Math.floor(Math.random() * (85 - 20) + 20) 
       };
@@ -183,7 +185,7 @@ const formatNumber = (num) => {
 const formatDate = (dateString) => {
   if(!dateString) return '';
   const options = { day: 'numeric', month: 'short', year: 'numeric' };
-  return new Date(dateString).toLocaleDateString('en-GB', options);
+  return new Date(dateString).toLocaleDateString(locale.value, options);
 };
 </script>
 
