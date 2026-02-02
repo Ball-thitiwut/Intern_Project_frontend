@@ -59,6 +59,46 @@ const isFormChanged = computed(() => {
   return JSON.stringify(form) !== JSON.stringify(originalForm);
 });
 
+const filteredBranchRanges = computed(() => {
+  return masterData.branchRanges.map((branch) => ({
+    ...branch,
+    isDisabled: branch.branch_ranges_label !== "1 สาขา",
+    label:
+      branch.branch_ranges_label +
+      (branch.branch_ranges_label !== "1 สาขา" ? " (Soon)" : ""),
+  }));
+});
+
+const filteredPosSystems = computed(() => {
+  if (!masterData.posSystems.length) return [];
+
+  const mainPos = masterData.posSystems.filter((pos) => {
+    const name = pos.pos_systems_name.trim();
+    return ![
+      "ไม่มี",
+      "อื่นๆ",
+      "None",
+      "Other",
+      "Standard CSV",
+      "Standard CSV (Other)",
+    ].some((exclude) => name.includes(exclude));
+  });
+
+  const otherOption = masterData.posSystems.find((pos) =>
+    ["Standard CSV", "อื่นๆ", "Other"].some((match) =>
+      pos.pos_systems_name.includes(match),
+    ),
+  );
+
+  return [
+    ...mainPos,
+    {
+      pos_systems_id: otherOption ? otherOption.pos_systems_id : 99,
+      pos_systems_name: "POS อื่นๆ",
+    },
+  ];
+});
+
 onMounted(async () => {
   isLoading.value = true;
   try {
@@ -81,7 +121,7 @@ onMounted(async () => {
       form.avatarSeed =
         userData.avatar_seed || userStore.avatarSeed || userData.first_name;
 
-      // อัปเดต Store ให้ตรงกัน
+      // อัปเดต User Store เบื้องต้น
       userStore.updateState({
         firstName: form.firstName,
         lastName: form.lastName,
@@ -106,6 +146,19 @@ onMounted(async () => {
         form.ageRangeId = restData.age.id || restData.restaurant_age_ranges_id;
       if (restData.pos_system)
         form.posSystemId = restData.pos_system.id || restData.pos_systems_id;
+      if (form.posSystemId) {
+        const exists = filteredPosSystems.value.some(
+          (p) => p.pos_systems_id === form.posSystemId,
+        );
+        if (!exists) {
+          const otherPos = filteredPosSystems.value.find(
+            (p) => p.pos_systems_name === "POS อื่นๆ",
+          );
+          form.posSystemId = otherPos
+            ? otherPos.pos_systems_id
+            : form.posSystemId;
+        }
+      }
     }
 
     Object.assign(originalForm, JSON.parse(JSON.stringify(form)));
@@ -161,11 +214,12 @@ const saveProfile = async () => {
 
     Object.assign(originalForm, JSON.parse(JSON.stringify(form)));
 
-    showToast(t('profile_view.toast.messages.save_success'), "success");
+    showToast(t("profile_view.toast.messages.save_success"), "success");
   } catch (error) {
     console.error("Save Error:", error);
     const msg =
-      error.response?.data?.message || t('profile_view.toast.messages.save_error_default');
+      error.response?.data?.message ||
+      t("profile_view.toast.messages.save_error_default");
     showToast(msg, "error");
   } finally {
     isLoading.value = false;
@@ -179,9 +233,11 @@ const saveProfile = async () => {
       class="max-w-4xl mx-auto mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4"
     >
       <div>
-        <h1 class="text-2xl font-bold text-[#051960]">{{ $t('profile_view.header.title') }}</h1>
+        <h1 class="text-2xl font-bold text-[#051960]">
+          {{ $t("profile_view.header.title") }}
+        </h1>
         <p class="text-gray-500 text-sm mt-1">
-          {{ $t('profile_view.header.subtitle') }}
+          {{ $t("profile_view.header.subtitle") }}
         </p>
       </div>
 
@@ -190,7 +246,7 @@ const saveProfile = async () => {
           @click="router.back()"
           class="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
         >
-          {{ $t('profile_view.buttons.cancel') }}
+          {{ $t("profile_view.buttons.cancel") }}
         </button>
         <button
           @click="saveProfile"
@@ -218,7 +274,11 @@ const saveProfile = async () => {
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          {{ isLoading ? $t('profile_view.buttons.saving') : $t('profile_view.buttons.save') }}
+          {{
+            isLoading
+              ? $t("profile_view.buttons.saving")
+              : $t("profile_view.buttons.save")
+          }}
         </button>
       </div>
     </div>
@@ -245,7 +305,7 @@ const saveProfile = async () => {
             </svg>
           </div>
           <h2 class="text-lg font-semibold text-gray-800">
-            {{ $t('profile_view.personal_info.title') }}
+            {{ $t("profile_view.personal_info.title") }}
           </h2>
         </div>
 
@@ -264,9 +324,9 @@ const saveProfile = async () => {
 
           <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-1.5"
-                >{{ $t('profile_view.personal_info.labels.first_name') }}</label
-              >
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
+                $t("profile_view.personal_info.labels.first_name")
+              }}</label>
               <input
                 v-model="form.firstName"
                 type="text"
@@ -274,9 +334,9 @@ const saveProfile = async () => {
               />
             </div>
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-1.5"
-                >{{ $t('profile_view.personal_info.labels.last_name') }}</label
-              >
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
+                $t("profile_view.personal_info.labels.last_name")
+              }}</label>
               <input
                 v-model="form.lastName"
                 type="text"
@@ -284,9 +344,9 @@ const saveProfile = async () => {
               />
             </div>
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-1.5"
-                >{{ $t('profile_view.personal_info.labels.phone') }}</label
-              >
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
+                $t("profile_view.personal_info.labels.phone")
+              }}</label>
               <input
                 v-model="form.phone"
                 type="tel"
@@ -294,9 +354,9 @@ const saveProfile = async () => {
               />
             </div>
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-1.5"
-                >{{ $t('profile_view.personal_info.labels.email') }}</label
-              >
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
+                $t("profile_view.personal_info.labels.email")
+              }}</label>
               <input
                 v-model="form.email"
                 type="email"
@@ -329,33 +389,41 @@ const saveProfile = async () => {
             </svg>
           </div>
           <h2 class="text-lg font-semibold text-gray-800">
-            {{ $t('profile_view.restaurant_info.title') }}
+            {{ $t("profile_view.restaurant_info.title") }}
           </h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
           <div class="col-span-1 md:col-span-2">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5"
-              >{{ $t('profile_view.restaurant_info.labels.name') }}</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
+              $t("profile_view.restaurant_info.labels.name")
+            }}</label>
             <input
               v-model="form.restaurantName"
               type="text"
               class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm"
-              :placeholder="$t('profile_view.restaurant_info.placeholders.name')"
+              :placeholder="
+                $t('profile_view.restaurant_info.placeholders.name')
+              "
             />
           </div>
 
           <div class="col-span-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5"
-              >{{ $t('profile_view.restaurant_info.labels.category') }}</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
+              $t("profile_view.restaurant_info.labels.category")
+            }}</label>
             <div class="relative">
               <select
                 v-model="form.categoryId"
                 class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white"
               >
-                <option value="" disabled>{{ $t('profile_view.restaurant_info.placeholders.select_category') }}</option>
+                <option value="" disabled>
+                  {{
+                    $t(
+                      "profile_view.restaurant_info.placeholders.select_category",
+                    )
+                  }}
+                </option>
                 <option
                   v-for="cat in masterData.restaurantTypes"
                   :key="cat.restaurant_types_id"
@@ -385,15 +453,19 @@ const saveProfile = async () => {
           </div>
 
           <div class="col-span-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5"
-              >{{ $t('profile_view.restaurant_info.labels.age') }}</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
+              $t("profile_view.restaurant_info.labels.age")
+            }}</label>
             <div class="relative">
               <select
                 v-model="form.ageRangeId"
                 class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white"
               >
-                <option value="" disabled>{{ $t('profile_view.restaurant_info.placeholders.select_age') }}</option>
+                <option value="" disabled>
+                  {{
+                    $t("profile_view.restaurant_info.placeholders.select_age")
+                  }}
+                </option>
                 <option
                   v-for="age in masterData.ageRanges"
                   :key="age.restaurant_age_ranges_id"
@@ -427,15 +499,19 @@ const saveProfile = async () => {
           ></div>
 
           <div class="col-span-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5"
-              >{{ $t('profile_view.restaurant_info.labels.avg_sales') }}</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
+              $t("profile_view.restaurant_info.labels.avg_sales")
+            }}</label>
             <div class="relative">
               <select
                 v-model="form.avgSalesId"
                 class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white"
               >
-                <option value="" disabled>{{ $t('profile_view.restaurant_info.placeholders.select_sales') }}</option>
+                <option value="" disabled>
+                  {{
+                    $t("profile_view.restaurant_info.placeholders.select_sales")
+                  }}
+                </option>
                 <option
                   v-for="range in masterData.incomeRanges"
                   :key="range.monthly_income_ranges_id"
@@ -465,21 +541,28 @@ const saveProfile = async () => {
           </div>
 
           <div class="col-span-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5"
-              >{{ $t('profile_view.restaurant_info.labels.branches') }}</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
+              $t("profile_view.restaurant_info.labels.branches")
+            }}</label>
             <div class="relative">
               <select
                 v-model="form.branchesId"
                 class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white"
               >
-                <option value="" disabled>{{ $t('profile_view.restaurant_info.placeholders.select_branches') }}</option>
+                <option value="" disabled>
+                  {{
+                    $t(
+                      "profile_view.restaurant_info.placeholders.select_branches",
+                    )
+                  }}
+                </option>
                 <option
-                  v-for="b in masterData.branchRanges"
+                  v-for="b in filteredBranchRanges"
                   :key="b.branch_ranges_id"
                   :value="b.branch_ranges_id"
+                  :disabled="b.isDisabled"
                 >
-                  {{ b.branch_ranges_label }}
+                  {{ b.label }}
                 </option>
               </select>
               <div
@@ -503,15 +586,19 @@ const saveProfile = async () => {
           </div>
 
           <div class="col-span-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5"
-              >{{ $t('profile_view.restaurant_info.labels.menu_items') }}</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
+              $t("profile_view.restaurant_info.labels.menu_items")
+            }}</label>
             <div class="relative">
               <select
                 v-model="form.menuRangeId"
                 class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white"
               >
-                <option value="" disabled>{{ $t('profile_view.restaurant_info.placeholders.select_menu') }}</option>
+                <option value="" disabled>
+                  {{
+                    $t("profile_view.restaurant_info.placeholders.select_menu")
+                  }}
+                </option>
                 <option
                   v-for="m in masterData.menuRanges"
                   :key="m.menu_ranges_id"
@@ -541,17 +628,21 @@ const saveProfile = async () => {
           </div>
 
           <div class="col-span-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5"
-              >{{ $t('profile_view.restaurant_info.labels.pos_system') }}</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
+              $t("profile_view.restaurant_info.labels.pos_system")
+            }}</label>
             <div class="relative">
               <select
                 v-model="form.posSystemId"
                 class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white"
               >
-                <option value="" disabled>{{ $t('profile_view.restaurant_info.placeholders.select_pos') }}</option>
+                <option value="" disabled>
+                  {{
+                    $t("profile_view.restaurant_info.placeholders.select_pos")
+                  }}
+                </option>
                 <option
-                  v-for="pos in masterData.posSystems"
+                  v-for="pos in filteredPosSystems"
                   :key="pos.pos_systems_id"
                   :value="pos.pos_systems_id"
                 >
@@ -635,7 +726,11 @@ const saveProfile = async () => {
 
           <div class="ml-3 w-0 flex-1">
             <p class="text-sm font-bold text-[#051960]">
-              {{ toast.type === "success" ? $t('profile_view.toast.titles.success') : $t('profile_view.toast.titles.error') }}
+              {{
+                toast.type === "success"
+                  ? $t("profile_view.toast.titles.success")
+                  : $t("profile_view.toast.titles.error")
+              }}
             </p>
             <p class="text-xs text-gray-500 mt-0.5">{{ toast.message }}</p>
           </div>
@@ -679,22 +774,35 @@ const saveProfile = async () => {
 
 <style scoped>
 @keyframes progress {
-  from { width: 100%; }
-  to { width: 0%; }
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+option:disabled {
+  color: #cbd5e1;
+  background-color: #f8fafc;
+}
+
+select option:disabled {
+  opacity: 0.5;
 }
 
 @media (max-width: 767px) {
   .min-h-screen.p-6.pb-10 {
-    padding: 1rem !important;       
-    padding-bottom: 5rem !important; 
+    padding: 1rem !important;
+    padding-bottom: 5rem !important;
   }
 
   .max-w-4xl.mx-auto.mb-6 {
     margin-bottom: 1rem !important;
   }
-  
+
   h1.text-2xl {
-    font-size: 1.25rem !important; 
+    font-size: 1.25rem !important;
   }
 
   .max-w-4xl.mx-auto.mb-6 > .flex.gap-3 {
@@ -710,7 +818,7 @@ const saveProfile = async () => {
   }
 
   .bg-white.rounded-xl {
-    padding: 1rem !important; 
+    padding: 1rem !important;
   }
 
   .flex.items-center.gap-3.mb-6 {
@@ -725,20 +833,20 @@ const saveProfile = async () => {
     width: 100%;
     margin-bottom: 0 !important;
   }
-  
+
   .w-32.h-32 {
-    width: 6rem !important;  
+    width: 6rem !important;
     height: 6rem !important;
-    margin: 0 auto;          
+    margin: 0 auto;
   }
 
   input[type="text"],
   input[type="tel"],
   input[type="email"],
   select {
-    padding-top: 0.5rem !important;   
-    padding-bottom: 0.5rem !important; 
-    font-size: 0.85rem !important;    
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    font-size: 0.85rem !important;
     height: auto !important;
   }
 
@@ -746,13 +854,13 @@ const saveProfile = async () => {
     padding-top: 0.375rem !important;
     padding-bottom: 0.375rem !important;
     font-size: 0.85rem !important;
-    height: auto !important;           
+    height: auto !important;
   }
 
   .grid.gap-5 {
-    gap: 0.75rem !important; 
+    gap: 0.75rem !important;
   }
-  
+
   label.block.text-sm {
     margin-bottom: 0.25rem !important;
     font-size: 0.8rem !important;

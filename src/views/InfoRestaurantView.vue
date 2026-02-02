@@ -8,189 +8,248 @@
         <form @submit.prevent="handleSubmit">
           <div class="form-group">
             <label for="restaurantName">Restaurant Name</label>
-            <input 
-              type="text" 
-              id="restaurantName" 
-              class="form-input" 
+            <input
+              type="text"
+              id="restaurantName"
+              class="form-input"
               v-model="restaurantName"
-              placeholder="Ex. The Burger Joint" 
+              placeholder="Ex. The Burger Joint"
               :class="{ 'input-error': errors.restaurantName }"
               @input="clearError('restaurantName')"
-            >
-            <p v-if="errors.restaurantName" class="error-text">{{ errors.restaurantName }}</p>
+            />
+            <p v-if="errors.restaurantName" class="error-text">
+              {{ errors.restaurantName }}
+            </p>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="category">Category</label>
-              <select 
-                id="category" 
-                class="form-input" 
-                :class="{ 'placeholder-text': !category, 'input-error': errors.category }"
+              <select
+                id="category"
+                class="form-input"
+                :class="{
+                  'placeholder-text': !category,
+                  'input-error': errors.category,
+                }"
                 v-model="category"
                 @change="clearError('category')"
               >
                 <option :value="null" disabled selected>Select Category</option>
-                <option 
-                  v-for="type in restaurantTypes" 
-                  :key="type.restaurant_types_id" 
+                <option
+                  v-for="type in restaurantTypes"
+                  :key="type.restaurant_types_id"
                   :value="type.restaurant_types_id"
                 >
                   {{ type.restaurant_types_label }}
                 </option>
               </select>
-              <p v-if="errors.category" class="error-text">{{ errors.category }}</p>
+              <p v-if="errors.category" class="error-text">
+                {{ errors.category }}
+              </p>
             </div>
             <div class="form-group">
               <label for="monthlySales">Avg. Sales</label>
-              <select 
-                id="monthlySales" 
+              <select
+                id="monthlySales"
                 class="form-input"
-                :class="{ 'placeholder-text': !monthlySales, 'input-error': errors.monthlySales }"
+                :class="{
+                  'placeholder-text': !monthlySales,
+                  'input-error': errors.monthlySales,
+                }"
                 v-model="monthlySales"
                 @change="clearError('monthlySales')"
               >
                 <option :value="null" disabled selected>Select Range</option>
-                <option 
-                  v-for="income in incomeRanges" 
-                  :key="income.monthly_income_ranges_id" 
+                <option
+                  v-for="income in incomeRanges"
+                  :key="income.monthly_income_ranges_id"
                   :value="income.monthly_income_ranges_id"
                 >
                   {{ income.monthly_income_ranges_label }}
                 </option>
               </select>
-              <p v-if="errors.monthlySales" class="error-text">{{ errors.monthlySales }}</p>
+              <p v-if="errors.monthlySales" class="error-text">
+                {{ errors.monthlySales }}
+              </p>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="branches">Branches</label>
-              <select 
-                id="branches" 
+              <select
+                id="branches"
                 class="form-input"
-                :class="{ 'placeholder-text': !branches, 'input-error': errors.branches }"
+                :class="{
+                  'placeholder-text': !branches,
+                  'input-error': errors.branches,
+                }"
                 v-model="branches"
                 @change="clearError('branches')"
               >
                 <option :value="null" disabled selected>Select</option>
-                <option 
-                  v-for="branch in branchRanges" 
-                  :key="branch.branch_ranges_id" 
+                <option
+                  v-for="branch in branchRanges"
+                  :key="branch.branch_ranges_id"
                   :value="branch.branch_ranges_id"
+                  :disabled="branch.branch_ranges_label !== '1 สาขา'"
                 >
                   {{ branch.branch_ranges_label }}
+                  {{ branch.branch_ranges_label !== "1 สาขา" ? "(Soon)" : "" }}
                 </option>
               </select>
-              <p v-if="errors.branches" class="error-text">{{ errors.branches }}</p>
+              <p v-if="errors.branches" class="error-text">
+                {{ errors.branches }}
+              </p>
             </div>
             <div class="form-group">
               <label for="menuItems">Menu Items</label>
-              <select 
-                id="menuItems" 
+              <select
+                id="menuItems"
                 class="form-input"
-                :class="{ 'placeholder-text': !menuItems, 'input-error': errors.menuItems }"
+                :class="{
+                  'placeholder-text': !menuItems,
+                  'input-error': errors.menuItems,
+                }"
                 v-model="menuItems"
                 @change="clearError('menuItems')"
               >
                 <option :value="null" disabled selected>Select</option>
-                <option 
-                  v-for="menu in menuRanges" 
-                  :key="menu.menu_ranges_id" 
+                <option
+                  v-for="menu in menuRanges"
+                  :key="menu.menu_ranges_id"
                   :value="menu.menu_ranges_id"
                 >
                   {{ menu.menu_ranges_label }}
                 </option>
               </select>
-              <p v-if="errors.menuItems" class="error-text">{{ errors.menuItems }}</p>
+              <p v-if="errors.menuItems" class="error-text">
+                {{ errors.menuItems }}
+              </p>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="yearsInBusiness">Years</label>
-              <select 
-                id="yearsInBusiness" 
+              <select
+                id="yearsInBusiness"
                 class="form-input"
-                :class="{ 'placeholder-text': !yearsInBusiness, 'input-error': errors.yearsInBusiness }"
+                :class="{
+                  'placeholder-text': !yearsInBusiness,
+                  'input-error': errors.yearsInBusiness,
+                }"
                 v-model="yearsInBusiness"
                 @change="clearError('yearsInBusiness')"
               >
                 <option :value="null" disabled selected>Select</option>
-                <option 
-                  v-for="age in ageRanges" 
-                  :key="age.restaurant_age_ranges_id" 
+                <option
+                  v-for="age in ageRanges"
+                  :key="age.restaurant_age_ranges_id"
                   :value="age.restaurant_age_ranges_id"
                 >
                   {{ age.restaurant_age_ranges_label }}
                 </option>
               </select>
-              <p v-if="errors.yearsInBusiness" class="error-text">{{ errors.yearsInBusiness }}</p>
+              <p v-if="errors.yearsInBusiness" class="error-text">
+                {{ errors.yearsInBusiness }}
+              </p>
             </div>
             <div class="form-group">
               <label for="posSystem">POS System</label>
-              <select 
-                id="posSystem" 
+              <select
+                id="posSystem"
                 class="form-input"
-                :class="{ 'placeholder-text': !posSystem, 'input-error': errors.posSystem }"
+                :class="{
+                  'placeholder-text': !posSystem,
+                  'input-error': errors.posSystem,
+                }"
                 v-model="posSystem"
                 @change="clearError('posSystem')"
               >
                 <option :value="null" disabled selected>Select</option>
-                <option 
-                  v-for="pos in posSystems" 
-                  :key="pos.pos_systems_id" 
+                <option
+                  v-for="pos in filteredPosSystems"
+                  :key="pos.pos_systems_id"
                   :value="pos.pos_systems_id"
                 >
                   {{ pos.pos_systems_name }}
                 </option>
               </select>
-              <p v-if="errors.posSystem" class="error-text">{{ errors.posSystem }}</p>
+              <p v-if="errors.posSystem" class="error-text">
+                {{ errors.posSystem }}
+              </p>
             </div>
           </div>
         </form>
       </div>
 
       <div class="action-buttons">
-        <button class="btn-nav btn-back" @click="handleBack" :disabled="isLoading">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <button
+          class="btn-nav btn-back"
+          @click="handleBack"
+          :disabled="isLoading"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 12H5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 19L5 12L12 5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           Back
         </button>
 
-        <button class="btn-nav btn-next" @click="handleSubmit" :disabled="isLoading">
+        <button
+          class="btn-nav btn-next"
+          @click="handleSubmit"
+          :disabled="isLoading"
+        >
           <span v-if="!isLoading">Done</span>
           <span v-else>Processing...</span>
         </button>
       </div>
     </div>
 
-    <DoneSignupModal 
-      :show="showModal" 
-      :type="modalType" 
-      :title="modalTitle" 
-      :message="modalMessage" 
-      @close="closeModal" 
+    <DoneSignupModal
+      :show="showModal"
+      :type="modalType"
+      :title="modalTitle"
+      :message="modalMessage"
+      @close="closeModal"
     />
-
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useRegisterStore } from '@/stores/registration';
-import api from '@/utils/axios';
-import DoneSignupModal from '@/components/DoneSignupModal.vue';
-import '@/assets/css/infoForm.css'; 
+import { ref, reactive, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import { useRegisterStore } from "@/stores/registration";
+import api from "@/utils/axios";
+import DoneSignupModal from "@/components/DoneSignupModal.vue";
+import "@/assets/css/infoForm.css";
 
 const router = useRouter();
 const registerStore = useRegisterStore();
 
 // ตัวแปรเก็บค่าจาก Form
-const restaurantName = ref('');
+const restaurantName = ref("");
 const category = ref(null);
 const monthlySales = ref(null);
 const branches = ref(null);
@@ -210,15 +269,16 @@ const posSystems = ref([]);
 const isLoading = ref(false);
 const errors = reactive({});
 const showModal = ref(false);
-const modalType = ref('success'); 
-const modalTitle = ref('');
-const modalMessage = ref('');
+const modalType = ref("success");
+const modalTitle = ref("");
+const modalMessage = ref("");
 
 // โหลดข้อมูล Dropdown เมื่อเข้าหน้าเว็บ
 onMounted(async () => {
   try {
-    const response = await api.get('/restaurant-registration-options');
+    const response = await api.get("/restaurant-registration-options");
     const data = response.data;
+
     restaurantTypes.value = data.restaurantTypes || [];
     incomeRanges.value = data.incomeRanges || [];
     branchRanges.value = data.branchRanges || [];
@@ -226,24 +286,47 @@ onMounted(async () => {
     ageRanges.value = data.ageRanges || [];
     posSystems.value = data.posSystems || [];
 
-    if (registerStore.formData.restaurant_name) restaurantName.value = registerStore.formData.restaurant_name;
-    if (registerStore.formData.restaurant_types_id) category.value = registerStore.formData.restaurant_types_id;
-    if (registerStore.formData.monthly_income_ranges_id) monthlySales.value = registerStore.formData.monthly_income_ranges_id;
-    if (registerStore.formData.branch_ranges_id) branches.value = registerStore.formData.branch_ranges_id;
-    if (registerStore.formData.menu_ranges_id) menuItems.value = registerStore.formData.menu_ranges_id;
-    if (registerStore.formData.restaurant_age_ranges_id) yearsInBusiness.value = registerStore.formData.restaurant_age_ranges_id;
-    if (registerStore.formData.pos_systems_id) posSystem.value = registerStore.formData.pos_systems_id;
+    if (registerStore.formData.restaurant_name)
+      restaurantName.value = registerStore.formData.restaurant_name;
+    if (registerStore.formData.restaurant_types_id)
+      category.value = registerStore.formData.restaurant_types_id;
+    if (registerStore.formData.monthly_income_ranges_id)
+      monthlySales.value = registerStore.formData.monthly_income_ranges_id;
+    if (registerStore.formData.branch_ranges_id)
+      branches.value = registerStore.formData.branch_ranges_id;
+    if (registerStore.formData.menu_ranges_id)
+      menuItems.value = registerStore.formData.menu_ranges_id;
+    if (registerStore.formData.restaurant_age_ranges_id)
+      yearsInBusiness.value = registerStore.formData.restaurant_age_ranges_id;
 
+    if (registerStore.formData.pos_systems_id) {
+      const isAvailableInFiltered = filteredPosSystems.value.some(
+        (p) => p.pos_systems_id === registerStore.formData.pos_systems_id,
+      );
+
+      if (isAvailableInFiltered) {
+        posSystem.value = registerStore.formData.pos_systems_id;
+      } else {
+        const otherPos = filteredPosSystems.value.find(
+          (p) => p.pos_systems_name === "POS อื่นๆ",
+        );
+        posSystem.value = otherPos ? otherPos.pos_systems_id : null;
+      }
+    }
   } catch (error) {
     console.error("Failed to fetch options:", error);
-    triggerModal('error', 'Connection Error', 'Cannot load options from server.');
+    triggerModal(
+      "error",
+      "Connection Error",
+      "Cannot load options from server.",
+    );
   }
 });
 
 // ตรวจสอบความถูกต้องของ Form
 const validateForm = () => {
   let isValid = true;
-  Object.keys(errors).forEach(key => delete errors[key]);
+  Object.keys(errors).forEach((key) => delete errors[key]);
 
   if (!restaurantName.value.trim()) {
     errors.restaurantName = "Restaurant name is required";
@@ -292,9 +375,9 @@ const triggerModal = (type, title, message) => {
 
 const closeModal = () => {
   showModal.value = false;
-  if (modalType.value === 'success') {
+  if (modalType.value === "success") {
     registerStore.resetForm();
-    router.push('/login');
+    router.push("/login");
   }
 };
 
@@ -308,7 +391,7 @@ const handleBack = () => {
   registerStore.formData.restaurant_age_ranges_id = yearsInBusiness.value;
   registerStore.formData.pos_systems_id = posSystem.value;
 
-  router.push('/info-user');
+  router.push("/info-user");
 };
 
 // ปุ่ม Done
@@ -326,24 +409,59 @@ const handleSubmit = async () => {
   registerStore.formData.pos_systems_id = posSystem.value;
 
   try {
-    const response = await api.post('/auth/register', registerStore.formData);
-    
+    const response = await api.post("/auth/register", registerStore.formData);
+
     if (response.status === 200 || response.status === 201) {
-      triggerModal('success', 'Registration Successful!', 'Your account has been created. Please login.');
+      triggerModal(
+        "success",
+        "Registration Successful!",
+        "Your account has been created. Please login.",
+      );
     }
   } catch (error) {
     console.error(error);
-    const msg = error.response?.data?.message || "Registration failed. Please try again.";
-    triggerModal('error', 'Registration Failed', msg);
+    const msg =
+      error.response?.data?.message || "Registration failed. Please try again.";
+    triggerModal("error", "Registration Failed", msg);
   } finally {
     isLoading.value = false;
   }
 };
+
+const filteredPosSystems = computed(() => {
+  if (!posSystems.value.length) return [];
+
+  const mainPos = posSystems.value.filter((pos) => {
+    const name = pos.pos_systems_name.trim();
+    return ![
+      "ไม่มี",
+      "อื่นๆ",
+      "None",
+      "Other",
+      "Standard CSV",
+      "Standard CSV (Other)",
+    ].some((exclude) => name.includes(exclude));
+  });
+
+  const otherOption = posSystems.value.find((pos) =>
+    ["Standard CSV", "อื่นๆ", "Other"].some((match) =>
+      pos.pos_systems_name.includes(match),
+    ),
+  );
+
+  return [
+    ...mainPos,
+    {
+      pos_systems_id: otherOption ? otherOption.pos_systems_id : 99,
+      pos_systems_name: "POS อื่นๆ",
+    },
+  ];
+});
 </script>
 
 <style scoped>
 .placeholder-text {
-  color: #A0AEC0 !important; 
+  color: #a0aec0 !important;
 }
 
 .info-container {
@@ -397,7 +515,7 @@ const handleSubmit = async () => {
 }
 
 .btn-next {
-  background-color: #F97316;
+  background-color: #f97316;
   color: white;
   box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.3);
 }
@@ -429,6 +547,15 @@ const handleSubmit = async () => {
   margin-bottom: 0;
 }
 
+option:disabled {
+  color: #cbd5e1;
+  background-color: #f8fafc;
+}
+
+select option:disabled {
+  opacity: 0.5;
+}
+
 /* Responsive Mobile */
 @media (max-width: 768px) {
   .info-container {
@@ -441,69 +568,76 @@ const handleSubmit = async () => {
 
   .content-wrapper {
     width: 100%;
-    max-width: 340px !important; 
+    max-width: 340px !important;
     margin: 0 auto;
-    gap: 0.5rem; 
+    gap: 0.5rem;
   }
 
-  :deep(.info-card), .info-card {
+  :deep(.info-card),
+  .info-card {
     width: 100%;
-    padding: 1.5rem !important; 
+    padding: 1.5rem !important;
     border-radius: 1.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
 
-  :deep(.info-title), .info-title {
+  :deep(.info-title),
+  .info-title {
     font-size: 1.4rem !important;
     text-align: left !important;
     margin-bottom: 0.25rem;
   }
 
-  :deep(.info-description), .info-description {
+  :deep(.info-description),
+  .info-description {
     font-size: 0.85rem !important;
     text-align: left !important;
-    margin-bottom: 1.25rem; 
+    margin-bottom: 1.25rem;
   }
 
   :deep(.form-group) {
-    margin-bottom: 0.85rem !important; 
+    margin-bottom: 0.85rem !important;
   }
 
-  :deep(.form-row), .form-row {
+  :deep(.form-row),
+  .form-row {
     display: flex !important;
     flex-direction: row !important;
-    gap: 0.75rem !important; 
-    margin-bottom: 0.85rem !important; 
+    gap: 0.75rem !important;
+    margin-bottom: 0.85rem !important;
   }
 
-  .form-row :deep(.form-group), .form-row .form-group {
+  .form-row :deep(.form-group),
+  .form-row .form-group {
     width: 50% !important;
-    margin-bottom: 0 !important; 
+    margin-bottom: 0 !important;
   }
 
   label {
-    font-size: 0.75rem !important; 
+    font-size: 0.75rem !important;
     margin-bottom: 0.35rem !important;
     display: block !important;
   }
 
-  :deep(.form-input), .form-input, select {
-    font-size: 13px !important; 
-    padding: 0 10px !important; 
-    padding-right: 25px !important; 
+  :deep(.form-input),
+  .form-input,
+  select {
+    font-size: 13px !important;
+    padding: 0 10px !important;
+    padding-right: 25px !important;
     height: 36px !important;
     width: 100% !important;
-    
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .action-buttons {
     padding: 0 0.25rem;
     margin-top: 0.5rem;
   }
-  
+
   .btn-nav {
     padding: 0 1.2rem;
     font-size: 0.9rem;
