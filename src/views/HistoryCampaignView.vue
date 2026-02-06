@@ -6,17 +6,18 @@
     <div class="flex items-end justify-between gap-4 mb-8">
       <div>
         <h1 class="text-3xl font-bold text-[#051960] tracking-tight mb-2">
-          {{ $t('history_campaign_view.header.title') }}
+          {{ $t("history_campaign_view.header.title") }}
         </h1>
         <p class="text-gray-500 text-sm md:text-base font-light">
-          {{ $t('history_campaign_view.header.subtitle') }}
+          {{ $t("history_campaign_view.header.subtitle") }}
         </p>
       </div>
       <button
         @click="$router.push('/ideas')"
         class="bg-[#051960] text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-lg shadow-blue-900/20 hover:bg-[#0a237a] hover:-translate-y-0.5 transition-all flex items-center gap-2"
       >
-        <span class="text-lg">+</span> {{ $t('history_campaign_view.header.create_button') }}
+        <span class="text-lg">+</span>
+        {{ $t("history_campaign_view.header.create_button") }}
       </button>
     </div>
 
@@ -44,9 +45,12 @@
         </div>
         <div>
           <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">
-            {{ $t('history_campaign_view.summary.active_label') }}
+            {{ $t("history_campaign_view.summary.active_label") }}
           </p>
-          <h3 class="text-2xl font-bold text-[#051960]">3 {{ $t('history_campaign_view.summary.unit_campaigns') }}</h3>
+          <h3 class="text-2xl font-bold text-[#051960]">
+            {{ activeCampaignCount }}
+            {{ $t("history_campaign_view.summary.unit_campaigns") }}
+          </h3>
         </div>
       </div>
       <div
@@ -72,9 +76,11 @@
         </div>
         <div>
           <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">
-            {{ $t('history_campaign_view.summary.sales_label') }}
+            {{ $t("history_campaign_view.summary.sales_label") }}
           </p>
-          <h3 class="text-2xl font-bold text-[#051960]">฿24,500</h3>
+          <h3 class="text-2xl font-bold text-[#051960]">
+            ฿{{ formatCurrency(totalRevenueSummary) }}
+          </h3>
         </div>
       </div>
       <div
@@ -106,9 +112,11 @@
         </div>
         <div>
           <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">
-            {{ $t('history_campaign_view.summary.penetration_label') }}
+            {{ $t("history_campaign_view.summary.penetration_label") }}
           </p>
-          <h3 class="text-2xl font-bold text-[#051960]">12.5%</h3>
+          <h3 class="text-2xl font-bold text-[#051960]">
+            {{ avgPenetration }}%
+          </h3>
         </div>
       </div>
     </div>
@@ -118,7 +126,7 @@
         <span
           class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"
         ></span>
-        {{ $t('history_campaign_view.active_section.title') }}
+        {{ $t("history_campaign_view.active_section.title") }}
       </h2>
 
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -126,8 +134,19 @@
           v-for="campaign in activeCampaigns"
           :key="campaign.id"
           @click="navigateToDetails(campaign.id)"
-          class="bg-white rounded-[2rem] p-6 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 group relative cursor-pointer"
+          class="bg-white rounded-[2rem] p-6 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden cursor-pointer"
         >
+          <div
+            v-if="campaign.status === 'paused'"
+            class="absolute inset-0 z-20 backdrop-blur-[4px] bg-white/40 flex items-center justify-center transition-all duration-500"
+          >
+            <button
+              @click.stop="handleMenuAction('resume', campaign)"
+              class="bg-[#051960] text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-2xl hover:bg-[#0a237a] hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+            >
+              เริ่มแคมเปญต่อ
+            </button>
+          </div>
           <div class="relative z-10">
             <div class="flex justify-between items-start mb-4">
               <div class="flex items-center gap-4">
@@ -159,7 +178,11 @@
                           clip-rule="evenodd"
                         />
                       </svg>
-                      {{ $t('history_campaign_view.active_section.days_left', { n: campaign.daysLeft }) }}
+                      {{
+                        $t("history_campaign_view.active_section.days_left", {
+                          n: campaign.daysLeft,
+                        })
+                      }}
                     </span>
                   </div>
                   <h3
@@ -231,7 +254,11 @@
                               />
                             </svg>
                           </span>
-                          <span class="font-medium">{{ $t('history_campaign_view.active_section.menu.duplicate') }}</span>
+                          <span class="font-medium">{{
+                            $t(
+                              "history_campaign_view.active_section.menu.duplicate",
+                            )
+                          }}</span>
                         </button>
                       </li>
                       <li>
@@ -257,7 +284,11 @@
                               />
                             </svg>
                           </span>
-                          <span class="font-medium">{{ $t('history_campaign_view.active_section.menu.pause') }}</span>
+                          <span class="font-medium">{{
+                            $t(
+                              "history_campaign_view.active_section.menu.pause",
+                            )
+                          }}</span>
                         </button>
                       </li>
                       <li class="my-1 border-t border-gray-100"></li>
@@ -284,7 +315,11 @@
                               />
                             </svg>
                           </span>
-                          <span class="font-medium">{{ $t('history_campaign_view.active_section.menu.delete') }}</span>
+                          <span class="font-medium">{{
+                            $t(
+                              "history_campaign_view.active_section.menu.delete",
+                            )
+                          }}</span>
                         </button>
                       </li>
                     </ul>
@@ -295,7 +330,10 @@
 
             <div class="mb-6">
               <div class="flex justify-between text-xs mb-2">
-                <span class="text-gray-500">{{ $t('history_campaign_view.active_section.sales_target') }}</span>
+                <span class="text-gray-500"
+                  >{{ formatCurrency(campaign.total_revenue) }} /
+                  {{ formatCurrency(campaign.target_revenue) }} ฿</span
+                >
                 <span class="font-bold text-[#051960]"
                   >{{ campaign.progress }}%</span
                 >
@@ -331,7 +369,7 @@
                     d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                   />
                 </svg>
-                {{ $t('history_campaign_view.active_section.edit_button') }}
+                {{ $t("history_campaign_view.active_section.edit_button") }}
               </button>
             </div>
           </div>
@@ -340,7 +378,9 @@
     </div>
 
     <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
-      <h2 class="text-xl font-bold text-[#051960] mb-6">{{ $t('history_campaign_view.history_section.title') }}</h2>
+      <h2 class="text-xl font-bold text-[#051960] mb-6">
+        {{ $t("history_campaign_view.history_section.title") }}
+      </h2>
 
       <div class="overflow-x-auto">
         <table class="w-full">
@@ -349,32 +389,36 @@
               <th
                 class="pb-4 pl-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-[30%]"
               >
-                {{ $t('history_campaign_view.history_section.headers.name') }}
+                {{ $t("history_campaign_view.history_section.headers.name") }}
               </th>
               <th
                 class="pb-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center"
               >
-                {{ $t('history_campaign_view.history_section.headers.type') }}
+                {{ $t("history_campaign_view.history_section.headers.type") }}
               </th>
               <th
                 class="pb-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center"
               >
-                {{ $t('history_campaign_view.history_section.headers.duration') }}
+                {{
+                  $t("history_campaign_view.history_section.headers.duration")
+                }}
               </th>
               <th
                 class="pb-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right"
               >
-                {{ $t('history_campaign_view.history_section.headers.revenue') }}
+                {{
+                  $t("history_campaign_view.history_section.headers.revenue")
+                }}
               </th>
               <th
                 class="pb-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center"
               >
-                {{ $t('history_campaign_view.history_section.headers.status') }}
+                {{ $t("history_campaign_view.history_section.headers.status") }}
               </th>
               <th
                 class="pb-4 pr-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right"
               >
-                {{ $t('history_campaign_view.history_section.headers.manage') }}
+                {{ $t("history_campaign_view.history_section.headers.manage") }}
               </th>
             </tr>
           </thead>
@@ -387,16 +431,14 @@
               <td class="py-4 pl-4">
                 <div class="flex items-center gap-3">
                   <div
-                    class="w-10 h-10 rounded-lg flex items-center justify-center text-lg shadow-sm border border-white"
+                    class="w-10 h-10 rounded-lg flex items-center justify-center text-lg shadow-sm border border-white shrink-0"
                     :class="[history.iconColor, history.iconBgColor]"
                     v-html="history.icon"
                   ></div>
-                  <div>
-                    <div class="font-bold text-[#051960]">
+
+                  <div class="flex flex-col justify-center min-h-[40px]">
+                    <div class="font-bold text-[#051960] leading-tight">
                       {{ history.name }}
-                    </div>
-                    <div class="text-xs text-gray-400 font-light">
-                      {{ history.branch }}
                     </div>
                   </div>
                 </div>
@@ -409,7 +451,8 @@
                 </span>
               </td>
               <td class="py-4 text-center text-gray-500 font-medium">
-                {{ calculateDuration(history.startDate, history.endDate) }} {{ $t('history_campaign_view.history_section.unit_days') }}
+                {{ calculateDuration(history.startDate, history.endDate) }}
+                {{ $t("history_campaign_view.history_section.unit_days") }}
               </td>
               <td class="py-4 text-right font-bold text-[#051960]">
                 ฿{{ formatCurrency(history.revenue) }}
@@ -423,7 +466,15 @@
                       : 'bg-gray-100 text-gray-500'
                   "
                 >
-                  {{ history.status === "Completed" ? $t('history_campaign_view.history_section.status.completed') : $t('history_campaign_view.history_section.status.cancelled') }}
+                  {{
+                    history.status === "Completed"
+                      ? $t(
+                          "history_campaign_view.history_section.status.completed",
+                        )
+                      : $t(
+                          "history_campaign_view.history_section.status.cancelled",
+                        )
+                  }}
                 </span>
               </td>
               <td class="py-4 pr-4 text-right">
@@ -445,7 +496,11 @@
                       d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                     />
                   </svg>
-                  {{ $t('history_campaign_view.history_section.view_report_button') }}
+                  {{
+                    $t(
+                      "history_campaign_view.history_section.view_report_button",
+                    )
+                  }}
                 </button>
               </td>
             </tr>
@@ -457,7 +512,7 @@
         v-if="historyCampaigns.length === 0"
         class="text-center py-10 text-gray-400"
       >
-        {{ $t('history_campaign_view.history_section.empty_state') }}
+        {{ $t("history_campaign_view.history_section.empty_state") }}
       </div>
     </div>
     <EditCampaignModal
@@ -476,85 +531,110 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useCampaignStore } from "@/stores/campaign";
 import EditCampaignModal from "@/components/EditCampaignModal.vue";
 import ReportCampaignModal from "@/components/ReportCampaignModal.vue";
+import Swal from "sweetalert2";
 
 const router = useRouter();
 const { t, locale } = useI18n();
+const campaignStore = useCampaignStore();
 
-// State
+// ดึง State จาก Store
+const {
+  activeCampaigns: storeActive,
+  historyCampaigns: storeHistory,
+  isLoading,
+} = storeToRefs(campaignStore);
+
+// State สำหรับ UI
 const activeMenuId = ref(null);
-
 const showEditModal = ref(false);
 const editingCampaign = ref(null);
-
 const showReportModal = ref(false);
 const reportCampaign = ref(null);
 
-// Mock Data: Active
-const activeCampaigns = ref([
-  {
-    id: 101,
-    name: "โปรโมชั่น ข้าวมันไก่ + น้ำซุปฟัก",
-    type: "Pairing",
-    iconColor: "text-blue-600",
-    iconBgColor: "bg-blue-50",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>`,
-    badgeColor: "bg-blue-50 text-blue-600 border-blue-100",
-    startDate: "2023-10-25",
-    endDate: "2023-11-01",
-    daysLeft: 5,
-    progress: 45,
-  },
-  {
-    id: 102,
-    name: "Happy Hour ลด 20% เมนูเส้น",
-    type: "Happy Hour",
-    iconColor: "text-red-600",
-    iconBgColor: "bg-red-50",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
-    badgeColor: "bg-red-50 text-red-600 border-red-100",
-    startDate: "2023-10-20",
-    endDate: "2023-10-30",
-    daysLeft: 2,
-    progress: 82,
-  },
-]);
+const getCampaignAssets = (type) => {
+  const assets = {
+    Pairing: {
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>`,
+      iconColor: "text-blue-600",
+      iconBgColor: "bg-blue-50",
+      badgeColor: "bg-blue-50 text-blue-600 border-blue-100",
+    },
+    HappyHour: {
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+      iconColor: "text-red-600",
+      iconBgColor: "bg-red-50",
+      badgeColor: "bg-red-50 text-red-600 border-red-100",
+    },
+    Upsell: {
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>`,
+      iconColor: "text-purple-600",
+      iconBgColor: "bg-purple-50",
+      badgeColor: "bg-purple-50 text-purple-600 border-purple-100",
+    },
+    SlowMoving: {
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>`,
+      iconColor: "text-orange-600",
+      iconBgColor: "bg-orange-50",
+      badgeColor: "bg-orange-50 text-orange-600 border-orange-100",
+    },
+  };
+  return assets[type] || assets.Pairing;
+};
 
-// Mock Data: History
-const historyCampaigns = ref([
-  {
-    id: 98,
-    name: "ทานครบ 500 ฟรีเกี๊ยวซ่า",
-    branch: "สาขา เซ็นทรัลเวิลด์",
-    type: "Upsell",
-    iconColor: "text-purple-600",
-    iconBgColor: "bg-purple-50",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>`,
-    startDate: "2023-09-15",
-    endDate: "2023-09-30",
-    revenue: 45000,
-    status: "Completed",
-  },
-  {
-    id: 97,
-    name: "ลด 50% เค้กกล้วยหอม",
-    branch: "สาขา สยามสแควร์",
-    type: "Slow Moving",
-    iconColor: "text-orange-600",
-    iconBgColor: "bg-orange-50",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>`,
-    startDate: "2023-09-01",
-    endDate: "2023-09-03",
-    revenue: 2100,
-    status: "Cancelled",
-  },
-]);
+const activeCampaigns = computed(() => {
+  return storeActive.value.map((c) => {
+    const asset = getCampaignAssets(c.type);
+    const diffTime = new Date(c.end_date) - new Date();
+    const daysLeft = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
 
-// Functions
+    return {
+      ...c,
+      id: c.campaign_id,
+      ...asset,
+      startDate: c.start_date,
+      endDate: c.end_date,
+      daysLeft: daysLeft,
+      progress:
+        c.target_revenue > 0
+          ? Math.min(
+              100,
+              Math.round(
+                (parseFloat(c.total_revenue) / parseFloat(c.target_revenue)) *
+                  100,
+              ),
+            )
+          : 0,
+    };
+  });
+});
+
+const historyCampaigns = computed(() => {
+  return storeHistory.value.map((c) => {
+    const asset = getCampaignAssets(c.type);
+    return {
+      ...c,
+      id: c.campaign_id,
+      ...asset,
+      startDate: c.start_date,
+      endDate: c.end_date,
+      revenue: c.total_revenue,
+      status: c.status === "completed" ? "Completed" : "Cancelled",
+    };
+  });
+});
+
+onMounted(() => {
+  campaignStore.fetchCampaigns("active");
+  campaignStore.fetchCampaigns("history");
+});
+
 const navigateToEdit = (id) => {
   const campaign = activeCampaigns.value.find((c) => c.id === id);
   if (campaign) {
@@ -563,19 +643,20 @@ const navigateToEdit = (id) => {
   }
 };
 
-const handleSaveCampaign = (updatedData) => {
-  console.log("Saving data:", updatedData);
-
-  // Update ข้อมูลใน Array (จำลอง)
-  const index = activeCampaigns.value.findIndex((c) => c.id === updatedData.id);
-  if (index !== -1) {
-    activeCampaigns.value[index] = {
-      ...activeCampaigns.value[index],
-      ...updatedData,
-    };
+const handleSaveCampaign = async (updatedData) => {
+  const success = await campaignStore.updateCampaign(
+    editingCampaign.value.id,
+    updatedData,
+  );
+  if (success) {
+    showEditModal.value = false;
+    Swal.fire({
+      icon: "success",
+      title: "อัปเดตเรียบร้อย",
+      timer: 1500,
+      showConfirmButton: false,
+    });
   }
-
-  showEditModal.value = false;
 };
 
 const toggleMenu = (id) => {
@@ -586,31 +667,105 @@ const closeAnyOpenMenu = () => {
   activeMenuId.value = null;
 };
 
-const handleMenuAction = (action, campaign) => {
+const handleMenuAction = async (action, campaign) => {
   activeMenuId.value = null;
+
+  const commonSwalConfig = {
+    buttonsStyling: false,
+    customClass: {
+      popup:
+        "rounded-[2rem] font-sans shadow-2xl w-[85%] md:w-[26rem] pt-6 pb-4 px-4 md:p-8",
+      title: "text-[#051960] text-xl md:text-2xl font-bold mb-1",
+      htmlContainer: "text-gray-500 text-sm md:text-base font-light px-2 mb-4",
+      confirmButton:
+        "bg-[#F97316] hover:bg-[#ea580c] text-white font-bold text-sm px-8 py-3 rounded-full shadow-lg shadow-orange-200 transition-all transform hover:-translate-y-1 active:scale-95 outline-none w-full md:w-auto mx-2",
+      cancelButton:
+        "bg-gray-100 hover:bg-gray-200 text-gray-500 font-bold text-sm px-8 py-3 rounded-full transition-all outline-none w-full md:w-auto mx-2 mt-2 md:mt-0",
+      icon: "border-none !mt-0 !mb-4 transform scale-75 md:scale-100",
+    },
+  };
+
   if (action === "duplicate") {
-    alert(t('history_campaign_view.alerts.duplicate_msg', { name: campaign.name }));
-  } else if (action === "delete") {
-    if (confirm(t('history_campaign_view.alerts.delete_confirm'))) {
-      alert(t('history_campaign_view.alerts.delete_success'));
+    try {
+      const success = await campaignStore.duplicateCampaign(campaign.id);
+      if (success) {
+        Swal.fire({
+          ...commonSwalConfig,
+          icon: "success",
+          title: "คัดลอกสำเร็จ!",
+          text: `ทำซ้ำแคมเปญ "${campaign.name}" เรียบร้อยแล้ว`,
+          confirmButtonText: "ตกลง",
+        });
+      }
+    } catch (error) {
+      console.error(error);
     }
+  } else if (action === "delete") {
+    Swal.fire({
+      ...commonSwalConfig,
+      icon: "warning",
+      title: "ยืนยันการลบ?",
+      text: "คุณแน่ใจหรือไม่ที่จะลบแคมเปญนี้?",
+      showCancelButton: true,
+      confirmButtonText: "ลบแคมเปญ",
+      cancelButtonText: "ยกเลิก",
+      customClass: {
+        ...commonSwalConfig.customClass,
+        icon: "border-[3px] border-orange-400 !mt-0 !mb-6 transform scale-75 md:scale-90 rounded-full p-4 text-orange-500",
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const success = await campaignStore.updateStatus(campaign.id, "delete");
+        if (success) {
+          Swal.fire({
+            ...commonSwalConfig,
+            icon: "success",
+            title: "ลบสำเร็จ",
+            text: "ลบแคมเปญเรียบร้อยแล้ว",
+            showConfirmButton: false,
+            timer: 1200,
+          });
+        }
+      }
+    });
+  } else if (action === "pause" || action === "resume") {
+    const isPause = action === "pause";
+    Swal.fire({
+      ...commonSwalConfig,
+      icon: "question",
+      title: isPause ? "หยุดแคมเปญ?" : "เริ่มแคมเปญต่อ?",
+      text: isPause
+        ? "ต้องการหยุดติดตามผลชั่วคราวใช่หรือไม่?"
+        : "ต้องการเริ่มทำงานแคมเปญนี้ต่อใช่หรือไม่?",
+      showCancelButton: true,
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+      customClass: {
+        ...commonSwalConfig.customClass,
+        icon: "border-[3px] border-blue-200 !mt-0 !mb-2 transform scale-75 md:scale-90 rounded-full p-4 text-blue-500",
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await campaignStore.updateStatus(campaign.id, action);
+      }
+    });
   }
 };
 
-const navigateToDetails = (id) => {
-  console.log("View Details", id);
+const navigateToDetails = async (id) => {
+  await campaignStore.fetchCampaignDetail(id);
+  reportCampaign.value = campaignStore.currentDetail;
+  showReportModal.value = true;
 };
 
-const viewReport = (id) => {
-  const campaign = historyCampaigns.value.find((c) => c.id === id); // หรือ activeCampaigns ตามที่คลิก
-  if (campaign) {
-    reportCampaign.value = campaign;
-    showReportModal.value = true;
-  }
+const viewReport = async (id) => {
+  await campaignStore.fetchCampaignDetail(id);
+  reportCampaign.value = campaignStore.currentDetail;
+  showReportModal.value = true;
 };
 
-// Helpers
 const formatDate = (dateString) => {
+  if (!dateString) return "";
   const options = { day: "numeric", month: "short" };
   return new Date(dateString).toLocaleDateString(locale.value, options);
 };
@@ -621,16 +776,39 @@ const formatCurrency = (value) => {
 
 const calculateDuration = (start, end) => {
   const diffTime = Math.abs(new Date(end) - new Date(start));
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
+
+// คำนวณจำนวนแคมเปญที่กำลังใช้งานอยู่จริง
+const activeCampaignCount = computed(() => storeActive.value.length);
+
+// คำนวณยอดขายรวมจากทุกแคมเปญ (Active + History)
+const totalRevenueSummary = computed(() => {
+  const all = [...storeActive.value, ...storeHistory.value];
+  return all.reduce((sum, c) => sum + parseFloat(c.total_revenue || 0), 0);
+});
+
+// คำนวณอัตราการเข้าถึงบิลเฉลี่ย (Bill Penetration)
+const avgPenetration = computed(() => {
+  if (storeActive.value.length === 0) return 0;
+  const all = [...storeActive.value, ...storeHistory.value];
+  const matched = all.reduce(
+    (sum, c) => sum + parseInt(c.total_matched_bills || 0),
+    0,
+  );
+  const total = all.reduce(
+    (sum, c) => sum + parseInt(c.total_period_bills || 0),
+    0,
+  );
+  return total > 0 ? ((matched / total) * 100).toFixed(1) : 0;
+});
 </script>
 
 <style scoped>
 @media (max-width: 767px) {
   .flex.items-end.justify-between.gap-4.mb-8 {
     flex-direction: column !important;
-    align-items: stretch !important; 
+    align-items: stretch !important;
     gap: 0.75rem;
     margin-bottom: 1.25rem !important;
   }
@@ -640,8 +818,8 @@ const calculateDuration = (start, end) => {
   }
 
   .flex.items-end.justify-between.gap-4.mb-8 button {
-    width: auto !important; 
-    align-self: flex-end; 
+    width: auto !important;
+    align-self: flex-end;
     justify-content: center;
     margin-top: 0.5rem;
 
@@ -661,10 +839,10 @@ const calculateDuration = (start, end) => {
   .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10 > div {
     padding: 1rem !important;
     display: flex;
-    flex-direction: column; 
-    justify-content: space-between; 
+    flex-direction: column;
+    justify-content: space-between;
     align-items: flex-start;
-    min-height: 7rem; 
+    min-height: 7rem;
   }
 
   .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10 > div > div:first-child {
@@ -680,25 +858,25 @@ const calculateDuration = (start, end) => {
     margin-bottom: 0.25rem;
   }
   .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10 > div h3 {
-    font-size: 1.1rem; 
+    font-size: 1.1rem;
   }
 
   .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10 > div:last-child {
-    grid-column: span 2; 
-    flex-direction: row !important; 
-    align-items: center; 
+    grid-column: span 2;
+    flex-direction: row !important;
+    align-items: center;
 
     justify-content: flex-start !important;
-    gap: 1rem; 
+    gap: 1rem;
 
-    min-height: auto; 
+    min-height: auto;
     padding: 1rem 1.25rem !important;
   }
 
   .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10
     > div:last-child
     > div:first-child {
-    margin-bottom: 0; 
+    margin-bottom: 0;
   }
 
   .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-10

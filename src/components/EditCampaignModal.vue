@@ -50,9 +50,9 @@
                   />
                 </svg>
               </div>
-              <span class="toast-text text-sm font-bold"
-                >{{ $t('edit_campaign_modal.toast.success') }}</span
-              >
+              <span class="toast-text text-sm font-bold">{{
+                $t("edit_campaign_modal.toast.success")
+              }}</span>
             </div>
           </div>
         </transition>
@@ -60,9 +60,11 @@
           class="bg-white px-8 pt-8 pb-4 flex justify-between items-start shrink-0 border-b border-gray-50"
         >
           <div>
-            <h3 class="text-2xl font-bold text-[#051960]">{{ $t('edit_campaign_modal.header.title') }}</h3>
+            <h3 class="text-2xl font-bold text-[#051960]">
+              {{ $t("edit_campaign_modal.header.title") }}
+            </h3>
             <p class="text-gray-400 text-sm mt-1 font-light">
-              {{ $t('edit_campaign_modal.header.subtitle') }}
+              {{ $t("edit_campaign_modal.header.subtitle") }}
             </p>
           </div>
           <button
@@ -89,7 +91,7 @@
         <div class="p-8 space-y-6 overflow-y-auto custom-scrollbar">
           <div class="space-y-2">
             <label class="text-sm font-bold text-[#051960] ml-1">
-              {{ $t('edit_campaign_modal.form.name_label') }}
+              {{ $t("edit_campaign_modal.form.name_label") }}
             </label>
             <div class="relative">
               <input
@@ -123,42 +125,32 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="text-sm font-bold text-[#051960] ml-1">
-                {{ $t('edit_campaign_modal.form.start_date_label') }}
+                {{ $t("edit_campaign_modal.form.target_revenue_label") }}
               </label>
               <div class="relative">
                 <input
-                  v-model="formData.startDate"
-                  type="date"
-                  class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
+                  v-model="formData.target_revenue"
+                  :disabled="isLoading"
+                  type="number"
+                  class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-semibold text-[#051960] placeholder-gray-400 shadow-sm"
+                  placeholder="ตัวอย่าง: 50000"
                 />
                 <span
                   class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
+                  ฿
                 </span>
               </div>
             </div>
             <div class="space-y-2">
               <label class="text-sm font-bold text-[#051960] ml-1">
-                {{ $t('edit_campaign_modal.form.end_date_label') }}
+                {{ $t("edit_campaign_modal.form.end_date_label") }}
               </label>
               <div class="relative">
                 <input
                   v-model="formData.endDate"
                   type="date"
+                  :min="formData.startDate"
                   class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
                 />
                 <span
@@ -191,14 +183,16 @@
             @click="closeModal"
             class="flex-1 py-3.5 rounded-full border-2 border-gray-100 text-gray-500 font-bold text-sm hover:bg-gray-50 hover:border-gray-200 hover:text-gray-700 transition-all"
           >
-            {{ $t('edit_campaign_modal.buttons.cancel') }}
+            {{ $t("edit_campaign_modal.buttons.cancel") }}
           </button>
           <button
             @click="saveChanges"
             :disabled="isLoading"
             class="flex-[2] py-3.5 rounded-full bg-[#051960] text-white font-bold text-sm hover:bg-[#0a237a] shadow-xl shadow-blue-900/20 hover:shadow-blue-900/30 hover:-translate-y-0.5 transition-all active:scale-95 active:translate-y-0 flex items-center justify-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
           >
-            <span v-if="!isLoading">{{ $t('edit_campaign_modal.buttons.save') }}</span>
+            <span v-if="!isLoading">{{
+              $t("edit_campaign_modal.buttons.save")
+            }}</span>
             <div v-else class="flex items-center gap-2">
               <svg
                 class="animate-spin -ml-1 h-5 w-5 text-white"
@@ -220,7 +214,7 @@
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              <span>{{ $t('edit_campaign_modal.buttons.processing') }}</span>
+              <span>{{ $t("edit_campaign_modal.buttons.processing") }}</span>
             </div>
           </button>
         </div>
@@ -232,6 +226,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { useCampaignStore } from "@/stores/campaign";
 
 const props = defineProps({
   isOpen: Boolean,
@@ -240,25 +235,55 @@ const props = defineProps({
 
 const emit = defineEmits(["close", "save"]);
 const { t } = useI18n();
+const campaignStore = useCampaignStore();
 
 const isLoading = ref(false);
 const showToast = ref(false);
 
+const getLocalDateString = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 const formData = ref({
+  id: null,
   name: "",
   startDate: "",
   endDate: "",
+  target_revenue: 0,
 });
 
-// Watch Prop เพื่อดึงข้อมูลมาใส่ Form
+const minDate = getLocalDateString();
+
 watch(
   () => props.campaign,
   (newVal) => {
     if (newVal) {
-      formData.value = { ...newVal };
+      formData.value = {
+        id: newVal.campaign_id || newVal.id,
+        name: newVal.name,
+        startDate: newVal.start_date ? newVal.start_date.split("T")[0] : "",
+        endDate: newVal.end_date ? newVal.end_date.split("T")[0] : "",
+        target_revenue: newVal.target_revenue || 0,
+      };
     }
   },
-  { immediate: true }
+  { immediate: true },
+);
+
+watch(
+  () => formData.value.startDate,
+  (newStartDate) => {
+    if (
+      newStartDate &&
+      formData.value.endDate &&
+      newStartDate > formData.value.endDate
+    ) {
+      formData.value.endDate = newStartDate;
+    }
+  },
 );
 
 const closeModal = () => {
@@ -275,27 +300,30 @@ const saveChanges = async () => {
   isLoading.value = true;
 
   try {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const success = await campaignStore.updateCampaign(formData.value.id, {
+      name: formData.value.name,
+      start_date: formData.value.startDate,
+      end_date: formData.value.endDate,
+      target_revenue: formData.value.target_revenue,
+    });
 
-    isLoading.value = false;
-    showToast.value = true;
-
-    setTimeout(() => {
-      showToast.value = false;
-
-      emit("save", formData.value);
-
-      closeModal();
-    }, 1500);
+    if (success) {
+      showToast.value = true;
+      setTimeout(() => {
+        showToast.value = false;
+        emit("save", formData.value);
+        closeModal();
+      }, 1200);
+    }
   } catch (error) {
-    console.error(error);
+    console.error("Update failed:", error);
+  } finally {
     isLoading.value = false;
   }
 };
 </script>
 
 <style scoped>
-/* ซ่อน Default Calendar Icon ของ Browser (เฉพาะ Chrome/Edge) */
 input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0;
   position: absolute;

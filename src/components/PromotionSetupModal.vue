@@ -50,7 +50,9 @@
                   />
                 </svg>
               </div>
-              <span class="toast-text text-sm font-bold">{{ $t('promotion_setup_modal.toast.success') }}</span>
+              <span class="toast-text text-sm font-bold">{{
+                $t("promotion_setup_modal.toast.success")
+              }}</span>
             </div>
           </div>
         </transition>
@@ -58,9 +60,11 @@
           class="bg-white px-8 pt-8 pb-4 flex justify-between items-start shrink-0 border-b border-gray-50"
         >
           <div>
-            <h3 class="text-2xl font-bold text-[#051960]">{{ $t('promotion_setup_modal.header.title') }}</h3>
+            <h3 class="text-2xl font-bold text-[#051960]">
+              {{ $t("promotion_setup_modal.header.title") }}
+            </h3>
             <p class="text-gray-400 text-sm mt-1 font-light">
-              {{ $t('promotion_setup_modal.header.subtitle') }}
+              {{ $t("promotion_setup_modal.header.subtitle") }}
             </p>
           </div>
           <button
@@ -106,15 +110,18 @@
                     class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border bg-white/90 backdrop-blur-sm shadow-sm"
                     :class="ideaData?.badgeColor"
                   >
-                    {{ ideaData?.type || $t('promotion_setup_modal.card.default_type') }}
+                    {{
+                      ideaData?.type ||
+                      $t("promotion_setup_modal.card.default_type")
+                    }}
                   </span>
 
                   <div
                     class="flex items-center gap-1.5 bg-white/90 px-2.5 py-1 rounded-lg shadow-sm border border-white/50"
                   >
-                    <span class="text-[10px] text-gray-400 font-medium"
-                      >{{ $t('promotion_setup_modal.card.impact_label') }}</span
-                    >
+                    <span class="text-[10px] text-gray-400 font-medium">{{
+                      $t("promotion_setup_modal.card.impact_label")
+                    }}</span>
                     <span
                       class="text-sm font-bold"
                       :class="ideaData?.scoreColor"
@@ -137,15 +144,17 @@
 
           <form @submit.prevent="handleConfirm" class="space-y-6">
             <div class="space-y-2">
-              <label class="text-sm font-bold text-[#051960] ml-1"
-                >{{ $t('promotion_setup_modal.form.name_label') }}</label
-              >
+              <label class="text-sm font-bold text-[#051960] ml-1">{{
+                $t("promotion_setup_modal.form.name_label")
+              }}</label>
               <div class="relative">
                 <input
-                  v-model="form.name"
+                  v-model="form.promotionName"
                   type="text"
                   class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-semibold text-[#051960] placeholder-gray-400 shadow-sm"
-                  :placeholder="$t('promotion_setup_modal.form.name_placeholder')"
+                  :placeholder="
+                    $t('promotion_setup_modal.form.name_placeholder')
+                  "
                   required
                 />
                 <span
@@ -171,14 +180,14 @@
 
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="text-sm font-bold text-[#051960] ml-1"
-                  >{{ $t('promotion_setup_modal.form.start_date_label') }}</label
-                >
+                <label class="text-sm font-bold text-[#051960] ml-1">{{
+                  $t("promotion_setup_modal.form.start_date_label")
+                }}</label>
                 <div class="relative">
                   <input
                     v-model="form.startDate"
                     type="date"
-                    class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
+                    :min="minDate" class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
                     required
                   />
                   <span
@@ -202,14 +211,14 @@
                 </div>
               </div>
               <div class="space-y-2">
-                <label class="text-sm font-bold text-[#051960] ml-1"
-                  >{{ $t('promotion_setup_modal.form.end_date_label') }}</label
-                >
+                <label class="text-sm font-bold text-[#051960] ml-1">{{
+                  $t("promotion_setup_modal.form.end_date_label")
+                }}</label>
                 <div class="relative">
                   <input
                     v-model="form.endDate"
                     type="date"
-                    class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
+                    :min="form.startDate" class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
                     required
                   />
                   <span
@@ -243,14 +252,16 @@
             @click="close"
             class="flex-1 py-3.5 rounded-full border-2 border-gray-100 text-gray-500 font-bold text-sm hover:bg-gray-50 hover:border-gray-200 hover:text-gray-700 transition-all"
           >
-            {{ $t('promotion_setup_modal.buttons.cancel') }}
+            {{ $t("promotion_setup_modal.buttons.cancel") }}
           </button>
           <button
             @click="handleConfirm"
             :disabled="isLoading"
             class="flex-[2] py-3.5 rounded-full bg-[#051960] text-white font-bold text-sm hover:bg-[#0a237a] shadow-xl shadow-blue-900/20 hover:shadow-blue-900/30 hover:-translate-y-0.5 transition-all active:scale-95 active:translate-y-0 flex items-center justify-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
           >
-            <span v-if="!isLoading">{{ $t('promotion_setup_modal.buttons.confirm') }}</span>
+            <span v-if="!isLoading">{{
+              $t("promotion_setup_modal.buttons.confirm")
+            }}</span>
 
             <div v-else class="flex items-center gap-2">
               <svg
@@ -273,7 +284,7 @@
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              <span>{{ $t('promotion_setup_modal.buttons.processing') }}</span>
+              <span>{{ $t("promotion_setup_modal.buttons.processing") }}</span>
             </div>
           </button>
         </div>
@@ -283,7 +294,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 const props = defineProps({
@@ -298,53 +309,63 @@ const { t } = useI18n();
 const isLoading = ref(false);
 const showToast = ref(false);
 
+const getLocalDateString = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); 
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const form = ref({
-  name: "",
-  startDate: new Date().toISOString().split("T")[0],
-  endDate: new Date(new Date().setDate(new Date().getDate() + 7))
-    .toISOString()
-    .split("T")[0],
+  promotionName: "",
+  startDate: getLocalDateString(), 
+  endDate: getLocalDateString(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)), 
 });
 
 watch(
   () => props.suggestionData,
   (newVal) => {
     if (newVal) {
-      form.value.name = t('promotion_setup_modal.auto_fill.promotion_prefix') + ' ' + newVal.name;
+      form.value.promotionName =
+        t("promotion_setup_modal.auto_fill.promotion_prefix") +
+        " " +
+        newVal.name;
+    }
+  },
+  { immediate: true },
+);
+
+const minDate = getLocalDateString(); 
+
+watch(
+  () => form.value.startDate,
+  (newStartDate) => {
+    if (newStartDate > form.value.endDate) {
+      form.value.endDate = newStartDate;
     }
   }
 );
 
 const close = () => {
-  if (isLoading.value) return;
   emit("close");
-  setTimeout(() => {
-    showToast.value = false;
-  }, 300);
+  showToast.value = false;
 };
 
-const handleConfirm = async () => {
-  if (!form.value.name) return;
+const handleConfirm = () => {
+  console.log("Button Clicked. Name is:", form.value.promotionName);
 
-  isLoading.value = true;
-
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    isLoading.value = false;
-    showToast.value = true;
-
-    setTimeout(() => {
-      showToast.value = false;
-
-      emit("confirm", form.value);
-
-      close();
-    }, 1500);
-  } catch (error) {
-    console.error(error);
-    isLoading.value = false;
+  if (!form.value.promotionName) {
+    console.warn("Validation Failed: Name is empty");
+    return;
   }
+
+  console.log("Validation Passed. Emitting confirm...");
+
+  emit("confirm", {
+    promotionName: form.value.promotionName,
+    startDate: form.value.startDate,
+    endDate: form.value.endDate,
+  });
 };
 </script>
 
@@ -435,19 +456,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 
   .toast-wrapper {
-    padding-left: 1rem !important;  
-    padding-right: 1rem !important; 
-    padding-top: 0.5rem !important; 
-    padding-bottom: 0.5rem !important; 
-    gap: 0.5rem !important; 
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    gap: 0.5rem !important;
   }
 
   .toast-icon {
-    padding: 0.125rem !important; 
+    padding: 0.125rem !important;
   }
 
   .toast-text {
-    font-size: 0.75rem !important; 
+    font-size: 0.75rem !important;
   }
 }
 </style>

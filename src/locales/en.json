@@ -474,6 +474,7 @@
       "unit_items": "items",
       "avg_bill_format": "Avg ฿{n}/bill",
       "roi_label": "ROI",
+      "roi_description": "Return on Investment",
       "impact_high": "Impact High"
     },
     "chart": {
@@ -494,7 +495,9 @@
       "name_label": "Campaign Name",
       "name_placeholder": "Enter campaign name...",
       "start_date_label": "Start Date",
-      "end_date_label": "End Date"
+      "end_date_label": "End Date",
+      "target_revenue_label": "Target Revenue",
+      "target_revenue_placeholder": "e.g., 50000"
     },
     "buttons": {
       "cancel": "Cancel",

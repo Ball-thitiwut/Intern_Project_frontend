@@ -474,6 +474,7 @@
       "unit_items": "รายการ",
       "avg_bill_format": "เฉลี่ย ฿{n}/บิล",
       "roi_label": "ความคุ้มค่า (ROI)",
+      "roi_description": "อัตราผลตอบแทนจากการลงทุน",
       "impact_high": "Impact High"
     },
     "chart": {
@@ -494,7 +495,9 @@
       "name_label": "ชื่อแคมเปญ",
       "name_placeholder": "ระบุชื่อแคมเปญ...",
       "start_date_label": "วันที่เริ่ม",
-      "end_date_label": "วันที่สิ้นสุด"
+      "end_date_label": "วันที่สิ้นสุด",
+      "target_revenue_label": "เป้าหมายยอดขาย",
+      "target_revenue_placeholder": "ตัวอย่าง: 50000"
     },
     "buttons": {
       "cancel": "ยกเลิก",

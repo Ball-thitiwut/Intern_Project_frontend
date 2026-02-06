@@ -527,23 +527,39 @@ import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import PromotionSetupModal from "@/components/PromotionSetupModal.vue";
+import { usePromotionStore } from "@/stores/promotion";
+import { useCampaignStore } from "@/stores/campaign";
+import { storeToRefs } from "pinia";
+import Swal from 'sweetalert2';
 
 const router = useRouter();
 const { t } = useI18n();
 
-const isAnalyzing = ref(false);
-const isAnalyzed = ref(false);
-const selectedBranch = ref(1);
-const selectedChannel = ref("dinein");
-const lastUpdated = ref(null);
-const isBranchOpen = ref(false);
-const isChannelOpen = ref(false);
+const promotionStore = usePromotionStore();
+const campaignStore = useCampaignStore();
 
-const lastAnalyzedState = ref({ branch: null, channel: null });
+const { 
+  isAnalyzing, 
+  lastUpdated, 
+  pairingList, 
+  happyHourList, 
+  upsellList, 
+  slowMovingList 
+} = storeToRefs(promotionStore);
+
+// ใช้ hasData จาก store แทน isAnalyzed แบบเดิม
+const isAnalyzed = computed(() => promotionStore.hasData);
 
 const showSetupModal = ref(false);
 const selectedIdeaData = ref(null);
 const selectedSuggestion = ref(null);
+
+// 2. คืนค่าตัวแปร State ที่จำเป็น (ที่อาจจะเผลอลบไป)
+const selectedBranch = ref(1);
+const selectedChannel = ref("dinein");
+const isBranchOpen = ref(false);
+const isChannelOpen = ref(false);
+const lastAnalyzedState = ref({ branch: null, channel: null });
 
 const branches = [
   { id: 1, name: "สาขา สยามสแควร์" },
@@ -619,121 +635,102 @@ const toggleIdea = (index) => {
   ideas.value[index].isOpen = !ideas.value[index].isOpen;
 };
 
+// Map ข้อมูลจาก Store เข้ากับ UI
 const ideas = computed(() => [ 
   {
     type: "Pairing",
     title: t('ideas_view.demo_ideas.pairing.title'),
     subtitle: t('ideas_view.demo_ideas.pairing.subtitle'),
-    isOpen: false, // เพิ่ม isOpen
+    isOpen: false,
     badgeColor: "bg-blue-50 text-blue-600 border-blue-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>`,
     iconBg: "bg-blue-50 text-blue-500",
     contentBg: "bg-blue-50",
     textColor: "text-blue-600",
     scoreColor: "text-blue-600",
-    suggestions: [
-      {
-        name: "ข้าวมันไก่ + น้ำซุปฟัก",
-        detail: "แนะนำขาย ฿89 (ปกติ ฿100)",
-        score: 92,
-      },
-      { name: "ข้าวหมูแดง + เกี๊ยวน้ำ", detail: "เพิ่มกำไร 15%", score: 85 },
-      {
-        name: "บะหมี่แห้ง + น้ำเก๊กฮวย",
-        detail: "ยอดนิยมช่วงเที่ยง",
-        score: 78,
-      },
-    ],
+    suggestions: pairingList.value.map(item => ({
+      name: item.promotion_detail.title,
+      detail: item.promotion_detail.subtitle,
+      score: Math.round(item.score),
+      ...item
+    })),
   },
   {
     type: "Happy Hour",
     title: t('ideas_view.demo_ideas.happy_hour.title'),
     subtitle: t('ideas_view.demo_ideas.happy_hour.subtitle'),
-    isOpen: false, // เพิ่ม isOpen
+    isOpen: false,
     badgeColor: "bg-red-50 text-red-600 border-red-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
     iconBg: "bg-red-50 text-red-500",
     contentBg: "bg-red-50",
     textColor: "text-red-600",
     scoreColor: "text-red-600",
-    suggestions: [
-      { name: "ลด 20% เมนูเส้น", detail: "เวลา 14:00 - 16:00 น.", score: 88 },
-      { name: "เครื่องดื่ม 1 แถม 1", detail: "ก่อน 11:00 น.", score: 82 },
-      { name: "ทานครบ 300 ลด 50", detail: "มื้อดึกหลัง 2 ทุ่ม", score: 75 },
-    ],
+    suggestions: happyHourList.value.map(item => ({
+      name: item.promotion_detail.title,
+      detail: item.promotion_detail.subtitle,
+      score: Math.round(item.score),
+      ...item
+    })),
   },
   {
     type: "Upsell",
     title: t('ideas_view.demo_ideas.upsell.title'),
     subtitle: t('ideas_view.demo_ideas.upsell.subtitle'),
-    isOpen: false, // เพิ่ม isOpen
+    isOpen: false,
     badgeColor: "bg-purple-50 text-purple-600 border-purple-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>`,
     iconBg: "bg-purple-50 text-purple-500",
     contentBg: "bg-purple-50",
     textColor: "text-purple-600",
     scoreColor: "text-purple-600",
-    suggestions: [
-      {
-        name: "ครบ ฿500 ฟรี เกี๊ยวซ่า",
-        detail: "ต้นทุนของแถมต่ำกว่า 10%",
-        score: 89,
-      },
-      { name: "อัพไซส์น้ำฟรี", detail: "เมื่อสั่งคู่กับข้าว", score: 84 },
-      { name: "เพิ่มไข่ดาว 5 บาท", detail: "จากปกติ 10 บาท", score: 80 },
-    ],
+    suggestions: upsellList.value.map(item => ({
+      name: item.promotion_detail.title,
+      detail: item.promotion_detail.subtitle,
+      score: Math.round(item.score),
+      ...item
+    })),
   },
   {
     type: "Slow Moving",
     title: t('ideas_view.demo_ideas.slow_moving.title'),
     subtitle: t('ideas_view.demo_ideas.slow_moving.subtitle'),
-    isOpen: false, // เพิ่ม isOpen
+    isOpen: false,
     badgeColor: "bg-orange-50 text-orange-600 border-orange-100",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>`,
     iconBg: "bg-orange-50 text-orange-500",
     contentBg: "bg-orange-50",
     textColor: "text-orange-600",
     scoreColor: "text-orange-600",
-    suggestions: [
-      {
-        name: "ลด 15% ยำวุ้นเส้น",
-        detail: "ยอดขายต่ำสุดในหมวดยำ",
-        score: 90,
-      },
-      {
-        name: "แถมน้ำสมุนไพร",
-        detail: "เมื่อสั่งแกงป่า (ยอดขายน้อย)",
-        score: 85,
-      },
-      {
-        name: "ลด 20 บาท ทอดมันกุ้ง",
-        detail: "ไม่ได้ขายมา 3 วันแล้ว",
-        score: 70,
-      },
-    ],
+    suggestions: slowMovingList.value.map(item => ({
+      name: item.promotion_detail.title,
+      detail: item.promotion_detail.subtitle,
+      score: Math.round(item.score),
+      ...item
+    })),
   },
 ]);
 
-const handleAnalyzeClick = () => {
+const handleAnalyzeClick = async () => {
   if (!selectedBranch.value) return;
-  isAnalyzing.value = true;
+
   isBranchOpen.value = false;
   isChannelOpen.value = false;
 
-  setTimeout(() => {
-    isAnalyzing.value = false;
-    isAnalyzed.value = true;
+  const channelMap = {
+    dinein: 'Dine-in',
+    delivery: 'Delivery',
+    takeaway: 'Takeaway'
+  };
+  
+  const apiChannel = channelMap[selectedChannel.value] || null;
 
-    lastAnalyzedState.value = {
-      branch: selectedBranch.value,
-      channel: selectedChannel.value,
-    };
+  await promotionStore.analyzePromotions(apiChannel);
 
-    const now = new Date();
-    lastUpdated.value =
-      now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }) +
-      " น.";
-  }, 1500);
+  lastAnalyzedState.value = {
+    branch: selectedBranch.value,
+    channel: selectedChannel.value,
+  };
 };
 
 const openSetupModal = (idea, suggestion) => {
@@ -746,15 +743,68 @@ const closeModal = () => {
   showSetupModal.value = false;
 };
 
-const handlePromotionConfirm = (formData) => {
-  console.log("Creating Promotion:", {
-    idea: selectedIdeaData.value,
-    suggestion: selectedSuggestion.value,
-    ...formData,
-  });
+const handlePromotionConfirm = async (formData) => {
+  const payload = {
+    name: formData.promotionName,
+    type: selectedSuggestion.value.type, 
+    start_date: formData.startDate,
+    end_date: formData.endDate,
+    predicted_impact: Math.round(selectedSuggestion.value.score),
+    target_revenue: 0, 
+    campaign_config: {
+        ...selectedSuggestion.value.promotion_detail,
+        channel: selectedChannel.value === 'dinein' ? 'Dine-in' 
+                 : selectedChannel.value === 'delivery' ? 'Delivery' 
+                 : selectedChannel.value === 'takeaway' ? 'Takeaway' : 'All'
+    }
+  };
 
-  showSetupModal.value = false;
-  router.push("/history");
+  try {
+    const success = await campaignStore.createCampaign(payload); 
+
+    if (success) {
+      Swal.fire({
+        icon: 'success',
+        title: 'สร้างแคมเปญสำเร็จ!',
+        text: 'ระบบกำลังเริ่มติดตามยอดขายสำหรับแคมเปญนี้',
+        confirmButtonText: 'ดูประวัติแคมเปญ',
+        
+        buttonsStyling: false, 
+        customClass: {
+          popup: 'rounded-[2rem] md:rounded-[2.5rem] font-sans shadow-2xl w-[80%] md:w-[24rem] pt-8 pb-6 px-4 md:p-8',
+          title: 'text-[#051960] text-xl md:text-2xl font-bold mb-1',
+          htmlContainer: 'text-gray-500 text-xs md:text-sm font-light px-2',
+          confirmButton: 'bg-[#F97316] hover:bg-[#ea580c] text-white font-bold text-sm px-6 py-3 rounded-full shadow-lg shadow-orange-200 transition-all transform hover:-translate-y-1 active:scale-95 outline-none w-full md:w-auto mt-2', 
+          icon: 'border-none !mt-0 !mb-2 transform scale-60 md:scale-100'
+        },
+        background: '#fff',
+        
+      }).then(() => {
+        showSetupModal.value = false;
+        router.push("/history");
+      });
+
+    } else {
+        throw new Error("API returned false");
+    }
+  } catch (error) {
+    console.error("Create Campaign Error:", error);
+    
+    Swal.fire({
+      icon: 'error',
+      title: 'เกิดข้อผิดพลาด',
+      text: 'ไม่สามารถสร้างแคมเปญได้ กรุณาลองใหม่อีกครั้ง',
+      confirmButtonText: 'ปิด',
+      buttonsStyling: false,
+      customClass: {
+        popup: 'rounded-[2rem] md:rounded-[2.5rem] font-sans shadow-2xl w-[80%] md:w-[24rem] pt-8 pb-6 px-4 md:p-8',
+        title: 'text-[#051960] text-lg md:text-xl font-bold mb-2',
+        htmlContainer: 'text-gray-500 text-xs md:text-sm',
+        confirmButton: 'bg-gray-100 hover:bg-gray-200 text-[#051960] font-bold text-sm px-6 py-2.5 rounded-full transition-all outline-none w-full md:w-auto',
+        icon: 'border-none !mt-0 !mb-2 transform scale-60 md:scale-100'
+      }
+    });
+  }
 };
 </script>
 

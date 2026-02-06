@@ -132,7 +132,14 @@ const normalizedPeriod = computed(() => props.period ? props.period.toLowerCase(
 
 // เช็คว่ามีข้อมูลพยากรณ์ส่งมาจริงไหม 
 const hasForecastData = computed(() => {
-  return Array.isArray(props.forecast) && props.forecast.length > 0;
+  const hasForecast = Array.isArray(props.forecast) && props.forecast.length > 0;
+
+  const hasActualSales = props.data && props.data.some(item => {
+    const val = item.amount || item.sales || item.total_sales || 0;
+    return val > 0;
+  });
+
+  return hasForecast && hasActualSales;
 });
 
 // -- Logic การประมวลผลข้อมูล (Logic เดิม 100%) --
@@ -262,9 +269,7 @@ const chartData = computed(() => {
         fill: true,
         tension: 0.4, 
 
-        pointRadius: (ctx) => {
-            return !isMobile.value ? 4 : 0;
-        },
+        pointRadius: 0,
         pointBackgroundColor: '#F47122',
         pointBorderColor: '#F47122',
         pointBorderWidth: 2,
@@ -286,7 +291,7 @@ const chartData = computed(() => {
         borderWidth: 2.5,
         pointRadius: 4,
         
-        pointRadius: isMobile.value ? 0 : 4,
+        pointRadius: 0,
         pointBackgroundColor: '#3b82f6',
         pointBorderColor: '#ffffff',
         pointHoverRadius: 5,

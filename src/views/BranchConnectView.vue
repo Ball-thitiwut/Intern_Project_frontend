@@ -124,7 +124,7 @@
                       type="file"
                       ref="fileInputRefs"
                       class="hidden"
-                      accept=".csv, .xls, .xlsx"
+                      accept=".csv, .xls, .xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                       multiple
                       @change="(e) => handleFileUpload(e, index)"
                     />

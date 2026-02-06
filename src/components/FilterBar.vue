@@ -107,7 +107,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -133,24 +133,24 @@ const menuOptions = [
   { id: "behavior" },
 ];
 
-watch([() => props.dataStart, () => props.dataEnd], ([newStart, newEnd]) => {
-    if (selectedPeriod.value === 'All' && newStart) {
-        const start = new Date(newStart);
-        const end = newEnd ? new Date(newEnd) : new Date();
-        dateRange.value = [start, end];
-    }
-});
-
 const displayDateRange = computed(() => {
   const formatDate = (date) => {
-    if (!date) return "-"; 
+    if (!date) return "-";
     const d = new Date(date);
-    if (isNaN(d.getTime())) return "NaN"; 
+    if (isNaN(d.getTime())) return "-";
     const day = String(d.getDate()).padStart(2, "0");
     const month = String(d.getMonth() + 1).padStart(2, "0");
     const year = d.getFullYear();
     return `${day}/${month}/${year}`;
   };
+
+  if (selectedPeriod.value === 'all' || selectedPeriod.value === 'All') {
+    return {
+      start: formatDate(props.dataStart),
+      end: formatDate(props.dataEnd),
+    };
+  }
+
   return {
     start: formatDate(dateRange.value[0]),
     end: formatDate(dateRange.value[1]),
@@ -161,34 +161,24 @@ const currentViewName = computed(() => {
   return t(`filter_bar.views.${currentView.value}`);
 });
 
-// ฟังก์ชันเลือกช่วงเวลา และคำนวณวันเริ่มต้น-สิ้นสุดอัตโนมัติ
+// ฟังก์ชันเลือกช่วงเวลา
 const selectPeriod = (period) => {
   selectedPeriod.value = period;
   const end = new Date();
   const start = new Date();
 
+  if (period === 'all' || period === 'All') {
+    dateRange.value = [null, null]; 
+    emit("update:period", "All");
+    emit("update:date-range", null); 
+    return;
+  }
+
   switch (period) {
-    case "24h":
-      start.setHours(0, 0, 0, 0);
-      break;
-    case "7d":
-      start.setDate(end.getDate() - 7);
-      break;
-    case "1m":
-      start.setMonth(end.getMonth() - 1);
-      break;
-    case "1y":
-      start.setFullYear(end.getFullYear() - 1);
-      break;
-    case "all":
-    case "All":
-      if (props.dataStart) {
-          start.setTime(new Date(props.dataStart).getTime());
-          if (props.dataEnd) end.setTime(new Date(props.dataEnd).getTime());
-      } else {
-          start.setFullYear(new Date().getFullYear(), 0, 1);
-      }
-      break;
+    case "24h": start.setHours(0, 0, 0, 0); break;
+    case "7d": start.setDate(end.getDate() - 7); break;
+    case "1m": start.setMonth(end.getMonth() - 1); break;
+    case "1y": start.setFullYear(end.getFullYear() - 1); break;
   }
 
   dateRange.value = [start, end];

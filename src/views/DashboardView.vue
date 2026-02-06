@@ -437,15 +437,22 @@
         </div>
       </div>
     </div>
+    <EmptyStateModal
+      :is-open="showEmptyState"
+      @close="showEmptyState = false"
+      @setup="handleGoToSetup"
+    />
   </div>
 </template>
 
 <script setup>
-import { onMounted, watch } from "vue";
+import { onMounted, watch, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useDashboardStore } from "@/stores/dashboard";
 import { useI18n } from "vue-i18n";
 import SalesChart from "@/components/SalesChart.vue";
 import PromotionPieChart from "@/components/PromotionPieChart.vue";
+import EmptyStateModal from "@/components/EmptyStateModal.vue";
 
 // รับ Props จาก MainDashboard (ช่วงวันที่, Period)
 const props = defineProps({
@@ -456,9 +463,29 @@ const props = defineProps({
 const dashboardStore = useDashboardStore();
 const { t } = useI18n();
 
+const router = useRouter();
+const showEmptyState = ref(false);
+
+const handleGoToSetup = () => {
+  showEmptyState.value = false;
+  router.push({ name: "pos-info" });
+};
+
 // ดึงข้อมูล Overview
 const fetchData = async () => {
-  await dashboardStore.fetchDashboardOverview(props.period, props.dateRange);
+  showEmptyState.value = false; 
+  
+  await Promise.all([
+    dashboardStore.fetchDashboardOverview(props.period, props.dateRange),
+    dashboardStore.checkImportHistory() 
+  ]);
+
+  const totalSales = dashboardStore.overviewData?.summary?.total_sales || 0;
+  const hasFile = dashboardStore.hasImportHistory; 
+
+  if (totalSales === 0 && !hasFile && !dashboardStore.isLoading) {
+    showEmptyState.value = true;
+  }
 };
 
 onMounted(() => fetchData());
