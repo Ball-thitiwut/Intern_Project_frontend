@@ -180,7 +180,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useRegisterStore } from "@/stores/registration";
 import api from "@/utils/axios";
@@ -264,6 +264,18 @@ const checkEmailAvailability = async (emailToCheck) => {
     throw new Error("System error: Unable to verify email.");
   }
 };
+
+onMounted(() => {
+  if (registerStore.formData.email) {
+    email.value = registerStore.formData.email;
+  }
+  if (registerStore.formData.password) {
+    password.value = registerStore.formData.password;
+  }
+  if (registerStore.formData.confirm_password) {
+    confirmPassword.value = registerStore.formData.confirm_password;
+  }
+});
 
 // ปุ่ม Next Step
 const handleNextStep = async () => {

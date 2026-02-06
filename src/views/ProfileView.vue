@@ -99,6 +99,24 @@ const filteredPosSystems = computed(() => {
   ];
 });
 
+// ฟังก์ชันสำหรับจัดรูปแบบเบอร์โทรศัพท์
+const formatPhoneNumber = (value) => {
+  if (!value) return "";
+  const phoneNumber = value.replace(/[^\d]/g, "");
+  const phoneNumberLength = phoneNumber.length;
+
+  if (phoneNumberLength < 4) return phoneNumber;
+  if (phoneNumberLength < 7) {
+    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+  }
+  return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+};
+
+const handlePhoneInput = (e) => {
+  const formatted = formatPhoneNumber(e.target.value);
+  form.phone = formatted;
+};
+
 onMounted(async () => {
   isLoading.value = true;
   try {
@@ -117,7 +135,8 @@ onMounted(async () => {
       form.firstName = userData.first_name || "";
       form.lastName = userData.last_name || "";
       form.email = userData.email || "";
-      form.phone = userData.phone || userData.phone_number || "";
+      const rawPhone = userData.phone || userData.phone_number || "";
+      form.phone = formatPhoneNumber(rawPhone);
       form.avatarSeed =
         userData.avatar_seed || userStore.avatarSeed || userData.first_name;
 
@@ -186,7 +205,7 @@ const saveProfile = async () => {
     const userPayload = {
       first_name: form.firstName,
       last_name: form.lastName,
-      phone_number: form.phone,
+      phone_number: form.phone.replace(/[^\d]/g, ""),
     };
 
     const restaurantPayload = {
@@ -348,8 +367,10 @@ const saveProfile = async () => {
                 $t("profile_view.personal_info.labels.phone")
               }}</label>
               <input
-                v-model="form.phone"
+                :value="form.phone"
+                @input="handlePhoneInput"
                 type="tel"
+                maxlength="12"
                 class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm"
               />
             </div>
