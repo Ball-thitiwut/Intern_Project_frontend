@@ -1,84 +1,31 @@
 <template>
   <div
-    class="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center justify-between text-sm gap-y-2 md:gap-y-0 p-0 md:p-2 bg-transparent md:bg-white border-none md:border md:border-gray-200 shadow-none md:shadow-sm rounded-none md:rounded-full"
+    class="flex flex-col md:flex-row items-stretch md:items-center gap-3 p-0"
   >
-    <div
-      class="order-1 md:order-none flex items-center bg-[#F8FAFC] rounded-full p-0.5 md:p-1 shadow-sm border border-gray-200 overflow-x-auto w-full md:w-auto md:max-w-none scrollbar-hide"
-    >
-      <button
-        v-for="period in ['24h', '7d', '1m', '1y', 'all']"
-        :key="period"
-        @click="selectPeriod(period)"
-        :class="[
-          'px-0 py-0.5 md:px-4 md:py-1 rounded-full transition duration-200 whitespace-nowrap text-xs md:text-sm flex-1 md:flex-none',
-          selectedPeriod === period
-            ? 'bg-[#051960] font-bold text-white shadow-md'
-            : 'text-gray-600 hover:bg-gray-100',
-        ]"
-      >
-        {{ $t(`filter_bar.periods.${period}`) }}
-      </button>
-    </div>
-
-    <div class="order-2 md:order-none w-full md:w-auto block">
-      <VueDatePicker
-        v-model="dateRange"
-        range
-        :enable-time-picker="false"
-        @update:model-value="onDateChange"
-      >
-        <template #trigger>
-          <div
-            class="hidden md:flex items-center gap-4 text-[#031350] font-medium cursor-pointer hover:opacity-80 transition"
-          >
-            <div
-              class="flex items-center gap-2 bg-[#F8FAFC] px-4 py-1.5 rounded-full shadow border border-gray-200 hover:ring-1 hover:ring-gray-300"
-            >
-              <span>{{ displayDateRange.start }}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <span class="text-gray-400">{{ $t('filter_bar.date_range.to') }}</span>
-            <div
-              class="flex items-center gap-2 bg-[#F8FAFC] px-4 py-1.5 rounded-full shadow-sm border border-gray-200 hover:ring-1 hover:ring-gray-300"
-            >
-              <span>{{ displayDateRange.end }}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-          </div>
-
-          <div class="flex md:hidden items-center justify-between gap-2 w-full">
-              <div class="flex-1 bg-white py-1.5 px-2 rounded-full text-center shadow-sm border border-gray-200 text-xs font-medium text-[#031350]">
-                {{ displayDateRange.start }}
-              </div>
-              <span class="text-gray-400 text-xs">{{ $t('filter_bar.date_range.to') }}</span>
-              <div class="flex-1 bg-white py-1.5 px-2 rounded-full text-center shadow-sm border border-gray-200 text-xs font-medium text-[#031350]">
-                {{ displayDateRange.end }}
-              </div>
-          </div>
-        </template>
-      </VueDatePicker>
-    </div>
-
-    <div class="hidden md:block relative md:flex-none pl-0 min-w-0">
+    <div class="relative flex-1 md:flex-none">
       <div
         @click="isOpen = !isOpen"
-        class="w-full md:w-auto md:min-w-[250px] bg-white px-2 py-1.5 md:px-4 md:py-2 rounded-full border transition-all duration-300 cursor-pointer flex items-center justify-between"
-        :class="[
-          isOpen
-            ? 'border-orange-500 ring-2 ring-orange-100'
-            : 'border-gray-200 hover:border-orange-400 hover:shadow-md',
-        ]"
+        class="w-full md:min-w-[160px] bg-white px-4 py-2 rounded-full border border-gray-200 transition-all duration-300 cursor-pointer flex items-center justify-between hover:border-orange-400 shadow-sm"
+        :class="{ 'border-orange-500 ring-2 ring-orange-100': isOpen }"
       >
-        <span class="font-medium text-[#051960] truncate text-[11px] md:text-sm">{{ currentViewName }}</span>
-        <div class="text-gray-400 transition-transform duration-300 pointer-events-none flex-shrink-0 ml-1" :class="{ 'rotate-180 text-orange-500': isOpen }">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
+        <span class="font-bold text-[#051960] truncate text-xs md:text-sm">
+          {{ currentViewName }}
+        </span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4 text-gray-400 transition-transform"
+          :class="{ 'rotate-180 text-orange-500': isOpen }"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
       </div>
 
       <transition
@@ -89,19 +36,69 @@
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <div v-if="isOpen" class="absolute right-0 mt-2 w-full md:w-[250px] bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden py-1 z-50">
+        <div
+          v-if="isOpen"
+          class="absolute left-0 mt-2 w-full bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50"
+        >
           <div
             v-for="item in menuOptions"
             :key="item.id"
             @click="selectMenu(item)"
-            class="px-4 py-2 cursor-pointer transition-colors text-[11px] md:text-sm font-medium flex items-center justify-between"
-            :class="[currentView === item.id ? 'bg-orange-50/50 text-orange-600' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600']"
+            class="px-4 py-2.5 cursor-pointer text-xs md:text-sm font-medium flex items-center justify-between"
+            :class="[
+              currentView === item.id
+                ? 'bg-orange-50 text-orange-600'
+                : 'text-gray-700 hover:bg-orange-50',
+            ]"
           >
             <span>{{ $t(`filter_bar.views.${item.id}`) }}</span>
           </div>
         </div>
       </transition>
-      <div v-if="isOpen" @click="isOpen = false" class="fixed inset-0 z-40 bg-transparent cursor-default"></div>
+
+      <div
+        v-if="isOpen"
+        @click="isOpen = false"
+        class="fixed inset-0 z-40 bg-transparent"
+      ></div>
+    </div>
+
+    <div class="flex-1 md:flex-none">
+      <VueDatePicker
+        v-model="dateRange"
+        range
+        :enable-time-picker="false"
+        :preset-dates="presetDates"
+        vertical
+        inline-with-input
+        :max-date="new Date()"
+        @update:model-value="onDateChange"
+        auto-apply
+      >
+        <template #trigger>
+          <div
+            class="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-gray-200 cursor-pointer hover:border-orange-400 transition shadow-sm"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            <span class="text-[#031350] font-medium text-xs md:text-sm">
+              {{ displayDateRange.start }} - {{ displayDateRange.end }}
+            </span>
+          </div>
+        </template>
+      </VueDatePicker>
     </div>
   </div>
 </template>
@@ -110,92 +107,78 @@
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
+import { subDays, subMonths, subYears, startOfDay, endOfDay } from "date-fns";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = defineProps({
   initialPeriod: { type: String, default: "1m" },
   initialView: { type: String, default: "sales" },
-  dataStart: { type: [Date, String], default: null }, //  วันที่เริ่มของข้อมูล
-  dataEnd: { type: [Date, String], default: null } // วันที่สิ้นสุดของข้อมูล
+  dataStart: { type: [Date, String], default: null },
+  dataEnd: { type: [Date, String], default: null },
 });
 
 const emit = defineEmits(["update:period", "update:date-range", "change-view"]);
 const { t } = useI18n();
 
-const selectedPeriod = ref(props.initialPeriod);
 const isOpen = ref(false);
 const currentView = ref(props.initialView);
-const dateRange = ref([new Date(), new Date()]);
+const dateRange = ref([null, null]);
 
-const menuOptions = [
-  { id: "sales" },
-  { id: "bill" },
-  { id: "behavior" },
-];
+const menuOptions = [{ id: "sales" }, { id: "bill" }, { id: "behavior" }];
+
+// สร้างปุ่มลัดภายใน DatePicker
+const presetDates = computed(() => [
+  {
+    label: t("filter_bar.periods.24h"),
+    value: [startOfDay(new Date()), endOfDay(new Date())],
+  },
+  {
+    label: t("filter_bar.periods.7d"),
+    value: [subDays(new Date(), 7), new Date()],
+  },
+  {
+    label: t("filter_bar.periods.1m"),
+    value: [subMonths(new Date(), 1), new Date()],
+  },
+  {
+    label: t("filter_bar.periods.1y"),
+    value: [subYears(new Date(), 1), new Date()],
+  },
+]);
 
 const displayDateRange = computed(() => {
   const formatDate = (date) => {
     if (!date) return "-";
     const d = new Date(date);
-    if (isNaN(d.getTime())) return "-";
-    const day = String(d.getDate()).padStart(2, "0");
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
+    return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
   };
-
-  if (selectedPeriod.value === 'all' || selectedPeriod.value === 'All') {
-    return {
-      start: formatDate(props.dataStart),
-      end: formatDate(props.dataEnd),
-    };
-  }
-
   return {
-    start: formatDate(dateRange.value[0]),
-    end: formatDate(dateRange.value[1]),
+    start: formatDate(dateRange.value?.[0]),
+    end: formatDate(dateRange.value?.[1]),
   };
 });
 
-const currentViewName = computed(() => {
-  return t(`filter_bar.views.${currentView.value}`);
-});
+const currentViewName = computed(() =>
+  t(`filter_bar.views.${currentView.value}`),
+);
 
-// ฟังก์ชันเลือกช่วงเวลา
-const selectPeriod = (period) => {
-  selectedPeriod.value = period;
-  const end = new Date();
-  const start = new Date();
-
-  if (period === 'all' || period === 'All') {
-    dateRange.value = [null, null]; 
-    emit("update:period", "All");
-    emit("update:date-range", null); 
-    return;
-  }
-
-  switch (period) {
-    case "24h": start.setHours(0, 0, 0, 0); break;
-    case "7d": start.setDate(end.getDate() - 7); break;
-    case "1m": start.setMonth(end.getMonth() - 1); break;
-    case "1y": start.setFullYear(end.getFullYear() - 1); break;
-  }
-
-  dateRange.value = [start, end];
-  emit("update:period", period);
-  emit("update:date-range", { start, end });
-};
-
-// เมื่อเลือกวันที่เอง
 const onDateChange = (newRange) => {
   if (newRange) {
-    selectedPeriod.value = null;
-    emit("update:period", null); 
+    dateRange.value = newRange;
+
+    const diffTime = Math.abs(newRange[1] - newRange[0]);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
     emit("update:date-range", { start: newRange[0], end: newRange[1] });
+
+    if (diffDays >= 28 && diffDays <= 31) {
+      emit("update:period", "1m");
+    } else {
+      emit("update:period", null);
+    }
   }
 };
 
-// เลือกว่าจะดู Tab ไหน (Sales, Bill, Behavior)
 const selectMenu = (item) => {
   currentView.value = item.id;
   isOpen.value = false;
@@ -203,16 +186,53 @@ const selectMenu = (item) => {
 };
 
 onMounted(() => {
-  selectPeriod(props.initialPeriod);
+  const end = new Date();
+  let start = subMonths(end, 1);
+  if (props.initialPeriod === "24h") start = startOfDay(end);
+  else if (props.initialPeriod === "7d") start = subDays(end, 7);
+  else if (props.initialPeriod === "1y") start = subYears(end, 1);
+
+  dateRange.value = [start, end];
 });
 </script>
 
 <style scoped>
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
+:deep(.dp__preset_dates) {
+  padding: 12px 8px;
+  min-width: 80px;
+  border-right: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+
+:deep(.dp__preset_date) {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+  transition: all 0.2s ease;
+  text-align: center;
+  cursor: pointer;
+}
+
+:deep(.dp__preset_date:hover) {
+  background-color: #f1f5f9;
+  color: #051960;
+}
+
+:deep(.dp__menu) {
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-right: 16px;
+}
+
+@media (max-width: 768px) {
+  :deep(.dp__menu) {
+    margin-right: 8px;
+  }
 }
 </style>

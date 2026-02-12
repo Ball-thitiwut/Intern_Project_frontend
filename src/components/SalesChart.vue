@@ -32,6 +32,7 @@
 import { computed, ref, onMounted, onUnmounted, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Line } from 'vue-chartjs';
+import { watch } from 'vue'; 
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -127,6 +128,17 @@ const toggleSeries = (index) => {
     chartRef.value.chart.update();
   }
 };
+
+// เพิ่ม Watcher เพื่อดักจับตอนเปลี่ยนช่วงเวลา
+watch(() => props.period, (newPeriod) => {
+  if (newPeriod === '1m') {
+    seriesVisibility.value[1] = true;
+    if (chartRef.value && chartRef.value.chart) {
+      chartRef.value.chart.setDatasetVisibility(1, true);
+      chartRef.value.chart.update();
+    }
+  }
+});
 
 const normalizedPeriod = computed(() => props.period ? props.period.toLowerCase() : '');
 

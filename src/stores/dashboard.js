@@ -1,6 +1,34 @@
 import { defineStore } from "pinia";
 import api from "@/utils/axios";
 
+const formatToISO = (dateStr) => {
+  if (!dateStr) return null;
+
+  let day, month, year;
+
+  // กรณีรูปแบบ DD/MM/YYYY
+  if (typeof dateStr === "string" && dateStr.includes("/")) {
+    const parts = dateStr.split("/");
+    day = parts[0].padStart(2, "0");
+    month = parts[1].padStart(2, "0");
+    year = parseInt(parts[2]);
+  }
+  // กรณีรูปแบบ YYYY-MM-DD
+  else if (typeof dateStr === "string") {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return null;
+    day = String(d.getDate()).padStart(2, "0");
+    month = String(d.getMonth() + 1).padStart(2, "0");
+    year = d.getFullYear();
+  } else {
+    return null;
+  }
+
+  if (year > 2400) year -= 543;
+
+  return `${year}-${month}-${day}`;
+};
+
 export const useDashboardStore = defineStore("dashboard", {
   state: () => ({
     overviewData: {
@@ -34,13 +62,12 @@ export const useDashboardStore = defineStore("dashboard", {
   getters: {
     billAnalytics(state) {
       const trends = [...(state.overviewData.sales_trend || [])].sort(
-        (a, b) => {
-          return new Date(a.date_iso) - new Date(b.date_iso);
-        },
+        (a, b) => new Date(a.date_iso) - new Date(b.date_iso),
       );
 
-      if (trends.length === 0)
+      if (trends.length === 0) {
         return { dates: [], avgBillValues: [], billCountValues: [] };
+      }
 
       if (trends.length <= 35) {
         const dates = trends.map((item) => {
@@ -77,7 +104,7 @@ export const useDashboardStore = defineStore("dashboard", {
             groupedData[key] = {
               total_sales: 0,
               total_orders: 0,
-              displayLabel: `${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`,
+              displayLabel: `${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear() + 543}`,
             };
           }
           groupedData[key].total_sales += parseFloat(
@@ -142,13 +169,17 @@ export const useDashboardStore = defineStore("dashboard", {
         const params = { period: apiPeriod };
 
         if (period !== "All" && dateRange && dateRange.length === 2) {
-          if (dateRange[0])
-            params.startDate = dateRange[0].toISOString().split("T")[0];
-          if (dateRange[1])
-            params.endDate = dateRange[1].toISOString().split("T")[0];
+          const formatDate = (date) => {
+            if (!date) return null;
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+          };
+          if (dateRange[0]) params.startDate = formatDate(dateRange[0]);
+          if (dateRange[1]) params.endDate = formatDate(dateRange[1]);
         }
 
-        // เรียก API
         const [overviewRes, insightsRes] = await Promise.all([
           api.get("/dashboard", { params }),
           api.get("/dashboard/customer-insights", { params }),
@@ -156,19 +187,9 @@ export const useDashboardStore = defineStore("dashboard", {
 
         const data = overviewRes.data;
 
-        const formatToISO = (dateStr) => {
-          if (!dateStr) return null;
-          if (typeof dateStr === "string" && dateStr.includes("/")) {
-            const parts = dateStr.split("/");
-            let year = parseInt(parts[2]);
-            if (year > 2400) year -= 543;
-            return `${year}-${parts[1].padStart(2, "0")}-${parts[0].padStart(2, "0")}`;
-          }
-          return typeof dateStr === "string" ? dateStr.split("T")[0] : null;
-        };
-
+        let trendData = [];
         if (data.sales_trend && Array.isArray(data.sales_trend)) {
-          data.sales_trend = data.sales_trend
+          trendData = data.sales_trend
             .map((item) => ({
               ...item,
               date_iso: formatToISO(item.date),
@@ -176,29 +197,34 @@ export const useDashboardStore = defineStore("dashboard", {
             .filter((item) => item.date_iso)
             .sort((a, b) => new Date(a.date_iso) - new Date(b.date_iso));
 
-          if (data.sales_trend.length > 0) {
-            this.dataRangeLimits.minDate = data.sales_trend[0].date_iso;
+          if (trendData.length > 0) {
+            this.dataRangeLimits.minDate = trendData[0].date_iso;
             this.dataRangeLimits.maxDate =
-              data.sales_trend[data.sales_trend.length - 1].date_iso;
+              trendData[trendData.length - 1].date_iso;
           }
         }
 
-        if (data.sales_forecast && Array.isArray(data.sales_forecast)) {
-          data.sales_forecast = data.sales_forecast.map((item) => ({
-            ...item,
-            date_iso: formatToISO(item.date),
-          }));
+        let validatedForecast = [];
+        if (period === "1m" || apiPeriod === "30" || apiPeriod === 30) {
+          if (data.sales_forecast && Array.isArray(data.sales_forecast)) {
+            validatedForecast = data.sales_forecast.map((item) => ({
+              ...item,
+              date_iso: formatToISO(item.date),
+            }));
+          }
         }
 
-        this.overviewData = data;
-        this.customerInsights = insightsRes.data || {
-          group_size_analysis: [],
-          spending_analysis: [],
-          total_sample_bills: 0,
+        this.overviewData = {
+          ...data,
+          sales_trend: trendData,
+          sales_forecast: validatedForecast,
         };
+
+        this.customerInsights = insightsRes.data || { total_sample_bills: 0 };
       } catch (err) {
         console.error("Fetch dashboard error:", err);
         this.error = err.response?.data?.message || err.message;
+        this.overviewData.sales_forecast = [];
       } finally {
         this.isLoading = false;
       }
