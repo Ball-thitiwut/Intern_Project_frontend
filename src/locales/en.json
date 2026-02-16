@@ -106,7 +106,8 @@
       "y_label": "Sales (THB)"
     },
     "tooltip": {
-      "time_prefix": "Time"
+      "time_prefix": "Date",
+      "hour_prefix": "Time"
     }
   },
   "promotion_pie_chart": {

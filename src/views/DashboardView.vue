@@ -167,14 +167,14 @@
         </div>
         <div class="w-full h-56 md:h-80 relative">
           <SalesChart
-            :data="
-              period === '24h'
-                ? dashboardStore.overviewData?.sales_by_hour || []
-                : dashboardStore.overviewData?.sales_trend || []
-            "
-            :forecast="dashboardStore.overviewData?.sales_forecast || []"
-            :period="period"
-          />
+    :data="
+      isHourlyView
+        ? dashboardStore.overviewData?.sales_by_hour || []
+        : dashboardStore.overviewData?.sales_trend || []
+    "
+    :forecast="dashboardStore.overviewData?.sales_forecast || []"
+    :period="period"
+  />
         </div>
       </div>
 
@@ -446,7 +446,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch, ref } from "vue";
+import { computed, onMounted, watch, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useDashboardStore } from "@/stores/dashboard";
 import { useI18n } from "vue-i18n";
@@ -465,6 +465,18 @@ const { t } = useI18n();
 
 const router = useRouter();
 const showEmptyState = ref(false);
+
+const isHourlyView = computed(() => {
+  if (props.period === '24h') return true;
+  
+  if (props.dateRange && props.dateRange[0] && props.dateRange[1]) {
+    const start = new Date(props.dateRange[0]).setHours(0,0,0,0);
+    const end = new Date(props.dateRange[1]).setHours(0,0,0,0);
+    return start === end;
+  }
+  
+  return false;
+});
 
 const handleGoToSetup = () => {
   showEmptyState.value = false;

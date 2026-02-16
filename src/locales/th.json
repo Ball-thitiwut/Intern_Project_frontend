@@ -101,12 +101,13 @@
     "no_data": "- ไม่มีข้อมูลยอดขายในช่วงเวลานี้ -",
     "axis": {
       "time_day_month": "ช่วงเวลา (วัน/เดือน)",
-      "time_hour": "ช่วงเวลา (นาฬิกา)",
+      "time_hour": "ช่วงเวลา (ชั่วโมง)",
       "time_month_year": "ช่วงเวลา (เดือน/ปี)",
       "y_label": "ยอดขาย (บาท)"
     },
     "tooltip": {
-      "time_prefix": "เวลา"
+      "time_prefix": "วันที่",
+      "hour_prefix": "ช่วงเวลา"
     }
   },
   "promotion_pie_chart": {

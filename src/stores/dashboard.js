@@ -29,6 +29,24 @@ const formatToISO = (dateStr) => {
   return `${year}-${month}-${day}`;
 };
 
+const fillMissingHours = (data) => {
+  const fullHours = Array.from({ length: 24 }, (_, i) => ({
+    hour: `${String(i).padStart(2, '0')}:00`,
+    amount: 0
+  }));
+  
+  if (Array.isArray(data)) {
+    data.forEach(item => {
+      const hourPart = item.hour ? item.hour.split(':')[0] : null;
+      const hourIdx = parseInt(hourPart);
+      if (!isNaN(hourIdx) && hourIdx >= 0 && hourIdx < 24) {
+        fullHours[hourIdx].amount = parseFloat(item.amount || item.sales || 0);
+      }
+    });
+  }
+  return fullHours;
+};
+
 export const useDashboardStore = defineStore("dashboard", {
   state: () => ({
     overviewData: {
@@ -186,6 +204,10 @@ export const useDashboardStore = defineStore("dashboard", {
         ]);
 
         const data = overviewRes.data;
+
+        if (data.sales_by_hour) {
+    data.sales_by_hour = fillMissingHours(data.sales_by_hour);
+}
 
         let trendData = [];
         if (data.sales_trend && Array.isArray(data.sales_trend)) {
