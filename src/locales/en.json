@@ -28,6 +28,7 @@
       "to": "to"
     },
     "views": {
+      "overview": "Overview",
       "sales": "Sales",
       "bill": "Sales per Bill & Bill Count",
       "behavior": "Customer Behavior"

@@ -112,7 +112,7 @@ import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = defineProps({
   initialPeriod: { type: String, default: "1m" },
-  initialView: { type: String, default: "sales" },
+  initialView: { type: String, default: "overview" },
   dataStart: { type: [Date, String], default: null },
   dataEnd: { type: [Date, String], default: null },
 });
@@ -124,7 +124,7 @@ const isOpen = ref(false);
 const currentView = ref(props.initialView);
 const dateRange = ref([null, null]);
 
-const menuOptions = [{ id: "sales" }, { id: "bill" }, { id: "behavior" }];
+const menuOptions = [{ id: "overview" }, { id: "sales" }, { id: "bill" }, { id: "behavior" }];
 
 // สร้างปุ่มลัดภายใน DatePicker
 const presetDates = computed(() => [

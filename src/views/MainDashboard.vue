@@ -29,13 +29,14 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { useDashboardStore } from "@/stores/dashboard";
 import FilterBar from "@/components/FilterBar.vue";
+import DashboardOverviewView from "@/views/DashboardOverviewView.vue";
 import DashboardView from "@/views/DashboardView.vue";
 import DashboardBillView from "@/views/DashboardBillView.vue";
 import DashboardBehaviorView from "@/views/DashboardBehaviorView.vue";
 
 const dashboardStore = useDashboardStore();
 
-const currentView = ref("sales");
+const currentView = ref("overview");
 const currentPeriod = ref("1m");
 const dateRange = ref([null, null]);
 
@@ -58,11 +59,12 @@ watch([currentView, dateRange], () => {
 
 const currentComponent = computed(() => {
   const views = {
+    overview: DashboardOverviewView,
     sales: DashboardView,
     bill: DashboardBillView,
     behavior: DashboardBehaviorView,
   };
-  return views[currentView.value] || DashboardView;
+  return views[currentView.value] || DashboardOverviewView;
 });
 
 const handleDateChange = (range) => {
