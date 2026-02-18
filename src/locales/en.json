@@ -146,15 +146,20 @@
   "average_sales_chart": {
     "axis": {
       "y_unit": "THB",
-      "x_monthly": "Month/Year",
-      "x_daily": "Date"
+      "x_hourly": "Time (Hour)",
+      "x_monthly": "Time (Month/Year)",
+      "x_daily": "Time (Day/Month)"
     }
   },
   "bill_count_chart": {
     "axis": {
-      "y_unit": "Bills",
-      "x_monthly": "Month/Year",
-      "x_daily": "Date"
+      "y_unit": "No. of Bills",
+      "x_hourly": "Time (Hour)",
+      "x_monthly": "Time (Month/Year)",
+      "x_daily": "Time (Day/Month)"
+    },
+    "units": {
+      "bill": "Bills"
     },
     "tooltip": {
       "unit": "Bills"

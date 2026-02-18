@@ -96,16 +96,25 @@ const updateWidth = () => {
 onMounted(() => {
   window.addEventListener("resize", updateWidth);
   nextTick(() => {
-    if (chartRef.value && chartRef.value.chart) {
+    if (
+      chartRef.value &&
+      chartRef.value.chart &&
+      processedData.value.actualValues?.length > 0
+    ) {
       const chart = chartRef.value.chart;
-      const actualSalesData = processedData.value.actualValues || [];
+      const actualSalesData = processedData.value.actualValues;
+
       const validData = actualSalesData.map((v) =>
         v === null || v === undefined ? -Infinity : v,
       );
       const maxVal = Math.max(...validData);
       const maxIndex = validData.indexOf(maxVal);
 
-      if (maxIndex !== -1 && maxVal > 0) {
+      if (
+        maxIndex !== -1 &&
+        maxVal > -Infinity &&
+        chart.data.datasets[0]?.data[maxIndex] !== undefined
+      ) {
         chart.setActiveElements([{ datasetIndex: 0, index: maxIndex }]);
         chart.tooltip.setActiveElements([{ datasetIndex: 0, index: maxIndex }]);
         chart.update();
@@ -424,7 +433,7 @@ const chartOptions = computed(() => {
           font: { size: 14, weight: 500 },
           padding: { bottom: 8 },
         },
-        grid: { color: "#f3f4f6", drawBorder: false, display: true },
+        grid: { color: "#e5e5e5", drawBorder: false, display: true },
         ticks: {
           color: "#64748b",
           padding: 10,
@@ -446,7 +455,7 @@ const chartOptions = computed(() => {
           font: { size: 14, weight: 500 },
           padding: { top: 8, bottom: 0 },
         },
-        grid: { display: true, color: "#f8fafc", drawBorder: false },
+        grid: { display: true, color: "#e5e5e5", drawBorder: false },
         ticks: {
           color: "#64748b",
           padding: 10,

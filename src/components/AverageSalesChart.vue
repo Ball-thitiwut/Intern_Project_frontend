@@ -1,17 +1,19 @@
 <template>
   <div class="relative w-full h-full">
-    <div
-      class="hidden md:block absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-sm text-[#64748b] font-medium tracking-wide font-sans"
-    >
-      {{ $t('average_sales_chart.axis.y_unit') }}
-    </div>
-
     <Bar :data="chartData" :options="chartOptions" />
 
     <div
       class="hidden md:block text-center text-sm text-[#64748b] font-medium mt-2 font-sans"
     >
-      {{ isMonthlyView ? $t('average_sales_chart.axis.x_monthly') : $t('average_sales_chart.axis.x_daily') }}
+      <span v-if="isHourlyView">
+        {{ $t("average_sales_chart.axis.x_hourly") || "รายชั่วโมง (เวลา)" }}
+      </span>
+      <span v-else-if="isMonthlyView">
+        {{ $t("average_sales_chart.axis.x_monthly") }}
+      </span>
+      <span v-else>
+        {{ $t("average_sales_chart.axis.x_daily") }}
+      </span>
     </div>
   </div>
 </template>
@@ -36,7 +38,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 ChartJS.defaults.font.family = "'Prompt', 'Kanit', 'Sarabun', sans-serif";
@@ -61,8 +63,14 @@ onUnmounted(() => window.removeEventListener("resize", updateWidth));
 
 const isMobile = computed(() => windowWidth.value < 768);
 
+const isHourlyView = computed(() => {
+  return props.dates.length > 0 && String(props.dates[0]).includes(":");
+});
+
 const isMonthlyView = computed(() => {
-  return props.dates.length > 0 && props.dates[0].length > 5;
+  return (
+    props.dates.length > 0 && props.dates[0].length > 5 && !isHourlyView.value
+  );
 });
 
 const chartData = computed(() => {
@@ -71,11 +79,12 @@ const chartData = computed(() => {
     datasets: [
       {
         data: props.values.map((item) => item.value),
+        minBarLength: 2,
         backgroundColor: props.values.map((item) =>
-          item.highlight ? "#F47122" : "rgba(0, 38, 131, 0.2)"
+          item.highlight ? "#F47122" : "rgba(0, 38, 131, 0.2)",
         ),
         hoverBackgroundColor: props.values.map((item) =>
-          item.highlight ? "#d65f1a" : "rgba(0, 38, 131, 0.4)"
+          item.highlight ? "#d65f1a" : "rgba(0, 38, 131, 0.4)",
         ),
         borderRadius: 4,
         barPercentage: 0.6,
@@ -89,6 +98,17 @@ const chartData = computed(() => {
 const chartOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,
+  layout: {
+    padding: {
+      right: 30,
+      top: 20,
+      bottom: 0,
+    },
+  },
+  interaction: {
+    mode: "index",
+    intersect: false,
+  },
   plugins: {
     legend: { display: false },
     tooltip: {
@@ -114,8 +134,15 @@ const chartOptions = computed(() => ({
     y: {
       beginAtZero: true,
       border: { display: false },
+      title: {
+        display: !isMobile.value,
+        text: t("average_sales_chart.axis.y_unit"),
+        color: "#64748b",
+        font: { size: 13, weight: 500, family: "'Prompt', sans-serif" },
+        padding: { bottom: 10 },
+      },
       grid: {
-        color: "#f3f4f6",
+        color: "#e5e5e5",
         borderDash: [5, 5],
         drawTicks: false,
         display: !isMobile.value,
@@ -123,9 +150,9 @@ const chartOptions = computed(() => ({
       ticks: {
         display: !isMobile.value,
         color: "#64748b",
-        font: { size: 13, weight: 500 },
+        font: { size: 13, weight: 500, family: "'Prompt', sans-serif" },
         padding: 10,
-        callback: (value) => value.toLocaleString(),
+        callback: (value) => "฿" + value.toLocaleString(),
       },
     },
     x: {
@@ -133,10 +160,16 @@ const chartOptions = computed(() => ({
       grid: { display: false },
       ticks: {
         color: "#64748b",
-        font: { size: 13, weight: 500 },
+        font: { size: 13, weight: 500, family: "'Prompt', sans-serif" },
         maxRotation: 0,
         autoSkip: true,
-        maxTicksLimit: isMobile.value ? 5 : 12,
+        maxTicksLimit: isHourlyView.value
+          ? isMobile.value
+            ? 6
+            : 24
+          : isMobile.value
+            ? 5
+            : 12,
       },
     },
   },

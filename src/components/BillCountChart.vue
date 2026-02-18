@@ -1,17 +1,17 @@
 <template>
   <div class="relative w-full h-full">
-    <div
-      class="hidden md:block absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-sm text-[#64748b] font-medium tracking-wide font-sans"
-    >
-      {{ $t('bill_count_chart.axis.y_unit') }}
-    </div>
-
     <Line ref="chartRef" :data="chartData" :options="chartOptions" />
 
     <div
       class="hidden md:block text-center text-sm text-[#64748b] font-medium mt-2 font-sans"
     >
-      {{ isMonthlyView ? $t('bill_count_chart.axis.x_monthly') : $t('bill_count_chart.axis.x_daily') }}
+      <span v-if="isHourlyView">{{
+        $t("average_sales_chart.axis.x_hourly") || "รายชั่วโมง (เวลา)"
+      }}</span>
+      <span v-else-if="isMonthlyView">{{
+        $t("average_sales_chart.axis.x_monthly")
+      }}</span>
+      <span v-else>{{ $t("average_sales_chart.axis.x_daily") }}</span>
     </div>
   </div>
 </template>
@@ -40,7 +40,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 );
 
 ChartJS.defaults.font.family = "'Prompt', 'Kanit', 'Sarabun', sans-serif";
@@ -55,27 +55,22 @@ const props = defineProps({
 const chartRef = ref(null);
 const windowWidth = ref(window.innerWidth);
 
-// ตรวจจับขนาดจอ
 const updateWidth = () => {
   windowWidth.value = window.innerWidth;
 };
 
 onMounted(() => {
   window.addEventListener("resize", updateWidth);
-
   nextTick(() => {
-    if (chartRef.value && chartRef.value.chart) {
+    if (chartRef.value && chartRef.value.chart && props.values.length > 0) {
       const chart = chartRef.value.chart;
-
       const valArray = props.values.map((v) => v.value);
       const maxVal = Math.max(...valArray);
       const maxIndex = valArray.indexOf(maxVal);
 
-      if (maxIndex !== -1) {
+      if (maxIndex !== -1 && maxVal > 0) {
         chart.setActiveElements([{ datasetIndex: 0, index: maxIndex }]);
-
         chart.tooltip.setActiveElements([{ datasetIndex: 0, index: maxIndex }]);
-
         chart.update();
       }
     }
@@ -86,8 +81,14 @@ onUnmounted(() => window.removeEventListener("resize", updateWidth));
 
 const isMobile = computed(() => windowWidth.value < 768);
 
+const isHourlyView = computed(() => {
+  return props.dates.length > 0 && String(props.dates[0]).includes(":");
+});
+
 const isMonthlyView = computed(() => {
-  return props.dates.length > 0 && props.dates[0].length > 5;
+  return (
+    props.dates.length > 0 && props.dates[0].length > 5 && !isHourlyView.value
+  );
 });
 
 const getGradient = (ctx, chartArea) => {
@@ -95,10 +96,10 @@ const getGradient = (ctx, chartArea) => {
     0,
     chartArea.bottom,
     0,
-    chartArea.top
+    chartArea.top,
   );
   gradient.addColorStop(0, "rgba(244, 113, 34, 0.05)");
-  gradient.addColorStop(1, "rgba(244, 113, 34, 0.6)");
+  gradient.addColorStop(1, "rgba(244, 113, 34, 0.4)");
   return gradient;
 };
 
@@ -120,10 +121,9 @@ const chartData = computed(() => {
         pointBackgroundColor: "#F47122",
         pointBorderColor: "#fff",
         pointBorderWidth: 2,
-
-        // Mobile: ซ่อนจุด (radius 0) เพื่อความ Clean
-        pointRadius: isMobile.value ? 0 : 4,
+        pointRadius: 0,
         pointHoverRadius: 6,
+        pointHitRadius: 20,
         tension: 0.4,
         clip: false,
       },
@@ -134,6 +134,12 @@ const chartData = computed(() => {
 const chartOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,
+  layout: {
+    padding: {
+      right: 30,
+      top: 20,
+    },
+  },
   interaction: {
     mode: "index",
     intersect: false,
@@ -157,7 +163,8 @@ const chartOptions = computed(() => ({
         family: "'Prompt', sans-serif",
       },
       callbacks: {
-        label: (context) => `${context.raw.toLocaleString()} ${t('bill_count_chart.tooltip.unit')}`,
+        label: (context) =>
+          `${context.raw.toLocaleString()} ${t("bill_count_chart.units.bill") || "บิล"}`,
       },
     },
   },
@@ -165,29 +172,50 @@ const chartOptions = computed(() => ({
     y: {
       beginAtZero: true,
       border: { display: false },
-      grace: "20%",
-      // Mobile: ซ่อน Grid และแกน Y
+      title: {
+        display: !isMobile.value,
+        text: t("bill_count_chart.axis.y_unit"),
+        color: "#64748b",
+        font: { size: 13, weight: 500 },
+        padding: { bottom: 10 },
+      },
       grid: {
-        color: "#f3f4f6",
+        color: "#e5e5e5",
         borderDash: [5, 5],
-        drawTicks: false,
+        drawTicks: true,
+        tickLength: 8,
+        tickColor: "#e5e5e5",
         display: !isMobile.value,
       },
       ticks: {
-        display: !isMobile.value, // Mobile: ซ่อนตัวเลขแกน Y
+        display: !isMobile.value,
         color: "#64748b",
-        font: { size: 13, weight: 500 },
-        padding: 10,
+        font: { size: 13, weight: 500, family: "'Prompt', sans-serif" },
+        padding: 5,
         callback: (value) => value.toLocaleString(),
       },
     },
     x: {
       border: { display: false },
-      grid: { display: false },
+      grid: {
+        display: !isMobile.value,
+        color: "#e5e5e5",
+        drawTicks: true,
+        tickLength: 8,
+        tickColor: "#e5e5e5",
+      },
       ticks: {
         color: "#64748b",
-        font: { size: 13, weight: 500 },
-        maxTicksLimit: isMobile.value ? 5 : 12, // Mobile: ลดจำนวนป้าย
+        font: { size: 13, weight: 500, family: "'Prompt', sans-serif" },
+        maxRotation: 0,
+        autoSkip: true,
+        maxTicksLimit: isHourlyView.value
+          ? isMobile.value
+            ? 6
+            : 24
+          : isMobile.value
+            ? 5
+            : 12,
       },
     },
   },

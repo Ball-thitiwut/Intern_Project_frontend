@@ -16,7 +16,7 @@
         class="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 md:pb-10 shadow-sm w-full"
       >
         <div class="text-base md:text-xl font-bold text-[#051960] mb-4 md:mb-6">
-          {{ $t('dashboard_bill_view.avg_sales_title') }}
+          {{ $t("dashboard_bill_view.avg_sales_title") }}
         </div>
         <div class="h-60 md:h-72 w-full pl-0 md:pl-4">
           <AverageSalesChart
@@ -28,7 +28,7 @@
             v-else
             class="flex items-center justify-center h-full text-gray-400 text-sm md:text-base"
           >
-            {{ $t('dashboard_bill_view.no_data') }}
+            {{ $t("dashboard_bill_view.no_data") }}
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
         class="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 md:pb-10 shadow-sm w-full"
       >
         <div class="text-base md:text-xl font-bold text-[#051960] mb-4 md:mb-6">
-          {{ $t('dashboard_bill_view.bill_count_title') }}
+          {{ $t("dashboard_bill_view.bill_count_title") }}
         </div>
         <div class="h-60 md:h-72 w-full pl-0 md:pl-4">
           <BillCountChart
@@ -49,7 +49,7 @@
             v-else
             class="flex items-center justify-center h-full text-gray-400 text-sm md:text-base"
           >
-            {{ $t('dashboard_bill_view.no_data') }}
+            {{ $t("dashboard_bill_view.no_data") }}
           </div>
         </div>
       </div>

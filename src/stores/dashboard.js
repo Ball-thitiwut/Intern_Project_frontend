@@ -31,16 +31,20 @@ const formatToISO = (dateStr) => {
 
 const fillMissingHours = (data) => {
   const fullHours = Array.from({ length: 24 }, (_, i) => ({
-    hour: `${String(i).padStart(2, '0')}:00`,
-    amount: 0
+    hour: `${String(i).padStart(2, "0")}:00`,
+    amount: 0,
+    orders: 0,
   }));
-  
+
   if (Array.isArray(data)) {
-    data.forEach(item => {
-      const hourPart = item.hour ? item.hour.split(':')[0] : null;
+    data.forEach((item) => {
+      const hourPart = item.hour ? item.hour.split(":")[0] : null;
       const hourIdx = parseInt(hourPart);
       if (!isNaN(hourIdx) && hourIdx >= 0 && hourIdx < 24) {
         fullHours[hourIdx].amount = parseFloat(item.amount || item.sales || 0);
+        fullHours[hourIdx].orders = parseInt(
+          item.orders || item.total_orders || 0,
+        );
       }
     });
   }
@@ -82,6 +86,35 @@ export const useDashboardStore = defineStore("dashboard", {
       const trends = [...(state.overviewData.sales_trend || [])].sort(
         (a, b) => new Date(a.date_iso) - new Date(b.date_iso),
       );
+
+      const isSingleDay = trends.length <= 1;
+      const hourlyData = state.overviewData.sales_by_hour || [];
+      const hasHourlyValue = hourlyData.some(
+        (h) => (h.amount || 0) > 0 || (h.orders || 0) > 0,
+      );
+
+      if (isSingleDay && hasHourlyValue) {
+        const dates = hourlyData.map((item) => item.hour);
+
+        const avgBillValues = hourlyData.map((item) => {
+          const sales = parseFloat(item.amount || 0);
+          const orders = parseInt(item.orders || 0);
+          return {
+            value: orders > 0 ? Math.round(sales / orders) : 0,
+          };
+        });
+
+        const billCountValues = hourlyData.map((item) => ({
+          value: parseInt(item.orders || 0),
+        }));
+
+        const maxAvg = Math.max(...avgBillValues.map((v) => v.value), 0);
+        avgBillValues.forEach(
+          (v) => (v.highlight = v.value === maxAvg && v.value > 0),
+        );
+
+        return { dates, avgBillValues, billCountValues };
+      }
 
       if (trends.length === 0) {
         return { dates: [], avgBillValues: [], billCountValues: [] };
@@ -206,8 +239,8 @@ export const useDashboardStore = defineStore("dashboard", {
         const data = overviewRes.data;
 
         if (data.sales_by_hour) {
-    data.sales_by_hour = fillMissingHours(data.sales_by_hour);
-}
+          data.sales_by_hour = fillMissingHours(data.sales_by_hour);
+        }
 
         let trendData = [];
         if (data.sales_trend && Array.isArray(data.sales_trend)) {
