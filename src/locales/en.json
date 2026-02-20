@@ -85,8 +85,9 @@
   "dashboard_behavior_view": {
     "spending_analysis": {
       "title": "Average Sales per Bill Analysis",
-      "y_axis_label": "Bill Count",
-      "x_axis_label": "Price Range (THB)"
+      "y_axis_label": "Bill Count (bills)",
+      "x_axis_label": "Price Range (THB)",
+      "bill": "bills"
     },
     "stats": {
       "avg_bill_label": "Average Sales per Bill",
@@ -108,7 +109,8 @@
     },
     "tooltip": {
       "time_prefix": "Date",
-      "hour_prefix": "Time"
+      "hour_prefix": "Time",
+      "month_year_prefix": "Month"
     }
   },
   "promotion_pie_chart": {
@@ -121,7 +123,7 @@
   "group_size_chart": {
     "title": "Bill Count by Group Size",
     "axis": {
-      "y_label": "Bill Count",
+      "y_label": "Bill Count (bills)",
       "x_label": "Group Size",
       "unit_person_parentheses": "(people)"
     },
@@ -133,7 +135,7 @@
       "rank": "Rank",
       "group_size": "Group Size",
       "bill_count": "Bill Count",
-      "proportion": "Proportion(%)",
+      "proportion": "Proportion (%)",
       "total": "Total"
     }
   },
@@ -141,11 +143,15 @@
     "defaults": {
       "y_axis": "Bills",
       "x_axis": "THB"
+    },
+    "range_labels": {
+      "under": "Under {price}",
+      "above": "Above {price}"
     }
   },
   "average_sales_chart": {
     "axis": {
-      "y_unit": "THB",
+      "y_unit": "Avg. Sales per Bill (THB)",
       "x_hourly": "Time (Hour)",
       "x_monthly": "Time (Month/Year)",
       "x_daily": "Time (Day/Month)"
@@ -153,7 +159,7 @@
   },
   "bill_count_chart": {
     "axis": {
-      "y_unit": "No. of Bills",
+      "y_unit": "Bill Count (bills)",
       "x_hourly": "Time (Hour)",
       "x_monthly": "Time (Month/Year)",
       "x_daily": "Time (Day/Month)"
@@ -162,7 +168,7 @@
       "bill": "Bills"
     },
     "tooltip": {
-      "unit": "Bills"
+      "unit": "Bill Count"
     }
   },
   "pos_view": {

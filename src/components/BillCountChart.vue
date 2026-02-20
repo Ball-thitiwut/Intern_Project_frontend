@@ -3,7 +3,7 @@
     <Line ref="chartRef" :data="chartData" :options="chartOptions" />
 
     <div
-      class="hidden md:block text-center text-sm text-[#64748b] font-medium mt-2 font-sans"
+      class="hidden md:block text-center text-sm text-[#64748b] font-medium mt-2 font-['Prompt']"
     >
       <span v-if="isHourlyView">{{
         $t("average_sales_chart.axis.x_hourly") || "รายชั่วโมง (เวลา)"
@@ -163,8 +163,20 @@ const chartOptions = computed(() => ({
         family: "'Prompt', sans-serif",
       },
       callbacks: {
-        label: (context) =>
-          `${context.raw.toLocaleString()} ${t("bill_count_chart.units.bill") || "บิล"}`,
+        title: (context) => {
+          let prefix = t("sales_chart.tooltip.time_prefix");
+          if (isHourlyView.value) {
+            prefix = t("sales_chart.tooltip.hour_prefix");
+          } else if (isMonthlyView.value) {
+            prefix = t("sales_chart.tooltip.month_year_prefix");
+          }
+          return `${prefix}: ${context[0].label}`;
+        },
+        label: (context) => {
+          const prefixLabel = t("bill_count_chart.tooltip.unit") || "จำนวนบิล";
+          const unit = t("bill_count_chart.units.bill") || "บิล";
+          return `${prefixLabel}: ${context.raw.toLocaleString()} ${unit}`;
+        },
       },
     },
   },

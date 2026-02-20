@@ -1,10 +1,6 @@
 <template>
   <div
-    class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-gray-100"
-    style="
-      font-family:
-        &quot;Prompt&quot;, &quot;Kanit&quot;, &quot;Sarabun&quot;, sans-serif;
-    "
+    class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-gray-100 font-['Prompt']"
   >
     <h3 class="text-lg md:text-xl font-bold text-[#051960] mb-4">
       {{ $t("group_size_chart.title") }}
@@ -14,25 +10,25 @@
       <div class="lg:col-span-7 flex flex-col justify-center">
         <div class="h-60 md:h-72 relative w-full mb-10 md:mb-12">
           <div
-            class="hidden md:block absolute -left-2 md:-left-4 top-1/2 -translate-y-1/2 -rotate-90 text-xs md:text-sm text-[#64748b] font-medium whitespace-nowrap z-20"
+            class="hidden md:block absolute -left-6 md:-left-8 top-1/2 -translate-y-1/2 -rotate-90 text-xs md:text-sm text-[#64748b] font-medium whitespace-nowrap z-20"
           >
             {{ $t("group_size_chart.axis.y_label") }}
           </div>
 
           <div
-            class="hidden md:flex absolute left-6 md:left-10 top-0 bottom-0 flex-col justify-between text-[11px] md:text-[13px] text-[#64748b] font-medium z-10 pb-[1px]"
+            class="hidden md:flex absolute left-6 md:left-12 top-0 bottom-0 flex-col justify-between text-[11px] md:text-[13px] text-[#64748b] font-medium z-10 pb-[1px]"
           >
             <span v-for="tick in yTicks" :key="tick">{{ tick }}</span>
           </div>
 
-          <div class="ml-0 md:ml-20 h-full border-b border-[#f3f4f6] relative">
+          <div class="ml-0 md:ml-20 h-full border-b border-[#e5e5e5] relative">
             <div
-              class="absolute inset-0 flex flex-col justify-between pointer-events-none z-0 pb-[1px]"
+              class="absolute inset-0 flex flex-col justify-between pointer-events-none z-0"
             >
               <div
                 v-for="i in yTicks.length"
                 :key="i"
-                class="w-full h-0 border-t border-[#f3f4f6] border-dashed"
+                class="w-full h-0 border-t border-[#e5e5e5] border-solid"
                 :class="{ 'border-transparent': i === yTicks.length }"
               ></div>
             </div>
@@ -46,17 +42,10 @@
                 class="flex flex-col items-center w-full relative group h-full justify-end"
               >
                 <div
-                  class="mb-1 md:mb-2 bg-[#051960] text-white text-[10px] md:text-[13px] font-medium px-1.5 py-0.5 md:px-2 md:py-1 rounded-md shadow-sm relative -top-1 z-20 transition-all duration-200 ease-out transform"
-                  :class="
-                    item.highlight
-                      ? 'opacity-100 translate-y-0'
-                      : 'opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'
-                  "
+                  class="mb-1 md:mb-2 bg-[#051960] text-white text-[10px] md:text-[13px] font-medium px-1.5 py-0.5 md:px-2 md:py-1 rounded-md shadow-sm relative -top-1 z-20 transition-all duration-200 ease-out transform opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
                 >
                   {{ item.value.toLocaleString() }}
-                  <span class="md:hidden">{{
-                    $t("group_size_chart.units.bill")
-                  }}</span>
+                  {{ $t("group_size_chart.units.bill") }}
                   <div
                     class="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-[#051960]"
                   ></div>
@@ -74,8 +63,8 @@
 
                 <span
                   class="absolute top-full mt-2 md:mt-3 text-[11px] md:text-[13px] text-[#64748b] font-medium text-center w-full break-words leading-tight"
-                  >{{ item.label }}</span
-                >
+                  >{{ item.label }}
+                </span>
               </div>
             </div>
           </div>
@@ -84,9 +73,7 @@
             class="absolute -bottom-10 md:-bottom-12 left-0 right-0 text-center text-xs md:text-sm text-[#64748b] font-medium ml-0 md:ml-20"
           >
             {{ $t("group_size_chart.axis.x_label") }}
-            <span class="md:hidden">
-              {{ $t("group_size_chart.axis.unit_person_parentheses") }}</span
-            >
+            <span> ({{ $t("group_size_chart.units.person") }})</span>
           </div>
         </div>
       </div>
@@ -103,14 +90,24 @@
                 >
                   {{ $t("group_size_chart.table.rank") }}
                 </th>
-                <th class="py-2 md:py-3 text-center font-bold">
+                <th class="py-2 md:py-3 text-center font-bold leading-tight">
                   {{ $t("group_size_chart.table.group_size") }}
+                  <span
+                    class="block text-[10px] md:text-xs font-medium opacity-80"
+                  >
+                    ({{ $t("group_size_chart.units.person") }})
+                  </span>
                 </th>
-                <th class="py-2 md:py-3 text-right font-bold">
+                <th class="py-2 md:py-3 text-center font-bold leading-tight">
                   {{ $t("group_size_chart.table.bill_count") }}
+                  <span
+                    class="block text-[10px] md:text-xs font-medium opacity-80"
+                  >
+                    ({{ $t("group_size_chart.units.bill") }})
+                  </span>
                 </th>
                 <th
-                  class="py-2 md:py-3 pr-2 md:pr-3 text-right font-bold rounded-r-lg"
+                  class="py-2 md:py-3 pr-2 md:pr-3 text-center font-bold rounded-r-lg"
                 >
                   {{ $t("group_size_chart.table.proportion") }}
                 </th>
@@ -128,12 +125,12 @@
                   {{ idx + 1 }}
                 </td>
                 <td class="py-2 md:py-3 text-center font-medium">
-                  {{ row.size }} {{ $t("group_size_chart.units.person") }}
+                  {{ row.size }}
                 </td>
-                <td class="py-2 md:py-3 text-right font-bold text-[#051960]">
-                  {{ row.count }} {{ $t("group_size_chart.units.bill") }}
+                <td class="py-2 md:py-3 text-center font-bold text-[#051960]">
+                  {{ row.count.toLocaleString() }}
                 </td>
-                <td class="py-2 md:py-3 pr-2 md:pr-3 text-right">
+                <td class="py-2 md:py-3 pr-2 md:pr-3 text-center">
                   {{ row.percent }}%
                 </td>
               </tr>
@@ -142,7 +139,8 @@
           <div
             class="pt-4 text-right text-sm md:text-base font-bold text-[#051960] border-t border-gray-100 mt-2"
           >
-            {{ $t("group_size_chart.table.total") }}: {{ totalBills }}
+            {{ $t("group_size_chart.table.total") }}:
+            {{ totalBills.toLocaleString() }}
             {{ $t("group_size_chart.units.bill") }}
           </div>
         </div>

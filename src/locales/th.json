@@ -85,8 +85,9 @@
   "dashboard_behavior_view": {
     "spending_analysis": {
       "title": "ยอดขายเฉลี่ยต่อบิล",
-      "y_axis_label": "จำนวนบิล",
-      "x_axis_label": "ช่วงราคา (บาท)"
+      "y_axis_label": "จำนวนบิล (บิล)",
+      "x_axis_label": "ช่วงราคา (บาท)",
+      "bill": "บิล"
     },
     "stats": {
       "avg_bill_label": "ยอดขายต่อบิลเฉลี่ย",
@@ -108,7 +109,8 @@
     },
     "tooltip": {
       "time_prefix": "วันที่",
-      "hour_prefix": "ช่วงเวลา"
+      "hour_prefix": "ช่วงเวลา",
+      "month_year_prefix": "เดือน"
     }
   },
   "promotion_pie_chart": {
@@ -121,7 +123,7 @@
   "group_size_chart": {
     "title": "จำนวนบิลตามขนาดกลุ่มลูกค้า",
     "axis": {
-      "y_label": "จำนวนบิล",
+      "y_label": "จำนวนบิล (บิล)",
       "x_label": "ขนาดกลุ่ม",
       "unit_person_parentheses": "(คน)"
     },
@@ -133,7 +135,7 @@
       "rank": "อันดับ",
       "group_size": "ขนาดกลุ่ม",
       "bill_count": "จำนวนบิล",
-      "proportion": "สัดส่วน(%)",
+      "proportion": "สัดส่วน (%)",
       "total": "รวมทั้งหมด"
     }
   },
@@ -141,11 +143,15 @@
     "defaults": {
       "y_axis": "จำนวนบิล",
       "x_axis": "บาท"
-    }
+    },
+  "range_labels": {
+    "under": "น้อยกว่า {price}",
+    "above": "{price} ขึ้นไป"
+  }
   },
   "average_sales_chart": {
     "axis": {
-      "y_unit": "ยอดขาย (บาท)",
+      "y_unit": "ค่าเฉลี่ยต่อบิล (บาท)",
       "x_hourly": "ช่วงเวลา (ชั่วโมง)",
       "x_monthly": "ช่วงเวลา (เดือน/ปี)",
       "x_daily": "ช่วงเวลา (วัน/เดือน)"
@@ -162,7 +168,7 @@
       "bill": "บิล"
     },
     "tooltip": {
-      "unit": "บิล"
+      "unit": "จำนวนบิล"
     }
   },
   "pos_view": {

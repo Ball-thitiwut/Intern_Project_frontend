@@ -402,10 +402,15 @@ const chartOptions = computed(() => {
         boxPadding: isMobile.value ? 3 : 6,
         callbacks: {
           title: (context) => {
-            const prefix = isHourly
-              ? t("sales_chart.tooltip.hour_prefix")
-              : t("sales_chart.tooltip.time_prefix");
-            return `${prefix}: ${context[0].label}`;
+            const dateLabel = context[0].label;
+            let prefix = t("sales_chart.tooltip.time_prefix");
+            if (isHourly) {
+              prefix = t("sales_chart.tooltip.hour_prefix");
+            } else if (dateLabel.length > 5 || props.period === "1y") {
+              prefix = t("sales_chart.tooltip.month_year_prefix");
+            }
+
+            return `${prefix}: ${dateLabel}`;
           },
           label: (ctx) => {
             const labelName =

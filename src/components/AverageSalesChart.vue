@@ -3,7 +3,7 @@
     <Bar :data="chartData" :options="chartOptions" />
 
     <div
-      class="hidden md:block text-center text-sm text-[#64748b] font-medium mt-2 font-sans"
+      class="hidden md:block text-center text-sm text-[#64748b] font-medium mt-2 font-['Prompt']"
     >
       <span v-if="isHourlyView">
         {{ $t("average_sales_chart.axis.x_hourly") || "รายชั่วโมง (เวลา)" }}
@@ -117,6 +117,7 @@ const chartOptions = computed(() => ({
       titleFont: {
         size: isMobile.value ? 12 : 14,
         family: "'Prompt', sans-serif",
+        weight: "bold",
       },
       bodyFont: {
         size: isMobile.value ? 12 : 14,
@@ -126,7 +127,20 @@ const chartOptions = computed(() => ({
       cornerRadius: 4,
       displayColors: false,
       callbacks: {
-        label: (context) => `฿${context.raw.toLocaleString()}`,
+        title: (context) => {
+          let prefix = t("sales_chart.tooltip.time_prefix");
+          if (isHourlyView.value) {
+            prefix = t("sales_chart.tooltip.hour_prefix");
+          } else if (isMonthlyView.value) {
+            prefix = t("sales_chart.tooltip.month_year_prefix");
+          }
+          return `${prefix}: ${context[0].label}`;
+        },
+        label: (context) => {
+          const label =
+            t("dashboard_view.summary_stats.avg_bill") || "ค่าเฉลี่ยต่อบิล";
+          return `${label}: ฿${context.raw.toLocaleString()}`;
+        },
       },
     },
   },
@@ -138,7 +152,7 @@ const chartOptions = computed(() => ({
         display: !isMobile.value,
         text: t("average_sales_chart.axis.y_unit"),
         color: "#64748b",
-        font: { size: 13, weight: 500, family: "'Prompt', sans-serif" },
+        font: { size: 13.5, weight: 500, family: "'Prompt', sans-serif" },
         padding: { bottom: 10 },
       },
       grid: {
