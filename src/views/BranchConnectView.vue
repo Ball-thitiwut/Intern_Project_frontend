@@ -22,43 +22,27 @@
 
           <div class="px-6 md:px-10 py-10">
             <div class="flex flex-col gap-8 mb-8">
-              <div
-                v-for="(branch, index) in branches"
-                :key="index"
-                class="w-full relative group/item"
-              >
-                <div class="flex justify-between items-center mb-2">
-                  <label
-                    class="block text-[#051960] text-base font-semibold pl-1"
+              <div class="w-full relative group/item">
+                <div
+                  class="flex flex-col gap-4 items-center justify-center text-center border-2 border-dashed border-gray-200 rounded-2xl py-12 px-4 hover:border-[#051960]/30 transition-colors"
+                >
+                  <div
+                    v-if="allowUpload"
+                    class="flex-none w-full md:w-auto text-center"
                   >
-                    {{ $t("branch_connect_view.form.branch_label") }}
-                  </label>
-                </div>
-
-                <div class="flex flex-col md:flex-row gap-4 items-stretch">
-                  <div class="flex-1">
-                    <input
-                      v-model="branch.name"
-                      type="text"
-                      :placeholder="
-                        $t('branch_connect_view.form.branch_name_placeholder')
-                      "
-                      class="w-full h-12 px-4 text-sm rounded-xl border-transparent bg-[#F3F4F6] focus:bg-white focus:border-[#051960]/50 focus:ring-2 focus:ring-[#051960]/20 outline-none transition-all duration-200 text-gray-800 placeholder-gray-400 shadow-sm"
-                    />
-                  </div>
-
-                  <div v-if="allowUpload" class="flex-none w-full md:w-auto">
+                    <p class="text-gray-400 text-sm mb-4">
+                      {{ $t("branch_connect_view.upload.description") }}
+                    </p>
                     <button
-                      @click="triggerUpload(index)"
-                      class="group w-full md:w-auto h-12 px-5 rounded-xl border transition-all duration-200 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2 shadow-sm"
+                      @click="triggerUpload"
+                      class="group w-fit mx-auto h-12 px-8 rounded-xl border transition-all duration-200 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2 shadow-sm"
                       :class="
-                        branch.files.length > 0
+                        branchData.files.length > 0
                           ? 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100'
                           : 'bg-white text-gray-500 border-gray-200 hover:border-[#051960] hover:text-[#051960]'
                       "
                     >
                       <svg
-                        v-if="branch.files.length === 0"
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-5 w-5"
                         fill="none"
@@ -72,77 +56,37 @@
                           d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
                         />
                       </svg>
-                      <template v-else>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5 group-hover:hidden"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                          />
-                        </svg>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5 hidden group-hover:block"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 4v16m8-8H4"
-                          />
-                        </svg>
-                      </template>
 
-                      <span v-if="branch.files.length === 0">{{
+                      <span v-if="branchData.files.length === 0">{{
                         $t("branch_connect_view.upload.button_initial")
                       }}</span>
                       <span v-else>
-                        <span class="inline-block group-hover:hidden"
-                          >{{ branch.files.length }}
-                          {{
-                            $t("branch_connect_view.upload.files_attached")
-                          }}</span
-                        >
-                        <span
-                          class="hidden group-hover:inline-block font-semibold"
-                          >{{ $t("branch_connect_view.upload.add_more") }}</span
-                        >
+                        {{ $t("branch_connect_view.upload.add_more") }}
                       </span>
                     </button>
 
                     <input
                       type="file"
-                      ref="fileInputRefs"
+                      ref="fileInputRef"
                       class="hidden"
                       accept=".csv, .xls, .xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                       multiple
-                      @change="(e) => handleFileUpload(e, index)"
+                      @change="handleFileUpload"
                     />
                   </div>
                 </div>
 
                 <div
-                  v-if="branch.files.length > 0"
-                  class="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
+                  v-if="branchData.files.length > 0"
+                  class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
                 >
                   <div
-                    v-for="(fileItem, fIndex) in branch.files"
+                    v-for="(fileItem, fIndex) in branchData.files"
                     :key="fIndex"
-                    class="text-xs px-3 py-1.5 rounded-xl flex items-center justify-between border transition-all duration-200"
+                    class="text-xs px-3 py-2.5 rounded-xl flex items-center justify-between border transition-all duration-200"
                     :class="{
                       'bg-green-50 border-green-200 text-green-700':
                         fileItem.status === 'ready',
-
                       'bg-yellow-50 border-yellow-200 text-yellow-700':
                         fileItem.status === 'uploading',
                       'bg-green-100 border-green-300 text-green-800':
@@ -156,7 +100,7 @@
                         <svg
                           v-if="fileItem.status === 'ready'"
                           xmlns="http://www.w3.org/2000/svg"
-                          class="h-3.5 w-3.5 overflow-visible"
+                          class="h-4 w-4"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -170,7 +114,7 @@
                         </svg>
                         <svg
                           v-else-if="fileItem.status === 'uploading'"
-                          class="animate-spin h-3.5 w-3.5"
+                          class="animate-spin h-4 w-4"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
@@ -192,7 +136,7 @@
                         <svg
                           v-else-if="fileItem.status === 'success'"
                           xmlns="http://www.w3.org/2000/svg"
-                          class="h-3.5 w-3.5"
+                          class="h-4 w-4"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
@@ -205,7 +149,7 @@
                         <svg
                           v-else-if="fileItem.status === 'error'"
                           xmlns="http://www.w3.org/2000/svg"
-                          class="h-3.5 w-3.5"
+                          class="h-4 w-4"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -220,35 +164,22 @@
                       </div>
 
                       <div class="flex flex-col min-w-0 flex-1">
-                        <span
-                          class="truncate font-medium text-[11px] md:text-xs leading-tight"
-                          >{{ fileItem.file.name }}</span
-                        >
-                        <span
-                          v-if="fileItem.message"
-                          class="text-[9px] opacity-80 truncate leading-tight cursor-help"
-                          :class="{
-                            'text-red-600 font-medium':
-                              fileItem.status === 'error',
-                          }"
-                          :title="fileItem.message"
-                          >{{ fileItem.message }}</span
-                        >
+                        <span class="truncate font-medium leading-tight">{{
+                          fileItem.file.name
+                        }}</span>
                       </div>
 
                       <button
-                        @click="removeFile(index, fIndex)"
-                        class="p-1 rounded-full hover:bg-black/10 transition-colors flex-shrink-0 -mr-1"
-                        :class="{
-                          invisible:
-                            fileItem.status === 'uploading' ||
-                            fileItem.status === 'success',
-                        }"
-                        title="ลบไฟล์นี้"
+                        v-if="
+                          fileItem.status === 'ready' ||
+                          fileItem.status === 'error'
+                        "
+                        @click="removeFile(fIndex)"
+                        class="p-1 rounded-full hover:bg-black/10 transition-colors flex-shrink-0"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          class="h-3.5 w-3.5"
+                          class="h-4 w-4"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -294,7 +225,7 @@
           <button
             @click="handleContinue"
             :disabled="isSubmitting"
-            class="bg-[#F97316] hover:bg-[#ea580c] text-white font-bold text-base px-8 py-3 rounded-full shadow-lg shadow-orange-200 transition-all transform active:scale-95 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="bg-[#F97316] hover:bg-[#ea580c] text-white font-bold text-base px-10 py-3 rounded-full shadow-lg shadow-orange-200 transition-all transform active:scale-95 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span v-if="!isSubmitting">{{
               $t("branch_connect_view.buttons.continue")
@@ -336,7 +267,7 @@
       >
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
         <div
-          class="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center transform transition-all"
+          class="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center"
         >
           <div
             class="w-20 h-20 rounded-full flex items-center justify-center mb-6"
@@ -384,7 +315,6 @@
           >
             {{ modalState.title }}
           </h3>
-
           <p class="text-gray-500 font-light text-sm mb-6">
             {{ modalState.message }}
           </p>
@@ -445,7 +375,6 @@ const { t } = useI18n();
 
 const posName = ref(route.query.posName || "My Own POS");
 const posId = ref(route.query.posId || "99");
-
 const isSubmitting = ref(false);
 
 const modalState = reactive({
@@ -456,38 +385,27 @@ const modalState = reactive({
   details: [],
 });
 
-// เช็คว่าเป็น RESSELF POS หรือไม่ (ถ้าใช่ ไม่ต้องอัปโหลด)
-const allowUpload = computed(() => {
-  return posName.value !== "RESSELF POS";
-});
+const allowUpload = computed(() => posName.value !== "RESSELF POS");
 
-// เก็บรายการสาขาและไฟล์แนบ
-const branches = reactive([{ name: "", files: [] }]);
+// เก็บรายการไฟล์ (ใช้ Object เดียว ไม่ใช้ Array ของหลายสาขา)
+const branchData = reactive({ files: [] });
+const fileInputRef = ref(null);
 
-const fileInputRefs = ref([]);
-
-// ลบไฟล์ออกจากรายการ
-const removeFile = (branchIndex, fileIndex) => {
-  if (branches[branchIndex].files[fileIndex].status === "uploading") return;
-  branches[branchIndex].files.splice(fileIndex, 1);
-};
-
-const triggerUpload = (index) => {
-  if (fileInputRefs.value[index]) {
-    fileInputRefs.value[index].click();
+const triggerUpload = () => {
+  if (fileInputRef.value) {
+    fileInputRef.value.click();
   }
 };
 
-const handleFileUpload = (event, index) => {
+const handleFileUpload = (event) => {
   const selectedFiles = Array.from(event.target.files || []);
-
   if (selectedFiles.length > 0) {
     selectedFiles.forEach((file) => {
-      const isDuplicate = branches[index].files.some(
+      const isDuplicate = branchData.files.some(
         (f) => f.file.name === file.name,
       );
       if (!isDuplicate) {
-        branches[index].files.push({
+        branchData.files.push({
           file: file,
           status: "ready",
           message: "",
@@ -496,6 +414,11 @@ const handleFileUpload = (event, index) => {
     });
   }
   event.target.value = "";
+};
+
+const removeFile = (fileIndex) => {
+  if (branchData.files[fileIndex].status === "uploading") return;
+  branchData.files.splice(fileIndex, 1);
 };
 
 const showModal = (type, title, message, details = []) => {
@@ -507,27 +430,14 @@ const showModal = (type, title, message, details = []) => {
 };
 
 const handleContinue = async () => {
-  const validBranches = branches.filter((b) => b.name.trim() !== "");
-
-  if (validBranches.length === 0) {
+  // ตรวจสอบไฟล์อัปโหลด
+  if (allowUpload.value && branchData.files.length === 0) {
     showModal(
       "error",
-      t("branch_connect_view.alerts.incomplete_info"),
-      t("branch_connect_view.alerts.enter_branch_name"),
+      t("branch_connect_view.alerts.no_files"),
+      t("branch_connect_view.alerts.upload_at_least_one"),
     );
     return;
-  }
-
-  if (allowUpload.value) {
-    const hasFiles = validBranches.some((b) => b.files.length > 0);
-    if (!hasFiles) {
-      showModal(
-        "error",
-        t("branch_connect_view.alerts.no_files"),
-        t("branch_connect_view.alerts.upload_at_least_one"),
-      );
-      return;
-    }
   }
 
   isSubmitting.value = true;
@@ -540,53 +450,38 @@ const handleContinue = async () => {
 
     const uploadPromises = [];
 
-    validBranches.forEach((branch) => {
-      if (branch.files.length > 0) {
-        branch.files.forEach((fileItem) => {
-          if (fileItem.status === "success") return;
+    branchData.files.forEach((fileItem) => {
+      if (fileItem.status === "success") return;
 
-          fileItem.status = "uploading";
-          fileItem.message = t("branch_connect_view.upload.status.uploading");
+      fileItem.status = "uploading";
+      fileItem.message = t("branch_connect_view.upload.status.uploading");
 
-          const formData = new FormData();
-          formData.append("pos_system_id", posId.value);
-          formData.append("branch_name", branch.name);
-          formData.append("file", fileItem.file);
+      const formData = new FormData();
+      formData.append("pos_system_id", posId.value);
+      formData.append("branch_name", "Main Branch"); // ใส่ Default เพราะระบบต้องการ แต่เราไม่ได้ให้ User กรอก
+      formData.append("file", fileItem.file);
 
-          const p = api
-            .post("/sales/import", formData)
-            .then((response) => {
-              const resData = response.data;
-              if (resData && resData.summary && resData.summary.failed > 0) {
-                const logicalError = new Error("Business Logic Error");
-                logicalError.response = response;
-                throw logicalError;
-              }
-              fileItem.status = "success";
-              fileItem.message = t("branch_connect_view.upload.status.success");
-              return response;
-            })
-            .catch((error) => {
-              fileItem.status = "error";
-              const details = error.response?.data?.details;
-
-              let specificReason = null;
-              if (Array.isArray(details) && details.length > 0) {
-                specificReason = details[0].reason;
-              }
-
-              const msg =
-                specificReason ||
-                error.response?.data?.message ||
-                "เกิดข้อผิดพลาด";
-
-              fileItem.message = msg;
-              throw error;
-            });
-
-          uploadPromises.push(p);
+      const p = api
+        .post("/sales/import", formData)
+        .then((response) => {
+          if (response.data?.summary?.failed > 0) {
+            const logicalError = new Error("Business Logic Error");
+            logicalError.response = response;
+            throw logicalError;
+          }
+          fileItem.status = "success";
+          fileItem.message = t("branch_connect_view.upload.status.success");
+          return response;
+        })
+        .catch((error) => {
+          fileItem.status = "error";
+          const specificReason = error.response?.data?.details?.[0]?.reason;
+          fileItem.message =
+            specificReason || error.response?.data?.message || "เกิดข้อผิดพลาด";
+          throw error;
         });
-      }
+
+      uploadPromises.push(p);
     });
 
     if (uploadPromises.length > 0) {
@@ -599,21 +494,11 @@ const handleContinue = async () => {
           t("branch_connect_view.alerts.import_success_title"),
           t("branch_connect_view.alerts.import_success_msg"),
         );
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 2000);
+        setTimeout(() => router.push("/dashboard"), 2000);
       } else {
-        const failedItems = [];
-        validBranches.forEach((branch) => {
-          branch.files.forEach((f) => {
-            if (f.status === "error") {
-              failedItems.push({
-                filename: f.file.name,
-                reason: f.message,
-              });
-            }
-          });
-        });
+        const failedItems = branchData.files
+          .filter((f) => f.status === "error")
+          .map((f) => ({ filename: f.file.name, reason: f.message }));
 
         showModal(
           "error",
@@ -626,7 +511,6 @@ const handleContinue = async () => {
       router.push("/dashboard");
     }
   } catch (error) {
-    console.error("Global Submission Error:", error);
     showModal(
       "error",
       t("branch_connect_view.alerts.connection_error_title"),

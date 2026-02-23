@@ -231,6 +231,7 @@
       "branch_name_placeholder": "Enter branch name (e.g. Siam Branch)"
     },
     "upload": {
+      "description": "Update sales data with CSV files",
       "button_initial": "Upload File",
       "files_attached": "Files Attached",
       "add_more": "Add More Files",
@@ -279,14 +280,12 @@
     "table": {
       "headers": {
         "filename": "Filename",
-        "branch": "Branch",
         "upload_date": "Upload Date",
         "bill_count": "Bill Count",
         "total_sales": "Total Sales",
         "manage": "Manage"
       },
       "labels": {
-        "branch": "Branch",
         "bill_count": "Bill Count",
         "total_sales": "Total Sales",
         "unit_bill": "bills"

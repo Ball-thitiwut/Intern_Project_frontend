@@ -89,12 +89,14 @@ const handleDelete = async () => {
     isDeleteModalOpen.value = false;
 
     historyList.value = historyList.value.filter(
-      (item) => item.import_filename !== fileToDelete.value.import_filename
+      (item) => item.import_filename !== fileToDelete.value.import_filename,
     );
 
     expandedItems.value.delete(fileToDelete.value.import_filename);
 
-    successMessage.value = "ลบข้อมูลเรียบร้อยแล้ว";
+    successMessage.value = t(
+      "data_management_view.modals.success.delete_message",
+    );
     isSuccessModalOpen.value = true;
 
     fileToDelete.value = null;
@@ -102,7 +104,8 @@ const handleDelete = async () => {
     console.error("Delete Error:", error);
     isDeleteModalOpen.value = false;
     errorMessage.value =
-      error.response?.data?.message || "เกิดข้อผิดพลาดในการลบไฟล์";
+      error.response?.data?.message ||
+      t("data_management_view.modals.error.default_message");
     isErrorModalOpen.value = true;
   } finally {
     isDeleting.value = false;
@@ -129,10 +132,10 @@ onActivated(() => {
     >
       <div>
         <h1 class="text-xl md:text-3xl font-bold tracking-tight">
-          จัดการข้อมูล
+          {{ $t("data_management_view.header.title") }}
         </h1>
         <p class="text-gray-500 mt-1 font-light text-sm md:text-base">
-          จัดการไฟล์ข้อมูลยอดขายและประวัติการนำเข้า
+          {{ $t("data_management_view.header.subtitle") }}
         </p>
       </div>
 
@@ -155,7 +158,7 @@ onActivated(() => {
               d="M12 4v16m8-8H4"
             />
           </svg>
-          นำเข้าข้อมูลเพิ่ม
+          {{ $t("data_management_view.header.import_button") }}
         </button>
       </div>
     </div>
@@ -171,9 +174,9 @@ onActivated(() => {
           <div
             class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#051960]"
           ></div>
-          <span class="text-sm font-medium text-gray-500"
-            >กำลังโหลดข้อมูล...</span
-          >
+          <span class="text-sm font-medium text-gray-500">{{
+            $t("data_management_view.state.loading")
+          }}</span>
         </div>
       </div>
 
@@ -199,15 +202,17 @@ onActivated(() => {
             />
           </svg>
         </div>
-        <h3 class="text-lg font-bold text-gray-700">ยังไม่มีข้อมูล</h3>
+        <h3 class="text-lg font-bold text-gray-700">
+          {{ $t("data_management_view.state.empty.title") }}
+        </h3>
         <p class="text-gray-400 text-sm mt-1 mb-6">
-          คุณยังไม่ได้นำเข้าไฟล์ข้อมูลยอดขาย
+          {{ $t("data_management_view.state.empty.description") }}
         </p>
         <button
           @click="goToUpload"
           class="bg-[#051960] text-white px-6 py-2.5 rounded-xl font-medium hover:bg-[#031245] transition-colors shadow-sm"
         >
-          เริ่มนำเข้าข้อมูล
+          {{ $t("data_management_view.state.empty.button") }}
         </button>
       </div>
 
@@ -277,29 +282,25 @@ onActivated(() => {
               v-if="expandedItems.has(item.import_filename)"
               class="mt-3 pt-3 border-t border-dashed border-gray-100 bg-gray-50/50 p-3 rounded-xl text-sm grid grid-cols-2 gap-4 animate-fade-in-down"
             >
-              <div>
-                <div class="text-xs text-gray-400 mb-1">สาขา</div>
-                <span
-                  v-if="item.branch_name"
-                  class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs font-medium border border-blue-100 inline-block"
-                >
-                  {{ item.branch_name }}
+              <div class="col-span-2">
+                <div class="text-xs text-gray-400 mb-1">
+                  {{ $t("data_management_view.table.labels.bill_count") }}
+                </div>
+                <span class="font-medium text-gray-700">
+                  {{ Number(item.total_bills).toLocaleString() }}
+                  {{ $t("data_management_view.table.labels.unit_bill") }}
                 </span>
-                <span v-else class="text-gray-400">-</span>
               </div>
-              <div>
-                <div class="text-xs text-gray-400 mb-1">จำนวนบิล</div>
-                <span class="font-medium text-gray-700"
-                  >{{ item.total_bills }} บิล</span
-                >
-              </div>
+
               <div
                 class="col-span-2 border-t border-gray-200 pt-2 mt-1 flex justify-between items-center"
               >
-                <span class="text-xs text-gray-500">ยอดขายรวม</span>
-                <span class="font-bold text-[#051960] text-base"
-                  >฿{{ formatCurrency(item.total_sales) }}</span
-                >
+                <span class="text-xs text-gray-500">
+                  {{ $t("data_management_view.table.labels.total_sales") }}
+                </span>
+                <span class="font-bold text-[#051960] text-base">
+                  ฿{{ formatCurrency(item.total_sales) }}
+                </span>
               </div>
             </div>
 
@@ -336,13 +337,20 @@ onActivated(() => {
               <tr
                 class="bg-gray-50/50 border-b border-gray-100 text-sm uppercase text-gray-500 font-semibold tracking-wider"
               >
-                <th class="px-6 py-4 rounded-tl-3xl">ชื่อไฟล์</th>
-                <th class="px-6 py-4">สาขา</th>
-                <th class="px-6 py-4">วันที่อัปโหลด</th>
-                <th class="px-6 py-4 text-center">จำนวนบิล</th>
-                <th class="px-6 py-4 text-right">ยอดขายรวม</th>
+                <th class="px-6 py-4 rounded-tl-3xl w-1/2">
+                  {{ $t("data_management_view.table.headers.filename") }}
+                </th>
+                <th class="px-6 py-4">
+                  {{ $t("data_management_view.table.headers.upload_date") }}
+                </th>
+                <th class="px-6 py-4 text-center">
+                  {{ $t("data_management_view.table.headers.bill_count") }}
+                </th>
+                <th class="px-6 py-4 text-right">
+                  {{ $t("data_management_view.table.headers.total_sales") }}
+                </th>
                 <th class="px-6 py-4 rounded-tr-3xl text-center w-20">
-                  จัดการ
+                  {{ $t("data_management_view.table.headers.manage") }}
                 </th>
               </tr>
             </thead>
@@ -372,24 +380,9 @@ onActivated(() => {
                         />
                       </svg>
                     </div>
-                    <span
-                      class="truncate max-w-[200px] font-semibold"
-                      :title="item.import_filename"
-                    >
+                    <span class="font-semibold break-all">
                       {{ item.import_filename }}
                     </span>
-                  </div>
-                </td>
-
-                <td class="px-6 py-4 text-gray-600">
-                  <div class="flex items-center gap-2">
-                    <span
-                      v-if="item.branch_name"
-                      class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium border border-blue-100"
-                    >
-                      {{ item.branch_name }}
-                    </span>
-                    <span v-else class="text-gray-400">-</span>
                   </div>
                 </td>
 
@@ -400,7 +393,7 @@ onActivated(() => {
                   <span
                     class="bg-gray-100 text-gray-700 py-1 px-3 rounded-full text-xs font-bold"
                   >
-                    {{ item.total_bills }}
+                    {{ Number(item.total_bills).toLocaleString() }}
                   </span>
                 </td>
                 <td class="px-6 py-4 text-right font-bold text-[#051960]">
@@ -437,30 +430,30 @@ onActivated(() => {
 
     <ConfirmManageModal
       :is-open="isDeleteModalOpen"
-      title="ยืนยันการลบข้อมูล?"
-      confirm-text="ลบข้อมูล"
-      cancel-text="ยกเลิก"
-      loading-text="กำลังลบ..."
+      :title="$t('data_management_view.modals.delete.title')"
+      :confirm-text="$t('data_management_view.modals.delete.confirm_button')"
+      :cancel-text="$t('data_management_view.modals.delete.cancel_button')"
+      :loading-text="$t('data_management_view.modals.delete.loading_text')"
       :is-loading="isDeleting"
       @close="isDeleteModalOpen = false"
       @confirm="handleDelete"
     >
       <template #content>
-        คุณต้องการลบข้อมูลไฟล์ <br />
-        <span class="font-semibold text-[#051960]"
-          >"{{ fileToDelete?.import_filename }}"</span
-        >
-        ใช่หรือไม่?<br />
-        <span class="text-xs text-red-400 mt-1 block"
-          >*ข้อมูลยอดขายทั้งหมดจากไฟล์นี้จะหายไป</span
-        >
+        {{ $t("data_management_view.modals.delete.content_prefix") }} <br />
+        <span class="font-semibold text-[#051960]">
+          "{{ fileToDelete?.import_filename }}"
+        </span>
+        {{ $t("data_management_view.modals.delete.content_suffix") }}<br />
+        <span class="text-xs text-red-400 mt-1 block">
+          {{ $t("data_management_view.modals.delete.warning") }}
+        </span>
       </template>
     </ConfirmManageModal>
 
     <AlertManageModal
       :is-open="isSuccessModalOpen"
       type="success"
-      title="สำเร็จ!"
+      :title="$t('data_management_view.modals.success.title')"
       :message="successMessage"
       @close="onSuccessModalClose"
     />
@@ -468,9 +461,9 @@ onActivated(() => {
     <AlertManageModal
       :is-open="isErrorModalOpen"
       type="error"
-      title="เกิดข้อผิดพลาด"
+      :title="$t('data_management_view.modals.error.title')"
       :message="errorMessage"
-      button-text="ปิด"
+      :button-text="$t('data_management_view.modals.error.close_button')"
       @close="isErrorModalOpen = false"
     />
   </div>

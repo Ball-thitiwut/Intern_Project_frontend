@@ -144,10 +144,10 @@
       "y_axis": "จำนวนบิล",
       "x_axis": "บาท"
     },
-  "range_labels": {
-    "under": "น้อยกว่า {price}",
-    "above": "{price} ขึ้นไป"
-  }
+    "range_labels": {
+      "under": "น้อยกว่า {price}",
+      "above": "{price} ขึ้นไป"
+    }
   },
   "average_sales_chart": {
     "axis": {
@@ -231,6 +231,7 @@
       "branch_name_placeholder": "ระบุชื่อสาขา (เช่น สาขาสยาม)"
     },
     "upload": {
+      "description": "อัปเดตข้อมูลการขายด้วยไฟล์ CSV",
       "button_initial": "อัปโหลดไฟล์",
       "files_attached": "ไฟล์แนบแล้ว",
       "add_more": "เพิ่มไฟล์อีก",
@@ -279,14 +280,12 @@
     "table": {
       "headers": {
         "filename": "ชื่อไฟล์",
-        "branch": "สาขา",
         "upload_date": "วันที่อัปโหลด",
         "bill_count": "จำนวนบิล",
         "total_sales": "ยอดขายรวม",
         "manage": "จัดการ"
       },
       "labels": {
-        "branch": "สาขา",
         "bill_count": "จำนวนบิล",
         "total_sales": "ยอดขายรวม",
         "unit_bill": "บิล"
