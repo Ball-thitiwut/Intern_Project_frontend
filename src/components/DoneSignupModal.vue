@@ -14,7 +14,7 @@
       <p class="modal-message">{{ message }}</p>
       
       <button class="modal-btn" @click="$emit('close')">
-        {{ buttonText || 'OK' }}
+        {{ buttonText }}
       </button>
     </div>
   </div>
@@ -29,7 +29,10 @@ defineProps({
   },
   title: String,
   message: String,
-  buttonText: String
+  buttonText: {
+    type: String,
+    default: 'OK' 
+  }
 });
 
 defineEmits(['close']);

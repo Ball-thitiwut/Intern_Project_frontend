@@ -77,33 +77,6 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="branches">Branches</label>
-              <select
-                id="branches"
-                class="form-input"
-                :class="{
-                  'placeholder-text': !branches,
-                  'input-error': errors.branches,
-                }"
-                v-model="branches"
-                @change="clearError('branches')"
-              >
-                <option :value="null" disabled selected>Select</option>
-                <option
-                  v-for="branch in branchRanges"
-                  :key="branch.branch_ranges_id"
-                  :value="branch.branch_ranges_id"
-                  :disabled="branch.branch_ranges_label !== '1 สาขา'"
-                >
-                  {{ branch.branch_ranges_label }}
-                  {{ branch.branch_ranges_label !== "1 สาขา" ? "(Soon)" : "" }}
-                </option>
-              </select>
-              <p v-if="errors.branches" class="error-text">
-                {{ errors.branches }}
-              </p>
-            </div>
-            <div class="form-group">
               <label for="menuItems">Menu Items</label>
               <select
                 id="menuItems"
@@ -128,9 +101,6 @@
                 {{ errors.menuItems }}
               </p>
             </div>
-          </div>
-
-          <div class="form-row">
             <div class="form-group">
               <label for="yearsInBusiness">Years</label>
               <select
@@ -154,31 +124,6 @@
               </select>
               <p v-if="errors.yearsInBusiness" class="error-text">
                 {{ errors.yearsInBusiness }}
-              </p>
-            </div>
-            <div class="form-group">
-              <label for="posSystem">POS System</label>
-              <select
-                id="posSystem"
-                class="form-input"
-                :class="{
-                  'placeholder-text': !posSystem,
-                  'input-error': errors.posSystem,
-                }"
-                v-model="posSystem"
-                @change="clearError('posSystem')"
-              >
-                <option :value="null" disabled selected>Select</option>
-                <option
-                  v-for="pos in filteredPosSystems"
-                  :key="pos.pos_systems_id"
-                  :value="pos.pos_systems_id"
-                >
-                  {{ pos.pos_systems_name }}
-                </option>
-              </select>
-              <p v-if="errors.posSystem" class="error-text">
-                {{ errors.posSystem }}
               </p>
             </div>
           </div>
@@ -252,18 +197,14 @@ const registerStore = useRegisterStore();
 const restaurantName = ref("");
 const category = ref(null);
 const monthlySales = ref(null);
-const branches = ref(null);
 const menuItems = ref(null);
 const yearsInBusiness = ref(null);
-const posSystem = ref(null);
 
 // ตัวแปรเก็บตัวเลือก Dropdown
 const restaurantTypes = ref([]);
 const incomeRanges = ref([]);
-const branchRanges = ref([]);
 const menuRanges = ref([]);
 const ageRanges = ref([]);
-const posSystems = ref([]);
 
 // State สำหรับ UI และ Modal
 const isLoading = ref(false);
@@ -281,10 +222,8 @@ onMounted(async () => {
 
     restaurantTypes.value = data.restaurantTypes || [];
     incomeRanges.value = data.incomeRanges || [];
-    branchRanges.value = data.branchRanges || [];
     menuRanges.value = data.menuRanges || [];
     ageRanges.value = data.ageRanges || [];
-    posSystems.value = data.posSystems || [];
 
     if (registerStore.formData.restaurant_name)
       restaurantName.value = registerStore.formData.restaurant_name;
@@ -292,27 +231,10 @@ onMounted(async () => {
       category.value = registerStore.formData.restaurant_types_id;
     if (registerStore.formData.monthly_income_ranges_id)
       monthlySales.value = registerStore.formData.monthly_income_ranges_id;
-    if (registerStore.formData.branch_ranges_id)
-      branches.value = registerStore.formData.branch_ranges_id;
     if (registerStore.formData.menu_ranges_id)
       menuItems.value = registerStore.formData.menu_ranges_id;
     if (registerStore.formData.restaurant_age_ranges_id)
       yearsInBusiness.value = registerStore.formData.restaurant_age_ranges_id;
-
-    if (registerStore.formData.pos_systems_id) {
-      const isAvailableInFiltered = filteredPosSystems.value.some(
-        (p) => p.pos_systems_id === registerStore.formData.pos_systems_id,
-      );
-
-      if (isAvailableInFiltered) {
-        posSystem.value = registerStore.formData.pos_systems_id;
-      } else {
-        const otherPos = filteredPosSystems.value.find(
-          (p) => p.pos_systems_name === "POS อื่นๆ",
-        );
-        posSystem.value = otherPos ? otherPos.pos_systems_id : null;
-      }
-    }
   } catch (error) {
     console.error("Failed to fetch options:", error);
     triggerModal(
@@ -340,20 +262,12 @@ const validateForm = () => {
     errors.monthlySales = "Please select average sales";
     isValid = false;
   }
-  if (!branches.value) {
-    errors.branches = "Please select number of branches";
-    isValid = false;
-  }
   if (!menuItems.value) {
     errors.menuItems = "Please select menu range";
     isValid = false;
   }
   if (!yearsInBusiness.value) {
     errors.yearsInBusiness = "Please select years in business";
-    isValid = false;
-  }
-  if (!posSystem.value) {
-    errors.posSystem = "Please select a POS system";
     isValid = false;
   }
 
@@ -386,10 +300,8 @@ const handleBack = () => {
   registerStore.formData.restaurant_name = restaurantName.value;
   registerStore.formData.restaurant_types_id = category.value;
   registerStore.formData.monthly_income_ranges_id = monthlySales.value;
-  registerStore.formData.branch_ranges_id = branches.value;
   registerStore.formData.menu_ranges_id = menuItems.value;
   registerStore.formData.restaurant_age_ranges_id = yearsInBusiness.value;
-  registerStore.formData.pos_systems_id = posSystem.value;
 
   router.push("/info-user");
 };
@@ -403,10 +315,8 @@ const handleSubmit = async () => {
   registerStore.formData.restaurant_name = restaurantName.value;
   registerStore.formData.restaurant_types_id = category.value;
   registerStore.formData.monthly_income_ranges_id = monthlySales.value;
-  registerStore.formData.branch_ranges_id = branches.value;
   registerStore.formData.menu_ranges_id = menuItems.value;
   registerStore.formData.restaurant_age_ranges_id = yearsInBusiness.value;
-  registerStore.formData.pos_systems_id = posSystem.value;
 
   try {
     const response = await api.post("/auth/register", registerStore.formData);
@@ -427,36 +337,6 @@ const handleSubmit = async () => {
     isLoading.value = false;
   }
 };
-
-const filteredPosSystems = computed(() => {
-  if (!posSystems.value.length) return [];
-
-  const mainPos = posSystems.value.filter((pos) => {
-    const name = pos.pos_systems_name.trim();
-    return ![
-      "ไม่มี",
-      "อื่นๆ",
-      "None",
-      "Other",
-      "Standard CSV",
-      "Standard CSV (Other)",
-    ].some((exclude) => name.includes(exclude));
-  });
-
-  const otherOption = posSystems.value.find((pos) =>
-    ["Standard CSV", "อื่นๆ", "Other"].some((match) =>
-      pos.pos_systems_name.includes(match),
-    ),
-  );
-
-  return [
-    ...mainPos,
-    {
-      pos_systems_id: otherOption ? otherOption.pos_systems_id : 99,
-      pos_systems_name: "POS อื่นๆ",
-    },
-  ];
-});
 </script>
 
 <style scoped>

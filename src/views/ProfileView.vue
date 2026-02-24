@@ -30,10 +30,8 @@ const showToast = (message, type = "success") => {
 const masterData = reactive({
   restaurantTypes: [],
   incomeRanges: [],
-  branchRanges: [],
   menuRanges: [],
   ageRanges: [],
-  posSystems: [],
 });
 
 // ข้อมูลหลักในฟอร์ม
@@ -47,9 +45,7 @@ const form = reactive({
   categoryId: "",
   ageRangeId: "",
   avgSalesId: "",
-  branchesId: "",
   menuRangeId: "",
-  posSystemId: "",
 });
 
 const originalForm = reactive({});
@@ -57,46 +53,6 @@ const originalForm = reactive({});
 // เช็คว่า Form มีการเปลี่ยนแปลงหรือไม่? ถ้าเปลี่ยนปุ่ม Save จะทำงาน
 const isFormChanged = computed(() => {
   return JSON.stringify(form) !== JSON.stringify(originalForm);
-});
-
-const filteredBranchRanges = computed(() => {
-  return masterData.branchRanges.map((branch) => ({
-    ...branch,
-    isDisabled: branch.branch_ranges_label !== "1 สาขา",
-    label:
-      branch.branch_ranges_label +
-      (branch.branch_ranges_label !== "1 สาขา" ? " (Soon)" : ""),
-  }));
-});
-
-const filteredPosSystems = computed(() => {
-  if (!masterData.posSystems.length) return [];
-
-  const mainPos = masterData.posSystems.filter((pos) => {
-    const name = pos.pos_systems_name.trim();
-    return ![
-      "ไม่มี",
-      "อื่นๆ",
-      "None",
-      "Other",
-      "Standard CSV",
-      "Standard CSV (Other)",
-    ].some((exclude) => name.includes(exclude));
-  });
-
-  const otherOption = masterData.posSystems.find((pos) =>
-    ["Standard CSV", "อื่นๆ", "Other"].some((match) =>
-      pos.pos_systems_name.includes(match),
-    ),
-  );
-
-  return [
-    ...mainPos,
-    {
-      pos_systems_id: otherOption ? otherOption.pos_systems_id : 99,
-      pos_systems_name: "POS อื่นๆ",
-    },
-  ];
 });
 
 // ฟังก์ชันสำหรับจัดรูปแบบเบอร์โทรศัพท์
@@ -157,27 +113,10 @@ onMounted(async () => {
       if (restData.monthly_income)
         form.avgSalesId =
           restData.monthly_income.id || restData.monthly_income_ranges_id;
-      if (restData.branches)
-        form.branchesId = restData.branches.id || restData.branch_ranges_id;
       if (restData.menus)
         form.menuRangeId = restData.menus.id || restData.menu_ranges_id;
       if (restData.age)
         form.ageRangeId = restData.age.id || restData.restaurant_age_ranges_id;
-      if (restData.pos_system)
-        form.posSystemId = restData.pos_system.id || restData.pos_systems_id;
-      if (form.posSystemId) {
-        const exists = filteredPosSystems.value.some(
-          (p) => p.pos_systems_id === form.posSystemId,
-        );
-        if (!exists) {
-          const otherPos = filteredPosSystems.value.find(
-            (p) => p.pos_systems_name === "POS อื่นๆ",
-          );
-          form.posSystemId = otherPos
-            ? otherPos.pos_systems_id
-            : form.posSystemId;
-        }
-      }
     }
 
     Object.assign(originalForm, JSON.parse(JSON.stringify(form)));
@@ -212,10 +151,8 @@ const saveProfile = async () => {
       restaurant_name: form.restaurantName,
       restaurant_types_id: form.categoryId,
       monthly_income_ranges_id: form.avgSalesId,
-      branch_ranges_id: form.branchesId,
       menu_ranges_id: form.menuRangeId,
       restaurant_age_ranges_id: form.ageRangeId,
-      pos_systems_id: form.posSystemId,
     };
 
     const promises = [
@@ -563,51 +500,6 @@ const saveProfile = async () => {
 
           <div class="col-span-1">
             <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
-              $t("profile_view.restaurant_info.labels.branches")
-            }}</label>
-            <div class="relative">
-              <select
-                v-model="form.branchesId"
-                class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white"
-              >
-                <option value="" disabled>
-                  {{
-                    $t(
-                      "profile_view.restaurant_info.placeholders.select_branches",
-                    )
-                  }}
-                </option>
-                <option
-                  v-for="b in filteredBranchRanges"
-                  :key="b.branch_ranges_id"
-                  :value="b.branch_ranges_id"
-                  :disabled="b.isDisabled"
-                >
-                  {{ b.label }}
-                </option>
-              </select>
-              <div
-                class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500"
-              >
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  ></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-span-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
               $t("profile_view.restaurant_info.labels.menu_items")
             }}</label>
             <div class="relative">
@@ -626,48 +518,6 @@ const saveProfile = async () => {
                   :value="m.menu_ranges_id"
                 >
                   {{ m.menu_ranges_label }}
-                </option>
-              </select>
-              <div
-                class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500"
-              >
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  ></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-span-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{
-              $t("profile_view.restaurant_info.labels.pos_system")
-            }}</label>
-            <div class="relative">
-              <select
-                v-model="form.posSystemId"
-                class="w-full appearance-none px-4 py-2.5 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white"
-              >
-                <option value="" disabled>
-                  {{
-                    $t("profile_view.restaurant_info.placeholders.select_pos")
-                  }}
-                </option>
-                <option
-                  v-for="pos in filteredPosSystems"
-                  :key="pos.pos_systems_id"
-                  :value="pos.pos_systems_id"
-                >
-                  {{ pos.pos_systems_name }}
                 </option>
               </select>
               <div
