@@ -176,6 +176,27 @@
         </form>
       </div>
     </div>
+    <transition name="toast">
+      <div v-if="toastMessage" class="toast-container" :class="toastType">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="margin-right: 8px"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        {{ toastMessage }}
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -187,7 +208,7 @@ import api from "@/utils/axios";
 import "@/assets/css/auth.css";
 
 const router = useRouter();
-const registerStore = useRegisterStore(); 
+const registerStore = useRegisterStore();
 
 // เก็บค่า input
 const email = ref("");
@@ -198,6 +219,17 @@ const confirmPassword = ref("");
 const isLoading = ref(false);
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
+
+const toastMessage = ref("");
+const toastType = ref("error");
+
+const showToast = (msg, type = "error") => {
+  toastMessage.value = msg;
+  toastType.value = type;
+  setTimeout(() => {
+    toastMessage.value = "";
+  }, 3000);
+};
 
 // เก็บข้อความ error
 const errors = reactive({
@@ -213,12 +245,14 @@ const validateForm = () => {
   errors.password = "";
   errors.confirmPassword = "";
 
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   // ตรวจ email
-  if (!email.value) {
+  if (!email.value.trim()) {
     errors.email = "Please enter your email address";
     isValid = false;
-  } else if (!email.value.includes("@")) {
-    errors.email = "Invalid email format. Please include '@'";
+  } else if (!emailPattern.test(email.value)) {
+    errors.email = "Please enter a valid email address";
     isValid = false;
   }
 
@@ -294,7 +328,11 @@ const handleNextStep = async () => {
 
     router.push("/info-user");
   } catch (error) {
-    errors.email = error.message;
+    if (error.message === "This email is already in use") {
+      errors.email = error.message;
+    } else {
+      showToast(error.message || "An unexpected error occurred");
+    }
   } finally {
     isLoading.value = false;
   }
@@ -316,7 +354,9 @@ const handleNextStep = async () => {
 .password-wrapper input {
   width: 100%;
   padding-right: 40px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .input-error {
@@ -374,54 +414,99 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Toast styles */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+}
+
+.toast-container.error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+/* Toast Animation */
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast-enter-from {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
+.toast-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+
 /* Responsive Mobile */
 @media (max-width: 768px) {
-  :deep(.left-panel), .left-panel {
+  :deep(.left-panel),
+  .left-panel {
     display: none !important;
   }
 
-  :deep(.login-container), .login-container {
+  :deep(.login-container),
+  .login-container {
     display: flex;
     width: 100%;
     height: 100vh;
     padding: 0;
   }
 
-  :deep(.right-panel), .right-panel {
+  :deep(.right-panel),
+  .right-panel {
     width: 100%;
     max-width: 100%;
     height: 100%;
-    padding: 2rem; 
+    padding: 2rem;
     display: flex;
-    align-items: center; 
-    justify-content: center; 
+    align-items: center;
+    justify-content: center;
   }
 
-  :deep(.login-wrapper), .login-wrapper {
+  :deep(.login-wrapper),
+  .login-wrapper {
     width: 100%;
     max-width: 350px;
   }
 
-  :deep(.login-title), .login-title {
+  :deep(.login-title),
+  .login-title {
     text-align: left !important;
-    font-size: 1.75rem !important; 
+    font-size: 1.75rem !important;
     margin-bottom: 0.5rem;
   }
 
-  :deep(.login-subtitle), .login-subtitle {
+  :deep(.login-subtitle),
+  .login-subtitle {
     text-align: left !important;
     font-size: 0.9rem;
     margin-bottom: 2rem;
   }
 
-  :deep(.input-group input), .input-group input {
-    font-size: 16px; 
+  :deep(.input-group input),
+  .input-group input {
+    font-size: 16px;
     padding: 12px;
   }
 
-  :deep(.btn-login), .btn-login {
+  :deep(.btn-login),
+  .btn-login {
     padding: 12px;
-    margin-top: 1.5rem; 
+    margin-top: 1.5rem;
   }
 }
 </style>
