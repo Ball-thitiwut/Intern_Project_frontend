@@ -226,10 +226,6 @@
       "title": "เชื่อมต่อข้อมูลสาขา",
       "subtitle": "ระบุข้อมูลสาขาของคุณเพื่อให้ RESSELF ช่วยวิเคราะห์"
     },
-    "form": {
-      "branch_label": "ข้อมูลสาขา",
-      "branch_name_placeholder": "ระบุชื่อสาขา (เช่น สาขาสยาม)"
-    },
     "upload": {
       "description": "อัปเดตข้อมูลการขายด้วยไฟล์ CSV",
       "button_initial": "อัปโหลดไฟล์",
@@ -330,8 +326,6 @@
       "subtitle": "ค้นหาโอกาสในการเพิ่มยอดขายด้วย"
     },
     "filters": {
-      "branch_label": "สาขา",
-      "branch_placeholder": "-- เลือกสาขา --",
       "channel_label": "ประเภทการขาย",
       "channel_placeholder": "ทั้งหมด",
       "channels": {

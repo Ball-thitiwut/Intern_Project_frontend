@@ -226,10 +226,6 @@
       "title": "Connect Branch Data",
       "subtitle": "Specify your branch information for RESSELF analysis"
     },
-    "form": {
-      "branch_label": "Branch Info",
-      "branch_name_placeholder": "Enter branch name (e.g. Siam Branch)"
-    },
     "upload": {
       "description": "Update sales data with CSV files",
       "button_initial": "Upload File",
@@ -330,8 +326,6 @@
       "subtitle": "Discover opportunities to increase sales with"
     },
     "filters": {
-      "branch_label": "Branch",
-      "branch_placeholder": "-- Select Branch --",
       "channel_label": "Sales Channel",
       "channel_placeholder": "All",
       "channels": {
