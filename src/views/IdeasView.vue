@@ -444,7 +444,7 @@
                 :class="[
                   selectedPromoIndexes[index] !== null
                     ? 'bg-[#051960] text-white hover:bg-[#F97316] active:scale-95 shadow-md'
-                      'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200',
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200',
                 ]"
               >
                 <span>{{ $t("ideas_view.card.view_details_btn") }}</span>
@@ -563,7 +563,7 @@ const selectedIdeaData = ref(null);
 const selectedSuggestion = ref(null);
 
 const selectedPromoIndexes = ref({
-  0: null, 
+  0: null,
   1: null,
   2: null,
   3: null,

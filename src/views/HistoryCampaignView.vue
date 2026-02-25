@@ -121,7 +121,7 @@
       </div>
     </div>
 
-    <div class="mb-10">
+    <div class="mb-2">
       <h2 class="text-xl font-bold text-[#051960] mb-6 flex items-center gap-2">
         <span
           class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"
