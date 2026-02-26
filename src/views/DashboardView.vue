@@ -268,32 +268,74 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-50">
-                <tr
-                  v-for="(item, index) in dashboardStore.overviewData
-                    ?.top_menus || []"
-                  :key="index"
-                  class="hover:bg-gray-50 transition-colors"
+                <template
+                  v-if="dashboardStore.overviewData?.top_menus?.length > 0"
                 >
-                  <td class="px-4 py-4 font-medium text-gray-400">
-                    {{ index + 1 }}
-                  </td>
-                  <td
-                    class="px-4 py-4 font-bold text-[#051960] truncate max-w-[150px]"
+                  <tr
+                    v-for="(item, index) in dashboardStore.overviewData
+                      .top_menus"
+                    :key="index"
+                    class="hover:bg-gray-50 transition-colors"
                   >
-                    {{ item.menu_name }}
-                  </td>
-                  <td class="px-4 py-4 text-right">
-                    ฿{{
-                      item.total_sales.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      })
-                    }}
-                  </td>
-                  <td class="px-4 py-4 text-center">
-                    <span
-                      class="bg-blue-50 text-blue-700 px-2 py-1 rounded-md font-medium"
-                      >{{ item.total_qty }}</span
+                    <td class="px-4 py-4 font-medium text-gray-400">
+                      {{ index + 1 }}
+                    </td>
+                    <td
+                      class="px-4 py-4 font-bold text-[#051960] truncate max-w-[150px]"
                     >
+                      {{ item.menu_name }}
+                    </td>
+                    <td class="px-4 py-4 text-right">
+                      ฿{{
+                        item.total_sales.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        })
+                      }}
+                    </td>
+                    <td class="px-4 py-4 text-center">
+                      <span
+                        class="bg-blue-50 text-blue-700 px-2 py-1 rounded-md font-medium"
+                      >
+                        {{ item.total_qty }}
+                      </span>
+                    </td>
+                  </tr>
+                </template>
+
+                <tr v-else>
+                  <td colspan="4" class="px-4 py-24 text-center">
+                    <div
+                      class="flex flex-col items-center justify-center space-y-3"
+                    >
+                      <svg
+                        class="w-14 h-14 text-gray-200"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                        />
+                      </svg>
+                      <div class="space-y-1">
+                        <p class="text-gray-500 font-bold text-base">
+                          {{
+                            $t("dashboard_view.top_menu_table.no_data_title") ||
+                            "ไม่พบข้อมูลการขาย"
+                          }}
+                        </p>
+                        <p class="text-gray-400 text-sm">
+                          {{
+                            $t(
+                              "dashboard_view.top_menu_table.no_data_subtitle",
+                            ) || "ยังไม่มีรายการขายเมนูในช่วงเวลานี้"
+                          }}
+                        </p>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               </tbody>

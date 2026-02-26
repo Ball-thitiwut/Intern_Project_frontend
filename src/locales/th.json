@@ -74,7 +74,9 @@
         "sales": "ยอดขาย",
         "qty": "จำนวน",
         "sales_share": "% ยอดขาย"
-      }
+      },
+      "no_data_title": "ไม่พบข้อมูลการขาย",
+      "no_data_subtitle": "ยังไม่มีรายการขายเมนูในช่วงเวลานี้"
     }
   },
   "dashboard_bill_view": {

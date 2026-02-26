@@ -184,6 +184,7 @@ const chartOptions = computed(() => ({
     y: {
       beginAtZero: true,
       border: { display: false },
+      suggestedMax: Math.max(...props.values.map((v) => v.value), 80) * 1.2,
       title: {
         display: !isMobile.value,
         text: t("bill_count_chart.axis.y_unit"),
@@ -204,6 +205,8 @@ const chartOptions = computed(() => ({
         color: "#64748b",
         font: { size: 13, weight: 500, family: "'Prompt', sans-serif" },
         padding: 5,
+        maxTicksLimit: 8,
+        precision: 0,
         callback: (value) => value.toLocaleString(),
       },
     },

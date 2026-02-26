@@ -147,7 +147,10 @@ const chartOptions = computed(() => ({
   scales: {
     y: {
       beginAtZero: true,
+      precision: 0,
       border: { display: false },
+      suggestedMax:
+        Math.max(...props.values.map((item) => item.value || 0), 100) * 1.2,
       title: {
         display: !isMobile.value,
         text: t("average_sales_chart.axis.y_unit"),
@@ -168,6 +171,7 @@ const chartOptions = computed(() => ({
         padding: 10,
         callback: (value) => "฿" + value.toLocaleString(),
       },
+      suggestedMax: 8,
     },
     x: {
       border: { display: false },

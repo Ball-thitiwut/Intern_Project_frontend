@@ -428,8 +428,8 @@ const chartOptions = computed(() => {
         suggestedMax:
           Math.max(
             ...processedData.value.actualValues.filter((v) => v !== null),
-            0,
-          ) * 1.1,
+            80,
+          ) * 1.2,
         title: {
           display: !isMobile.value,
           text: t("sales_chart.axis.y_label"),
@@ -443,11 +443,14 @@ const chartOptions = computed(() => {
           color: "#64748b",
           padding: 10,
           font: { size: 12, weight: 500 },
-          callback: (value) =>
-            isMobile.value
+          precision: 0,
+          maxTicksLimit: 8,
+          callback: (value) => {
+            const formattedValue = isMobile.value
               ? (value / 1000).toFixed(0) + "k"
-              : value.toLocaleString(),
-          maxTicksLimit: 10,
+              : value.toLocaleString();
+            return "฿" + formattedValue;
+          },
         },
         border: { display: false },
       },

@@ -74,7 +74,9 @@
         "sales": "Sales",
         "qty": "Qty",
         "sales_share": "% Share"
-      }
+      },
+      "no_data_title": "No Sales Data Found",
+      "no_data_subtitle": "There are no menu sales records for this period."
     }
   },
   "dashboard_bill_view": {
