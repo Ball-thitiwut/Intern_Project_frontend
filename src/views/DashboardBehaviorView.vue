@@ -15,7 +15,9 @@
       <GroupSizeChart
         :chart-data="groupSizeChartData"
         :table-data="groupSizeTableData"
-        :total-bills="dashboardStore.customerInsights.total_sample_bills || 0"
+        :total-bills="
+          groupSizeTableData.reduce((acc, row) => acc + row.count, 0)
+        "
       />
 
       <StatAnalysisChart
@@ -70,31 +72,46 @@ watch([() => props.dateRange, () => props.period], async () => {
 // -- แปลงข้อมูลจาก Store เพื่อใส่กราฟ --
 // แปลงข้อมูลสำหรับกราฟขนาดกลุ่มลูกค้า
 const groupSizeChartData = computed(() => {
+  const masterGroups = ["1", "2", "3-4", "5-10", "10+"];
   const raw = dashboardStore.customerInsights.group_size_analysis || [];
   const maxVal = Math.max(...raw.map((i) => i.count), 0);
 
-  return raw.map((item) => {
-    const labelShort = item.label.replace(/[^0-9>]/g, "").trim();
+  return masterGroups.map((groupLabel) => {
+    const found = raw.find((item) => {
+      const cleanLabel = item.label
+        .replace(/People|Person|persons|people/gi, "")
+        .trim();
+      return cleanLabel === groupLabel;
+    });
+    const value = found ? found.count : 0;
+
+    const displayPercent = value === 0 ? 2 : (value / (maxVal || 1)) * 100;
+
     return {
-      label: labelShort,
-      percent: parseFloat(item.percentage),
-      value: item.count,
-      highlight: item.count === maxVal && item.count > 0,
+      label: groupLabel,
+      value: value,
+      percent: displayPercent,
+      highlight: value === maxVal && value > 0,
     };
   });
 });
 
 // ข้อมูลสำหรับตาราง
 const groupSizeTableData = computed(() => {
+  const masterGroups = ["1", "2", "3-4", "5-10", "10+"];
   const raw = dashboardStore.customerInsights.group_size_analysis || [];
-  const sorted = [...raw].sort((a, b) => b.count - a.count);
 
-  return sorted.map((item) => {
-    const labelShort = item.label.replace(/[^0-9>]/g, "").trim();
+  return masterGroups.map((groupLabel) => {
+    const found = raw.find((item) => {
+      const cleanLabel = item.label
+        .replace(/People|Person|persons|people/gi, "")
+        .trim();
+      return cleanLabel === groupLabel;
+    });
     return {
-      size: labelShort,
-      count: item.count,
-      percent: parseFloat(item.percentage),
+      size: groupLabel,
+      count: found ? found.count : 0,
+      percent: found ? parseFloat(found.percentage) : 0,
     };
   });
 });
@@ -102,19 +119,19 @@ const groupSizeTableData = computed(() => {
 // แปลงข้อมูลสำหรับกราฟช่วงยอดขาย
 const salesPerBillChartData = computed(() => {
   const raw = dashboardStore.customerInsights.spending_analysis || [];
-  
+
   const standardRanges = [
     { key: "Under", label: "Under ฿500", match: "Under" },
     { key: "500-1000", label: "฿500 - ฿1,000", match: "500 - 1,000" },
     { key: "1001-2000", label: "฿1,001 - ฿2,000", match: "1,001 - 2,000" },
-    { key: "2000+", label: "฿2,000+", match: "2,000+" }
+    { key: "2000+", label: "฿2,000+", match: "2,000+" },
   ];
 
   const maxValFromRaw = Math.max(...raw.map((i) => i.count), 0);
 
   return standardRanges.map((std) => {
     const found = raw.find((item) => item.range.includes(std.match));
-    const value = found ? found.count : 0; 
+    const value = found ? found.count : 0;
 
     return {
       label: std.label,
@@ -166,14 +183,16 @@ const salesPerBillStats = computed(() => {
 const calcYTicks = (data) => {
   if (!data || data.length === 0) return ["0"];
   const maxVal = Math.max(...data.map((i) => i.value), 0);
-  if (maxVal === 0) return ["0", "15"];
 
-  const step = 15;
+  if (maxVal === 0) return ["15", "10", "5", "0"];
 
-  const numTicks = Math.ceil(maxVal / step);
+  const numberOfSlices = 5;
+
+  const rawStep = maxVal / numberOfSlices;
+  const step = Math.ceil(rawStep / 5) * 5;
 
   const ticks = [];
-  for (let i = 0; i <= numTicks; i++) {
+  for (let i = 0; i <= numberOfSlices; i++) {
     ticks.push((step * i).toString());
   }
 

@@ -167,7 +167,7 @@ const maxValue = computed(() => {
 
 const yTicks = computed(() => {
   const max = maxValue.value;
-  if (max === 0) return ["0"];
+if (max === 0) return ["15", "10", "5", "0"];
 
   const step = Math.ceil(max / 5);
   const niceStep = step > 10 ? Math.ceil(step / 5) * 5 : Math.ceil(step);
@@ -179,10 +179,9 @@ const yTicks = computed(() => {
   return ticks.reverse();
 });
 
-// ฟังก์ชันแปลงค่า Value เป็น % ความสูง (CSS Height)
 const calculateHeight = (value) => {
   const maxTick = parseInt(yTicks.value[0]);
-  if (maxTick === 0) return 0;
+  if (!maxTick || maxTick === 0 || value === 0) return 2;
   return (value / maxTick) * 100;
 };
 </script>

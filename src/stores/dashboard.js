@@ -51,6 +51,72 @@ const fillMissingHours = (data) => {
   return fullHours;
 };
 
+const fillMissingDays = (data, startDate, endDate) => {
+  if (!startDate || !endDate) return data;
+
+  const dateMap = new Map();
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    const isoString = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    dateMap.set(isoString, {
+      date: isoString,
+      date_iso: isoString,
+      amount: 0,
+      total_sales: 0,
+      orders: 0,
+      total_orders: 0,
+    });
+  }
+
+  if (Array.isArray(data)) {
+    data.forEach((item) => {
+      if (dateMap.has(item.date_iso)) {
+        const existing = dateMap.get(item.date_iso);
+        dateMap.set(item.date_iso, {
+          ...existing,
+          ...item,
+          amount: parseFloat(item.amount || item.total_sales || 0),
+          orders: parseInt(item.orders || item.total_orders || 0),
+        });
+      }
+    });
+  }
+
+  return Array.from(dateMap.values()).sort(
+    (a, b) => new Date(a.date_iso) - new Date(b.date_iso),
+  );
+};
+
+const processBillData = (dataArray, isHourly = false) => {
+  const dates = dataArray.map((item) => {
+    if (isHourly) return item.hour;
+    if (item.label) return item.label;
+    const d = new Date(item.date_iso);
+    return isNaN(d.getTime())
+      ? item.date || "-"
+      : `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
+  });
+
+  const avgBillValues = dataArray.map((item) => {
+    const sales = parseFloat(item.amount || item.total_sales || 0);
+    const orders = parseInt(item.orders || item.total_orders || 0);
+    return { value: orders > 0 ? Math.round(sales / orders) : 0 };
+  });
+
+  const maxAvg = Math.max(...avgBillValues.map((v) => v.value), 0);
+  avgBillValues.forEach(
+    (v) => (v.highlight = v.value === maxAvg && v.value > 0),
+  );
+
+  const billCountValues = dataArray.map((item) => ({
+    value: parseInt(item.orders || item.total_orders || 0),
+  }));
+
+  return { dates, avgBillValues, billCountValues };
+};
+
 export const useDashboardStore = defineStore("dashboard", {
   state: () => ({
     overviewData: {
@@ -93,59 +159,21 @@ export const useDashboardStore = defineStore("dashboard", {
         (h) => (h.amount || 0) > 0 || (h.orders || 0) > 0,
       );
 
+      // 1. กรณีดูรายชั่วโมง (Single Day)
       if (isSingleDay && hasHourlyValue) {
-        const dates = hourlyData.map((item) => item.hour);
-
-        const avgBillValues = hourlyData.map((item) => {
-          const sales = parseFloat(item.amount || 0);
-          const orders = parseInt(item.orders || 0);
-          return {
-            value: orders > 0 ? Math.round(sales / orders) : 0,
-          };
-        });
-
-        const billCountValues = hourlyData.map((item) => ({
-          value: parseInt(item.orders || 0),
-        }));
-
-        const maxAvg = Math.max(...avgBillValues.map((v) => v.value), 0);
-        avgBillValues.forEach(
-          (v) => (v.highlight = v.value === maxAvg && v.value > 0),
-        );
-
-        return { dates, avgBillValues, billCountValues };
+        return processBillData(hourlyData, true); 
       }
 
       if (trends.length === 0) {
         return { dates: [], avgBillValues: [], billCountValues: [] };
       }
 
+      // 2. กรณีดูรายวัน (ไม่เกิน 35 วัน)
       if (trends.length <= 35) {
-        const dates = trends.map((item) => {
-          const d = new Date(item.date_iso);
-          return isNaN(d.getTime())
-            ? item.date || "-"
-            : `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
-        });
-
-        const avgBillValues = trends.map((item) => {
-          const sales = parseFloat(item.amount || item.total_sales || 0);
-          const orders = parseInt(item.orders || item.total_orders || 0);
-          return { value: orders > 0 ? Math.round(sales / orders) : 0 };
-        });
-
-        const billCountValues = trends.map((item) => ({
-          value: parseInt(item.orders || item.total_orders || 0),
-        }));
-
-        const maxAvg = Math.max(...avgBillValues.map((v) => v.value), 0);
-        avgBillValues.forEach(
-          (v) => (v.highlight = v.value === maxAvg && v.value > 0),
-        );
-
-        return { dates, avgBillValues, billCountValues };
+        return processBillData(trends, false);
       }
 
+      // 3. กรณีดูรายเดือน (เกิน 35 วัน)
       const groupedData = {};
       trends.forEach((item) => {
         const d = new Date(item.date_iso);
@@ -168,25 +196,13 @@ export const useDashboardStore = defineStore("dashboard", {
       });
 
       const sortedKeys = Object.keys(groupedData).sort();
-      const dates = sortedKeys.map((k) => groupedData[k].displayLabel);
-      const avgBillValues = sortedKeys.map((k) => ({
-        value:
-          groupedData[k].total_orders > 0
-            ? Math.round(
-                groupedData[k].total_sales / groupedData[k].total_orders,
-              )
-            : 0,
-      }));
-      const billCountValues = sortedKeys.map((k) => ({
-        value: groupedData[k].total_orders,
+      const finalMonthlyData = sortedKeys.map((k) => ({
+        label: groupedData[k].displayLabel,
+        total_sales: groupedData[k].total_sales,
+        total_orders: groupedData[k].total_orders,
       }));
 
-      const maxAvg = Math.max(...avgBillValues.map((v) => v.value), 0);
-      avgBillValues.forEach(
-        (v) => (v.highlight = v.value === maxAvg && v.value > 0),
-      );
-
-      return { dates, avgBillValues, billCountValues };
+      return processBillData(finalMonthlyData, false);
     },
   },
 
@@ -237,6 +253,18 @@ export const useDashboardStore = defineStore("dashboard", {
         ]);
 
         const data = overviewRes.data;
+        const insights = insightsRes.data || { total_sample_bills: 0 };
+
+        if (
+          insights.group_size_analysis &&
+          Array.isArray(insights.group_size_analysis)
+        ) {
+          insights.group_size_analysis.sort((a, b) => {
+            const valA = parseInt(a.label.replace(/[^0-9]/g, "")) || 0;
+            const valB = parseInt(b.label.replace(/[^0-9]/g, "")) || 0;
+            return valA - valB;
+          });
+        }
 
         if (data.sales_by_hour) {
           data.sales_by_hour = fillMissingHours(data.sales_by_hour);
@@ -244,13 +272,18 @@ export const useDashboardStore = defineStore("dashboard", {
 
         let trendData = [];
         if (data.sales_trend && Array.isArray(data.sales_trend)) {
-          trendData = data.sales_trend
+          const mappedTrend = data.sales_trend
             .map((item) => ({
               ...item,
               date_iso: formatToISO(item.date),
             }))
-            .filter((item) => item.date_iso)
-            .sort((a, b) => new Date(a.date_iso) - new Date(b.date_iso));
+            .filter((item) => item.date_iso);
+
+          trendData = fillMissingDays(
+            mappedTrend,
+            params.startDate,
+            params.endDate,
+          );
 
           if (trendData.length > 0) {
             this.dataRangeLimits.minDate = trendData[0].date_iso;
@@ -275,7 +308,7 @@ export const useDashboardStore = defineStore("dashboard", {
           sales_forecast: validatedForecast,
         };
 
-        this.customerInsights = insightsRes.data || { total_sample_bills: 0 };
+        this.customerInsights = insights;
       } catch (err) {
         console.error("Fetch dashboard error:", err);
         this.error = err.response?.data?.message || err.message;
