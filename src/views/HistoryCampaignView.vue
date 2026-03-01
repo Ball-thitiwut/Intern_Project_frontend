@@ -121,7 +121,7 @@
       </div>
     </div>
 
-    <div class="mb-2">
+    <div class="mb-8">
       <h2 class="text-xl font-bold text-[#051960] mb-6 flex items-center gap-2">
         <span
           class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"
@@ -771,7 +771,12 @@ const formatDate = (dateString) => {
 };
 
 const formatCurrency = (value) => {
-  return new Intl.NumberFormat(locale.value).format(value);
+  const num = parseFloat(value || 0);
+
+  return new Intl.NumberFormat(locale.value, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(num);
 };
 
 const calculateDuration = (start, end) => {

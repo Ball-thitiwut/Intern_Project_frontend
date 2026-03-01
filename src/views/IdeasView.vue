@@ -333,7 +333,7 @@
                 <div
                   v-if="idx === 0"
                   @click="selectPromo(index, idx)"
-                  class="rounded-xl p-3 md:p-4 border transition-all duration-300 relative overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-md"
+                  class="rounded-xl p-3 md:p-4 border transition-all duration-300 relative overflow-hidden cursor-pointer hover:-translate-y-0.5 hover:shadow-md"
                   :class="[
                     selectedPromoIndexes[index] === idx
                       ? 'ring-2 ring-orange-400 border-transparent shadow-md'
@@ -341,52 +341,71 @@
                     idea.contentBg,
                   ]"
                 >
-                  <div
-                    class="absolute -right-4 -top-4 w-16 h-16 bg-white/20 rounded-full blur-xl"
-                  ></div>
-                  <div class="flex items-center gap-2 mb-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 md:h-5 md:w-5 text-yellow-500 fill-yellow-500"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-1.5">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-3.5 w-3.5 text-yellow-500 fill-yellow-500"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                        />
+                      </svg>
+                      <span
+                        class="text-[10px] font-bold uppercase tracking-wide opacity-80"
+                        :class="idea.textColor"
+                      >
+                        {{ $t("ideas_view.card.top_pick") }}
+                      </span>
+                    </div>
+
+                    <div
+                      class="w-4 h-4 rounded-full border-[1.5px] flex items-center justify-center transition-all duration-300"
+                      :class="
+                        selectedPromoIndexes[index] === idx
+                          ? 'border-orange-500 bg-orange-500'
+                          : 'border-gray-300 bg-white/60'
+                      "
                     >
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                      />
-                    </svg>
-                    <span
-                      class="text-[10px] md:text-xs font-bold uppercase tracking-wide opacity-70"
-                      :class="idea.textColor"
-                    >
-                      {{ $t("ideas_view.card.top_pick") }}
-                    </span>
+                      <svg
+                        v-if="selectedPromoIndexes[index] === idx"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-2.5 w-2.5 text-white"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
                   </div>
-                  <div class="flex items-start justify-between gap-2 md:gap-4">
+
+                  <div class="flex items-end justify-between gap-2">
                     <div class="min-w-0">
                       <h5
-                        class="text-sm md:text-base font-bold text-[#051960] leading-tight mb-1 truncate"
+                        class="text-sm md:text-base font-bold text-[#051960] leading-tight mb-0.5 truncate"
                       >
                         {{ item.name }}
                       </h5>
-                      <p
-                        class="text-[10px] md:text-xs text-gray-600 font-medium truncate"
-                      >
+                      <p class="text-[10px] text-gray-500 font-medium truncate">
                         {{ item.detail }}
                       </p>
                     </div>
                     <div class="text-right flex-shrink-0">
                       <div
-                        class="text-base md:text-lg font-bold"
+                        class="text-base font-bold leading-none"
                         :class="idea.scoreColor"
                       >
                         {{ item.score }}%
                       </div>
-                      <div
-                        class="text-[8px] md:text-[10px] text-gray-400 flex items-center justify-end gap-1 group/tooltip relative"
-                      >
+                      <p class="text-[8px] text-gray-400 mt-0.5">
                         {{ $t("ideas_view.card.sales_opportunity") }}
-                      </div>
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -394,22 +413,27 @@
                 <div
                   v-else
                   @click="selectPromo(index, idx)"
-                  class="flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-300 border cursor-pointer hover:bg-gray-50 hover:translate-x-1"
+                  class="flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-300 border cursor-pointer hover:bg-gray-50/80 group/item"
                   :class="[
                     selectedPromoIndexes[index] === idx
-                      ? 'bg-orange-50 border-orange-200 shadow-sm'
+                      ? 'bg-orange-50/50 border-orange-200 shadow-sm'
                       : 'bg-white border-transparent',
                   ]"
                 >
                   <div class="flex items-center gap-3 min-w-0">
                     <div
-                      class="w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-gray-500 bg-gray-100 flex-shrink-0"
+                      class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors flex-shrink-0"
+                      :class="
+                        selectedPromoIndexes[index] === idx
+                          ? 'bg-orange-500 text-white'
+                          : 'bg-gray-100 text-gray-400'
+                      "
                     >
                       {{ idx + 1 }}
                     </div>
                     <div class="min-w-0">
                       <p
-                        class="text-xs md:text-sm font-semibold text-[#051960] truncate"
+                        class="text-xs md:text-sm font-semibold text-[#051960] truncate group-hover/item:text-orange-600 transition-colors"
                       >
                         {{ item.name }}
                       </p>
@@ -420,8 +444,41 @@
                       </p>
                     </div>
                   </div>
-                  <div class="text-xs md:text-sm font-bold text-gray-400 pl-2">
-                    {{ item.score }}%
+
+                  <div class="flex items-center gap-3 flex-shrink-0 ml-2">
+                    <span
+                      class="text-xs font-bold transition-colors"
+                      :class="
+                        selectedPromoIndexes[index] === idx
+                          ? 'text-orange-600'
+                          : 'text-gray-400'
+                      "
+                    >
+                      {{ item.score }}%
+                    </span>
+
+                    <div
+                      class="w-4 h-4 rounded-full border-[1.5px] flex items-center justify-center transition-all duration-300"
+                      :class="
+                        selectedPromoIndexes[index] === idx
+                          ? 'border-orange-500 bg-orange-500'
+                          : 'border-gray-200 bg-white group-hover/item:border-orange-300'
+                      "
+                    >
+                      <svg
+                        v-if="selectedPromoIndexes[index] === idx"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-2.5 w-2.5 text-white"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -777,7 +834,7 @@ const handlePromotionConfirm = async (formData) => {
     start_date: formData.startDate,
     end_date: formData.endDate,
     predicted_impact: Math.round(selectedSuggestion.value.score),
-    target_revenue: 0,
+    target_revenue: formData.targetRevenue || 0,
     campaign_config: {
       ...selectedSuggestion.value.promotion_detail,
       channel:

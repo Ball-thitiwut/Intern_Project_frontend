@@ -295,7 +295,7 @@ const chartData = computed(() => {
   const stats = currentDetail.value.daily_stats;
 
   const values = stats.map((s) => parseFloat(s.revenue_generated || 0));
-  const maxRev = Math.max(...values, 1); 
+  const maxRev = Math.max(...values, 1);
 
   return stats.map((s) => {
     const val = parseFloat(s.revenue_generated || 0);

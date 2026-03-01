@@ -151,14 +151,21 @@
                 <input
                   v-model="form.promotionName"
                   type="text"
-                  class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-semibold text-[#051960] placeholder-gray-400 shadow-sm"
+                  class="w-full pl-11 pr-4 py-3.5 rounded-2xl border-2 outline-none transition-all duration-200 text-sm font-semibold shadow-sm"
+                  :class="[
+                    errors.promotionName
+                      ? 'border-red-500 bg-red-50 text-red-900 placeholder-red-300'
+                      : 'border-transparent bg-gray-50 text-[#051960] focus:bg-white focus:border-[#051960]/20',
+                  ]"
                   :placeholder="
                     $t('promotion_setup_modal.form.name_placeholder')
                   "
-                  required
                 />
                 <span
-                  class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                  class="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200"
+                  :class="
+                    errors.promotionName ? 'text-red-400' : 'text-gray-400'
+                  "
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -177,6 +184,51 @@
                 </span>
               </div>
             </div>
+            <transition
+              enter-active-class="transition duration-200 ease-out"
+              enter-from-class="transform -translate-y-1 opacity-0"
+              enter-to-class="transform translate-y-0 opacity-100"
+            >
+              <p
+                v-if="errors.promotionName"
+                class="text-red-500 text-[10px] md:text-xs font-medium ml-2 flex items-center gap-1"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                กรุณาระบุชื่อแคมเปญ
+              </p>
+            </transition>
+
+            <div class="space-y-2">
+              <label class="text-sm font-bold text-[#051960] ml-1"
+                >เป้าหมายยอดขาย</label
+              >
+              <div class="relative">
+                <input
+                  :value="formattedRevenue"
+                  @input="onRevenueInput"
+                  type="text"
+                  class="w-full pl-4 pr-12 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-bold text-[#051960] shadow-sm"
+                  placeholder="0"
+                />
+                <span
+                  class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold"
+                  >฿</span
+                >
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4"></div>
 
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-2">
@@ -187,7 +239,8 @@
                   <input
                     v-model="form.startDate"
                     type="date"
-                    :min="minDate" class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
+                    :min="minDate"
+                    class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
                     required
                   />
                   <span
@@ -218,7 +271,8 @@
                   <input
                     v-model="form.endDate"
                     type="date"
-                    :min="form.startDate" class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
+                    :min="form.startDate"
+                    class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-medium text-gray-600 shadow-sm appearance-none"
                     required
                   />
                   <span
@@ -311,16 +365,29 @@ const showToast = ref(false);
 
 const getLocalDateString = (date = new Date()) => {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); 
-  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
 
 const form = ref({
   promotionName: "",
-  startDate: getLocalDateString(), 
-  endDate: getLocalDateString(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)), 
+  targetRevenue: 0,
+  startDate: getLocalDateString(),
+  endDate: getLocalDateString(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
 });
+
+const formattedRevenue = computed(() => {
+  if (!form.value.targetRevenue) return "";
+  return new Intl.NumberFormat("en-US").format(form.value.targetRevenue);
+});
+
+const onRevenueInput = (e) => {
+  const value = e.target.value.replace(/,/g, "");
+  if (!isNaN(value)) {
+    form.value.targetRevenue = value ? parseFloat(value) : 0;
+  }
+};
 
 watch(
   () => props.suggestionData,
@@ -335,7 +402,7 @@ watch(
   { immediate: true },
 );
 
-const minDate = getLocalDateString(); 
+const minDate = getLocalDateString();
 
 watch(
   () => form.value.startDate,
@@ -343,7 +410,7 @@ watch(
     if (newStartDate > form.value.endDate) {
       form.value.endDate = newStartDate;
     }
-  }
+  },
 );
 
 const close = () => {
@@ -351,22 +418,34 @@ const close = () => {
   showToast.value = false;
 };
 
-const handleConfirm = () => {
-  console.log("Button Clicked. Name is:", form.value.promotionName);
+const errors = ref({
+  promotionName: false,
+});
 
-  if (!form.value.promotionName) {
-    console.warn("Validation Failed: Name is empty");
+const handleConfirm = () => {
+  errors.value.promotionName = false;
+
+  if (!form.value.promotionName.trim()) {
+    errors.value.promotionName = true;
     return;
   }
 
-  console.log("Validation Passed. Emitting confirm...");
-
   emit("confirm", {
     promotionName: form.value.promotionName,
+    targetRevenue: Number(form.value.targetRevenue) || 0, 
     startDate: form.value.startDate,
     endDate: form.value.endDate,
   });
 };
+
+watch(
+  () => form.value.promotionName,
+  (newValue) => {
+    if (newValue && newValue.trim().length > 0) {
+      errors.value.promotionName = false;
+    }
+  },
+);
 </script>
 
 <style scoped>

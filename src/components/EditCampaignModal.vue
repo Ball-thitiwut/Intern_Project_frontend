@@ -129,14 +129,15 @@
               </label>
               <div class="relative">
                 <input
-                  v-model="formData.target_revenue"
+                  :value="formattedRevenue"
+                  @input="onRevenueInput"
                   :disabled="isLoading"
-                  type="number"
-                  class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-semibold text-[#051960] placeholder-gray-400 shadow-sm"
-                  placeholder="ตัวอย่าง: 50000"
+                  type="text"
+                  class="w-full pl-4 pr-10 py-3.5 rounded-2xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-[#051960]/20 focus:ring-4 focus:ring-[#051960]/5 outline-none transition-all text-sm font-bold text-[#051960] shadow-sm"
+                  placeholder="0"
                 />
                 <span
-                  class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold"
                 >
                   ฿
                 </span>
@@ -224,7 +225,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useCampaignStore } from "@/stores/campaign";
 
@@ -294,6 +295,23 @@ const closeModal = () => {
   }, 300);
 };
 
+const formattedRevenue = computed(() => {
+  if (
+    formData.value.target_revenue === null ||
+    formData.value.target_revenue === undefined
+  )
+    return "";
+  if (formData.value.target_revenue === 0) return "0";
+  return new Intl.NumberFormat("en-US").format(formData.value.target_revenue);
+});
+
+const onRevenueInput = (e) => {
+  const value = e.target.value.replace(/,/g, "");
+  if (!isNaN(value)) {
+    formData.value.target_revenue = value ? parseFloat(value) : 0;
+  }
+};
+
 const saveChanges = async () => {
   if (!formData.value.name) return;
 
@@ -304,7 +322,7 @@ const saveChanges = async () => {
       name: formData.value.name,
       start_date: formData.value.startDate,
       end_date: formData.value.endDate,
-      target_revenue: formData.value.target_revenue,
+      target_revenue: Number(formData.value.target_revenue) || 0,
     });
 
     if (success) {
