@@ -161,10 +161,7 @@
                 >
                   <span>{{
                     $t("report_campaign_modal.stats.avg_bill_format", {
-                      n: Math.round(
-                        currentDetail?.total_revenue /
-                          (currentDetail?.total_matched_bills || 1),
-                      ),
+                      n: averageBill,
                     })
                   }}</span>
                 </div>
@@ -288,19 +285,33 @@ const campaignStore = useCampaignStore();
 const { currentDetail, isLoading } = storeToRefs(campaignStore);
 
 const chartData = computed(() => {
-  if (!currentDetail.value || !currentDetail.value.daily_stats) return [];
+  if (
+    !currentDetail.value?.daily_stats ||
+    currentDetail.value.daily_stats.length === 0
+  ) {
+    return [];
+  }
 
   const stats = currentDetail.value.daily_stats;
-  const maxRev = Math.max(
-    ...stats.map((s) => parseFloat(s.revenue_generated)),
-    1,
-  );
 
-  return stats.map((s) => ({
-    day: formatDateShort(s.stat_date),
-    value: parseFloat(s.revenue_generated),
-    percent: (parseFloat(s.revenue_generated) / maxRev) * 100,
-  }));
+  const values = stats.map((s) => parseFloat(s.revenue_generated || 0));
+  const maxRev = Math.max(...values, 1); 
+
+  return stats.map((s) => {
+    const val = parseFloat(s.revenue_generated || 0);
+    return {
+      day: formatDateShort(s.stat_date),
+      value: val,
+      percent: maxRev > 0 ? (val / maxRev) * 100 : 0,
+    };
+  });
+});
+
+const averageBill = computed(() => {
+  const rev = parseFloat(currentDetail.value?.total_revenue || 0);
+  const bills = parseInt(currentDetail.value?.total_matched_bills || 0);
+  if (bills <= 0) return 0;
+  return Math.round(rev / bills);
 });
 
 watch(
@@ -336,8 +347,15 @@ const formatDateShort = (dateString) => {
 
 // เพิ่มฟังก์ชันคำนวณ % เทียบเป้าหมาย
 const calculateVsTarget = (current, target) => {
-  if (!target || target === 0) return 0;
-  const percentage = ((current - target) / target) * 100;
+  const currNum = parseFloat(current || 0);
+  const targetNum = parseFloat(target || 0);
+
+  if (targetNum <= 0) return "0.0";
+
+  if (currNum === 0) return "0.0";
+
+  const percentage = ((currNum - targetNum) / targetNum) * 100;
+
   return percentage > 0 ? `+${percentage.toFixed(1)}` : percentage.toFixed(1);
 };
 </script>
@@ -355,6 +373,10 @@ const calculateVsTarget = (current, target) => {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+.w-full.max-w-\[48px\].bg-blue-100 {
+  min-height: 2px;
 }
 
 @media (max-width: 767px) {
