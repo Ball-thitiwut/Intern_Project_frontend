@@ -184,7 +184,7 @@ const chartOptions = computed(() => ({
     y: {
       beginAtZero: true,
       border: { display: false },
-      suggestedMax: Math.max(...props.values.map((v) => v.value), 80) * 1.2,
+      suggestedMax: Math.max(...props.values.map((v) => v.value), 10) * 1.2,
       title: {
         display: !isMobile.value,
         text: t("bill_count_chart.axis.y_unit"),

@@ -48,6 +48,7 @@
       "title": "Sales Trend"
     },
     "summary_stats": {
+      "no_change": "No change",
       "total_sales": "Total Sales",
       "avg_bill": "Avg. per Bill",
       "table_headers": {
@@ -134,7 +135,7 @@
       "person": "people"
     },
     "table": {
-      "rank": "Rank",
+      "rank": "No.",
       "group_size": "Group Size",
       "bill_count": "Bill Count",
       "proportion": "Proportion (%)",
@@ -480,7 +481,7 @@
       "vs_target": "vs Target",
       "orders_label": "Total Orders",
       "unit_items": "items",
-      "avg_bill_format": "Avg ฿{n}/bill",
+      "avg_bill_format": "Avg ฿{n} / bill",
       "roi_label": "ROI",
       "roi_description": "Return on Investment",
       "impact_high": "Impact High"

@@ -6,7 +6,9 @@
       v-if="isMobile"
       class="absolute flex flex-col items-center justify-center pointer-events-none animate-fade-in"
     >
-      <span class="text-[10px] text-gray-400 font-medium">{{ $t('promotion_pie_chart.center_label') }}</span>
+      <span class="text-[10px] text-gray-400 font-medium">{{
+        $t("promotion_pie_chart.center_label")
+      }}</span>
       <span class="text-lg font-bold text-[#051960]">{{
         totalAmountFormatted
       }}</span>

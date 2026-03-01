@@ -161,7 +161,7 @@ export const useDashboardStore = defineStore("dashboard", {
 
       // 1. กรณีดูรายชั่วโมง (Single Day)
       if (isSingleDay && hasHourlyValue) {
-        return processBillData(hourlyData, true); 
+        return processBillData(hourlyData, true);
       }
 
       if (trends.length === 0) {

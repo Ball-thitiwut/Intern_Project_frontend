@@ -85,7 +85,7 @@
             ></div>
 
             <span
-              class="absolute top-full mt-2 md:mt-3 text-[10px] md:text-[13px] text-[#64748b] font-medium text-center w-full whitespace-nowrap overflow-hidden text-ellipsis px-0.5"
+              class="absolute top-full mt-2 md:mt-3 text-[10px] md:text-[13px] text-[#64748b] font-medium text-center w-full whitespace-normal leading-tight px-0.5 break-words"
             >
               {{ item.label }}
             </span>

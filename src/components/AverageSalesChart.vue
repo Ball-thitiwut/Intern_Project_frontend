@@ -171,7 +171,7 @@ const chartOptions = computed(() => ({
         padding: 10,
         callback: (value) => "฿" + value.toLocaleString(),
       },
-      suggestedMax: 8,
+      maxTicksLimit: 8,
     },
     x: {
       border: { display: false },

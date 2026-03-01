@@ -48,6 +48,7 @@
       "title": "แนวโน้มยอดขาย"
     },
     "summary_stats": {
+      "no_change": "ไม่มีการเปลี่ยนแปลง",
       "total_sales": "ยอดขายทั้งหมด",
       "avg_bill": "ค่าเฉลี่ยต่อบิล",
       "table_headers": {
@@ -134,7 +135,7 @@
       "person": "คน"
     },
     "table": {
-      "rank": "อันดับ",
+      "rank": "ลำดับ",
       "group_size": "ขนาดกลุ่ม",
       "bill_count": "จำนวนบิล",
       "proportion": "สัดส่วน (%)",
@@ -480,7 +481,7 @@
       "vs_target": "เทียบเป้าหมาย",
       "orders_label": "จำนวนออเดอร์",
       "unit_items": "รายการ",
-      "avg_bill_format": "เฉลี่ย ฿{n}/บิล",
+      "avg_bill_format": "เฉลี่ย ฿{n} / บิล",
       "roi_label": "ความคุ้มค่า (ROI)",
       "roi_description": "อัตราผลตอบแทนจากการลงทุน",
       "impact_high": "Impact High"

@@ -167,7 +167,7 @@ const maxValue = computed(() => {
 
 const yTicks = computed(() => {
   const max = maxValue.value;
-if (max === 0) return ["15", "10", "5", "0"];
+  if (max === 0) return ["15", "10", "5", "0"];
 
   const step = Math.ceil(max / 5);
   const niceStep = step > 10 ? Math.ceil(step / 5) * 5 : Math.ceil(step);

@@ -43,7 +43,9 @@
                 ) || "0.00"
               }}
             </div>
+
             <div
+              v-if="dashboardStore.overviewData?.summary?.total_sales > 0"
               :class="[
                 'text-[10px] md:text-xs font-bold px-1.5 py-0.5 rounded-full inline-block mt-1',
                 dashboardStore.overviewData?.summary?.growth
@@ -59,6 +61,10 @@
                   : "") +
                 dashboardStore.overviewData?.summary?.growth?.sales_growth_pct
               }}%
+            </div>
+
+            <div v-else class="text-[10px] md:text-xs text-gray-400 mt-1">
+              {{ $t("dashboard_view.summary_stats.no_change") }}
             </div>
           </div>
         </div>
@@ -272,9 +278,7 @@
                   v-if="dashboardStore.overviewData?.top_menus?.length > 0"
                 >
                   <tr
-                    v-for="(item, index) in dashboardStore.overviewData
-                      .top_menus"
-                    :key="index"
+                    v-for="(item, index) in sortedTopMenus" :key="index"
                     class="hover:bg-gray-50 transition-colors"
                   >
                     <td class="px-4 py-4 font-medium text-gray-400">
@@ -383,6 +387,11 @@ const isHourlyView = computed(() => {
   }
 
   return false;
+});
+
+const sortedTopMenus = computed(() => {
+  const menus = dashboardStore.overviewData?.top_menus || [];
+  return [...menus].sort((a, b) => b.total_sales - a.total_sales);
 });
 
 const handleGoToSetup = () => {
