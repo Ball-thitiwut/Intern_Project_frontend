@@ -278,7 +278,8 @@
                   v-if="dashboardStore.overviewData?.top_menus?.length > 0"
                 >
                   <tr
-                    v-for="(item, index) in sortedTopMenus" :key="index"
+                    v-for="(item, index) in sortedTopMenus"
+                    :key="index"
                     class="hover:bg-gray-50 transition-colors"
                   >
                     <td class="px-4 py-4 font-medium text-gray-400">
@@ -348,22 +349,15 @@
         </div>
       </div>
     </div>
-    <EmptyStateModal
-      :is-open="showEmptyState"
-      @close="showEmptyState = false"
-      @setup="handleGoToSetup"
-    />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, watch, ref } from "vue";
-import { useRouter } from "vue-router";
+import { computed, onMounted, watch } from "vue";
 import { useDashboardStore } from "@/stores/dashboard";
 import { useI18n } from "vue-i18n";
 import SalesChart from "@/components/SalesChart.vue";
 import PromotionPieChart from "@/components/PromotionPieChart.vue";
-import EmptyStateModal from "@/components/EmptyStateModal.vue";
 
 // รับ Props จาก MainDashboard (ช่วงวันที่, Period)
 const props = defineProps({
@@ -373,9 +367,6 @@ const props = defineProps({
 
 const dashboardStore = useDashboardStore();
 const { t } = useI18n();
-
-const router = useRouter();
-const showEmptyState = ref(false);
 
 const isHourlyView = computed(() => {
   if (props.period === "24h") return true;
@@ -394,26 +385,12 @@ const sortedTopMenus = computed(() => {
   return [...menus].sort((a, b) => b.total_sales - a.total_sales);
 });
 
-const handleGoToSetup = () => {
-  showEmptyState.value = false;
-  router.push({ name: "pos-info" });
-};
-
 // ดึงข้อมูล Overview
 const fetchData = async () => {
-  showEmptyState.value = false;
-
   await Promise.all([
     dashboardStore.fetchDashboardOverview(props.period, props.dateRange),
     dashboardStore.checkImportHistory(),
   ]);
-
-  const totalSales = dashboardStore.overviewData?.summary?.total_sales || 0;
-  const hasFile = dashboardStore.hasImportHistory;
-
-  if (totalSales === 0 && !hasFile && !dashboardStore.isLoading) {
-    showEmptyState.value = true;
-  }
 };
 
 onMounted(() => fetchData());
