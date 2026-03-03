@@ -112,30 +112,18 @@
                   ฿{{ formatNumber(currentDetail?.total_revenue) }}
                 </h4>
                 <div
-                  class="flex items-center gap-1 mt-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 w-fit px-2 py-0.5 rounded-full"
+                  class="flex items-center gap-1 mt-2 text-[10px] font-bold w-fit px-2 py-0.5 rounded-full text-emerald-700 bg-emerald-50"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-3 w-3"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
                   <span
                     >{{
-                      calculateVsTarget(
+                      calculateAchievement(
                         currentDetail?.total_revenue,
                         currentDetail?.target_revenue,
                       )
                     }}%</span
                   >
-                  <span class="text-emerald-400 font-medium ml-1">{{
-                    $t("report_campaign_modal.stats.vs_target")
+                  <span class="ml-1 font-medium opacity-70">{{
+                    $t("report_campaign_modal.stats.of_target")
                   }}</span>
                 </div>
               </div>
@@ -216,47 +204,63 @@
               </div>
             </div>
 
-            <div
-              class="h-56 flex items-end justify-between gap-3 md:gap-6 pt-6 pb-2 border-b border-gray-100 relative"
-            >
+            <div class="flex gap-4 h-64 pt-4">
               <div
-                class="absolute inset-0 flex flex-col justify-between pointer-events-none"
+                class="flex flex-col justify-between text-[12px] text-gray-400 font-medium pb-8 h-full text-right w-10 shrink-0"
               >
-                <div
-                  class="w-full h-px bg-gray-50 border-t border-dashed border-gray-200"
-                ></div>
-                <div
-                  class="w-full h-px bg-gray-50 border-t border-dashed border-gray-200"
-                ></div>
-                <div
-                  class="w-full h-px bg-gray-50 border-t border-dashed border-gray-200"
-                ></div>
-                <div
-                  class="w-full h-px bg-gray-50 border-t border-dashed border-gray-200"
-                ></div>
+                <span>฿{{ formatNumber(maxRevenueValue) }}</span>
+                <span>฿{{ formatNumber(maxRevenueValue * 0.75) }}</span>
+                <span>฿{{ formatNumber(maxRevenueValue * 0.5) }}</span>
+                <span>฿{{ formatNumber(maxRevenueValue * 0.25) }}</span>
+                <span>฿0</span>
               </div>
 
               <div
-                v-for="(val, index) in chartData"
-                :key="index"
-                class="relative flex-1 flex flex-col items-center group cursor-pointer"
+                class="relative flex-1 h-full flex items-end justify-between gap-2 md:gap-4 group/chart"
               >
                 <div
-                  class="absolute -top-10 opacity-0 group-hover:opacity-100 transition-all duration-200 bg-[#051960] text-white text-[10px] py-1.5 px-3 rounded-lg mb-2 pointer-events-none whitespace-nowrap z-20 shadow-lg translate-y-2 group-hover:translate-y-0"
+                  class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-8"
                 >
-                  ฿{{ formatNumber(val.value) }}
                   <div
-                    class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#051960] rotate-45"
+                    class="w-full border-t border-dashed border-gray-300"
                   ></div>
+                  <div
+                    class="w-full border-t border-dashed border-gray-300"
+                  ></div>
+                  <div
+                    class="w-full border-t border-dashed border-gray-300"
+                  ></div>
+                  <div
+                    class="w-full border-t border-dashed border-gray-300"
+                  ></div>
+                  <div class="w-full border-t border-gray-200"></div>
                 </div>
 
                 <div
-                  class="w-full max-w-[48px] bg-blue-100 rounded-t-lg group-hover:bg-blue-500 transition-all duration-300 relative z-10"
-                  :style="{ height: val.percent + '%' }"
-                ></div>
+                  v-for="(val, index) in chartData"
+                  :key="index"
+                  class="relative flex-1 flex flex-col items-center group cursor-pointer h-full justify-end pb-8"
+                >
+                  <div
+                    class="w-full max-w-[36px] bg-gradient-to-t from-blue-500/80 to-blue-400 rounded-t-md group-hover:from-blue-600 group-hover:to-blue-500 transition-all duration-300 relative z-10 shadow-sm"
+                    :style="{ height: val.percent + '%' }"
+                  >
+                    <div
+                      class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-all duration-200 bg-[#051960] text-white text-[12px] font-medium py-1.5 px-3 rounded-lg pointer-events-none whitespace-nowrap z-20 shadow-lg"
+                    >
+                      ฿{{ formatNumber(val.value) }}
 
-                <div class="mt-3 text-[10px] text-gray-400 font-medium">
-                  {{ val.day }}
+                      <div
+                        class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#051960] rotate-45"
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="absolute bottom-0 text-[12px] text-gray-400 font-medium whitespace-nowrap"
+                  >
+                    {{ val.day }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -284,25 +288,32 @@ const { t, locale } = useI18n();
 const campaignStore = useCampaignStore();
 const { currentDetail, isLoading } = storeToRefs(campaignStore);
 
+const maxRevenueValue = computed(() => {
+  if (!currentDetail.value?.daily_stats?.length) return 1000;
+  const values = currentDetail.value.daily_stats.map((s) =>
+    parseFloat(s.revenue_generated || 0),
+  );
+  const max = Math.max(...values);
+  return max > 0 ? Math.ceil(max / 100) * 100 : 1000;
+});
+
 const chartData = computed(() => {
-  if (
-    !currentDetail.value?.daily_stats ||
-    currentDetail.value.daily_stats.length === 0
-  ) {
-    return [];
-  }
+  if (!currentDetail.value?.daily_stats?.length) return [];
 
   const stats = currentDetail.value.daily_stats;
-
-  const values = stats.map((s) => parseFloat(s.revenue_generated || 0));
-  const maxRev = Math.max(...values, 1);
+  const maxVal = maxRevenueValue.value;
+  const MIN_BAR_PERCENT = 1.5;
 
   return stats.map((s) => {
     const val = parseFloat(s.revenue_generated || 0);
     return {
       day: formatDateShort(s.stat_date),
       value: val,
-      percent: maxRev > 0 ? (val / maxRev) * 100 : 0,
+
+      percent:
+        val === 0
+          ? MIN_BAR_PERCENT
+          : Math.max((val / maxVal) * 100, MIN_BAR_PERCENT),
     };
   });
 });
@@ -345,18 +356,15 @@ const formatDateShort = (dateString) => {
   });
 };
 
-// เพิ่มฟังก์ชันคำนวณ % เทียบเป้าหมาย
-const calculateVsTarget = (current, target) => {
+const calculateAchievement = (current, target) => {
   const currNum = parseFloat(current || 0);
   const targetNum = parseFloat(target || 0);
 
   if (targetNum <= 0) return "0.0";
 
-  if (currNum === 0) return "0.0";
+  const achievement = (currNum / targetNum) * 100;
 
-  const percentage = ((currNum - targetNum) / targetNum) * 100;
-
-  return percentage > 0 ? `+${percentage.toFixed(1)}` : percentage.toFixed(1);
+  return achievement.toFixed(2);
 };
 </script>
 

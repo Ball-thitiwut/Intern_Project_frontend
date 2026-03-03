@@ -479,6 +479,7 @@
     "stats": {
       "revenue_label": "Total Revenue",
       "vs_target": "vs Target",
+      "of_target": "of Target",
       "orders_label": "Total Orders",
       "unit_items": "items",
       "avg_bill_format": "Avg ฿{n} / bill",

@@ -479,6 +479,7 @@
     "stats": {
       "revenue_label": "ยอดขายรวม",
       "vs_target": "เทียบเป้าหมาย",
+      "of_target": "ของเป้าหมาย",
       "orders_label": "จำนวนออเดอร์",
       "unit_items": "รายการ",
       "avg_bill_format": "เฉลี่ย ฿{n} / บิล",

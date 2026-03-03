@@ -603,14 +603,11 @@ const activeCampaigns = computed(() => {
       daysLeft: daysLeft,
       progress:
         c.target_revenue > 0
-          ? Math.min(
-              100,
-              Math.round(
-                (parseFloat(c.total_revenue) / parseFloat(c.target_revenue)) *
-                  100,
-              ),
-            )
-          : 0,
+          ? (
+              (parseFloat(c.total_revenue) / parseFloat(c.target_revenue)) *
+              100
+            ).toFixed(2)
+          : "0.00",
     };
   });
 });
