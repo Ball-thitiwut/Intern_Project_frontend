@@ -226,8 +226,8 @@
   },
   "branch_connect_view": {
     "header": {
-      "title": "Connect Branch Data",
-      "subtitle": "Specify your branch information for RESSELF analysis"
+      "title": "Upload Sales Data",
+      "subtitle": "Add your sales data for RESSELF analysis"
     },
     "upload": {
       "description": "Update sales data with CSV files",
