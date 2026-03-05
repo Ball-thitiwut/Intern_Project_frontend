@@ -1,26 +1,32 @@
 <template>
   <div class="w-full flex flex-col">
-    
     <div class="px-4 md:px-10 pt-4 md:pt-6 pb-2 md:pb-4 flex-none">
-      <h1 class="text-2xl md:text-3xl font-bold text-[#051960] tracking-tight mb-2 md:mb-3">
-        {{ $t('select_pos_view.title') }}
+      <h1
+        class="text-2xl md:text-3xl font-bold text-[#051960] tracking-tight mb-2 md:mb-3"
+      >
+        {{ $t("select_pos_view.title") }}
       </h1>
       <p class="text-gray-500 text-sm md:text-base font-light">
-        {{ $t('select_pos_view.subtitle') }}
+        {{ $t("select_pos_view.subtitle") }}
       </p>
     </div>
 
     <div class="px-4 md:px-10 pt-4 pb-0 md:py-6">
-      
       <div v-if="isLoading" class="flex justify-center items-center h-40">
-        <p class="text-gray-400">{{ $t('select_pos_view.status.loading') }}</p>
+        <p class="text-gray-400">{{ $t("select_pos_view.status.loading") }}</p>
       </div>
 
-      <div v-else-if="posList.length === 0" class="flex justify-center items-center h-40">
-        <p class="text-gray-400">{{ $t('select_pos_view.status.no_data') }}</p>
+      <div
+        v-else-if="posList.length === 0"
+        class="flex justify-center items-center h-40"
+      >
+        <p class="text-gray-400">{{ $t("select_pos_view.status.no_data") }}</p>
       </div>
 
-      <div v-else class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6">
+      <div
+        v-else
+        class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6"
+      >
         <div
           v-for="pos in posList"
           :key="pos.id"
@@ -54,9 +60,49 @@
             class="flex-1 bg-gradient-to-b from-gray-50 to-white flex items-center justify-center p-2 md:p-4 relative overflow-hidden group-hover:from-blue-50/50 transition-all duration-500"
           >
             <div
-              class="z-10 w-10 h-10 md:w-16 md:h-16 bg-white rounded-lg md:rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-300 group-hover:scale-110 transition-transform duration-300"
+              class="z-10 w-full h-full flex items-center justify-center p-2"
             >
-              <span class="text-base md:text-2xl font-bold text-[#051960]">{{ pos.name.charAt(0) }}</span>
+              <img
+                v-if="getPosLogo(pos.name)"
+                :src="getPosLogo(pos.name)"
+                :alt="pos.name"
+                class="max-w-full max-h-full object-contain rounded-xl md:rounded-xl transition-transform duration-300 group-hover:scale-110"
+              />
+
+              <div
+                v-else
+                class="flex flex-col items-center justify-center text-gray-300"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-8 h-8 md:w-12 md:h-12 mb-1"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <rect
+                    x="2"
+                    y="3"
+                    width="20"
+                    height="14"
+                    rx="2"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M6 10h4M6 14h1M14 10h4M14 14h4"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M2 17h20v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2z"
+                    fill="currentColor"
+                    fill-opacity="0.1"
+                  />
+                </svg>
+                <span class="text-[10px] uppercase font-bold text-gray-400"
+                  >POS</span
+                >
+              </div>
             </div>
           </div>
 
@@ -96,7 +142,7 @@
               d="M10 19l-7-7m0 0l7-7m-7 7h18"
             />
           </svg>
-          {{ $t('select_pos_view.buttons.back') }}
+          {{ $t("select_pos_view.buttons.back") }}
         </button>
 
         <button
@@ -104,7 +150,7 @@
           :disabled="!selectedPosId"
           class="bg-[#F97316] hover:bg-[#ea580c] text-white font-bold text-sm md:text-base px-6 py-2.5 md:px-8 md:py-3 rounded-full shadow-lg shadow-orange-200 disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none transition-all transform active:scale-95 flex items-center gap-2"
         >
-          {{ $t('select_pos_view.buttons.continue') }}
+          {{ $t("select_pos_view.buttons.continue") }}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5"
@@ -130,6 +176,12 @@ import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import api from "@/utils/axios";
+import foodStoryLogo from "@/assets/logos/FoodStory.png";
+import ochaLogo from "@/assets/logos/ocha.png";
+import positiveLogo from "@/assets/logos/POSitive.png";
+import slimPosLogo from "@/assets/logos/SlimPOS.webp";
+import storeHubLogo from "@/assets/logos/StoreHub.png";
+import wongnaiLogo from "@/assets/logos/Wongnai.png";
 
 const router = useRouter();
 const { t } = useI18n();
@@ -139,38 +191,47 @@ const isLoading = ref(true);
 
 onMounted(async () => {
   try {
-    const response = await api.get('/restaurant-registration-options');
-    
+    const response = await api.get("/restaurant-registration-options");
+
     if (response.data && response.data.posSystems) {
       // แปลงโครงสร้างข้อมูล (Map)
-      const rawPosList = response.data.posSystems.map(system => ({
+      const rawPosList = response.data.posSystems.map((system) => ({
         id: system.pos_systems_id,
-        name: system.pos_systems_name 
+        name: system.pos_systems_name,
       }));
 
       // หา ID ของตัวเลือก "อื่นๆ" หรือ "Standard CSV" เพื่อใช้เป็น fallback
-      const fallbackOption = rawPosList.find(pos => 
-        ['Standard CSV', 'อื่นๆ', 'Other'].includes(pos.name)
+      const fallbackOption = rawPosList.find((pos) =>
+        ["Standard CSV", "อื่นๆ", "Other"].includes(pos.name),
       );
-      
+
       const otherPosId = fallbackOption ? fallbackOption.id : 99;
 
       // กรอง (Filter) เพื่อแยก Standard CSV และตัวเลือกที่ไม่ต้องการแสดงซ้ำ
-      const mainPosList = rawPosList.filter(pos => {
+      const mainPosList = rawPosList.filter((pos) => {
         const name = pos.name.trim();
-        const isStandardCsv = name.toLowerCase().includes('standard csv');
-        return !isStandardCsv && !['ไม่มี', 'อื่นๆ', 'None', 'Other', 'Standard CSV (Others)'].includes(name);
+        const isStandardCsv = name.toLowerCase().includes("standard csv");
+        return (
+          !isStandardCsv &&
+          ![
+            "ไม่มี",
+            "อื่นๆ",
+            "None",
+            "Other",
+            "Standard CSV (Others)",
+          ].includes(name)
+        );
       });
 
       posList.value = [
         ...mainPosList,
-        { id: otherPosId, name: t('select_pos_view.other_pos_label') } 
+        { id: otherPosId, name: t("select_pos_view.other_pos_label") },
       ];
     }
   } catch (error) {
     console.error("Failed to fetch POS systems:", error);
-    // กรณี Error ให้แสดง "POS อื่นๆ" เป็นค่า Default 
-    posList.value = [{ id: 99, name: 'POS อื่นๆ' }];
+    // กรณี Error ให้แสดง "POS อื่นๆ" เป็นค่า Default
+    posList.value = [{ id: 99, name: "POS อื่นๆ" }];
   } finally {
     isLoading.value = false;
   }
@@ -179,6 +240,23 @@ onMounted(async () => {
 // เลือก POS
 const selectPos = (id) => {
   selectedPosId.value = id;
+};
+
+const posLogos = {
+  FoodStory: foodStoryLogo,
+  Ocha: ochaLogo,
+  POSitive: positiveLogo,
+  SlimPOS: slimPosLogo,
+  StoreHub: storeHubLogo,
+  Wongnai: wongnaiLogo,
+  "Wongnai POS": wongnaiLogo,
+};
+
+const getPosLogo = (name) => {
+  const key = Object.keys(posLogos).find((k) =>
+    name.toLowerCase().includes(k.toLowerCase()),
+  );
+  return key ? posLogos[key] : null;
 };
 
 // ปุ่ม ดำเนินการต่อ
