@@ -121,7 +121,11 @@ const salesPerBillChartData = computed(() => {
   const raw = dashboardStore.customerInsights.spending_analysis || [];
 
   const standardRanges = [
-    { key: "Under", label: "Under ฿500", match: "Under" },
+    {
+      key: "Under",
+      label: t("stat_analysis_chart.range_labels.under", { price: "฿500" }),
+      match: "Under",
+    },
     { key: "500-1000", label: "฿500 - ฿1,000", match: "500 - 1,000" },
     { key: "1001-2000", label: "฿1,001 - ฿2,000", match: "1,001 - 2,000" },
     { key: "2000+", label: "฿2,000+", match: "2,000+" },
@@ -155,7 +159,9 @@ const salesPerBillStats = computed(() => {
 
     let range = maxItem.range;
     if (range.includes("Under")) {
-      mostCommonRange = range.replace("Under ", "Under ฿");
+      mostCommonRange = t("stat_analysis_chart.range_labels.under", {
+        price: "฿500",
+      });
     } else if (range.includes("+")) {
       mostCommonRange = "฿" + range;
     } else if (range.includes("-")) {

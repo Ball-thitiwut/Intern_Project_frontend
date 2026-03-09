@@ -528,7 +528,11 @@ const groupSizeTableData = computed(() => {
 const salesPerBillChartData = computed(() => {
   const raw = dashboardStore.customerInsights.spending_analysis || [];
   const standardRanges = [
-    { key: "Under", label: "Under ฿500", match: "Under" },
+    {
+      key: "Under",
+      label: t("stat_analysis_chart.range_labels.under", { price: "฿500" }),
+      match: "Under",
+    },
     { key: "500-1000", label: "฿500 - ฿1,000", match: "500 - 1,000" },
     { key: "1001-2000", label: "฿1,001 - ฿2,000", match: "1,001 - 2,000" },
     { key: "2000+", label: "฿2,000+", match: "2,000+" },
@@ -555,14 +559,18 @@ const salesPerBillStats = computed(() => {
     const maxItem = raw.reduce((prev, current) =>
       prev.count > current.count ? prev : current,
     );
-    mostCommonRange = maxItem.range.includes("-")
-      ? maxItem.range
-          .split(" - ")
-          .map((v) => "฿" + v.trim())
-          .join(" - ")
-      : maxItem.range.includes("Under")
-        ? maxItem.range.replace("Under ", "Under ฿")
-        : "฿" + maxItem.range;
+    if (maxItem.range.includes("Under")) {
+      mostCommonRange = t("stat_analysis_chart.range_labels.under", {
+        price: "฿500",
+      });
+    } else if (maxItem.range.includes("-")) {
+      mostCommonRange = maxItem.range
+        .split(" - ")
+        .map((v) => "฿" + v.trim())
+        .join(" - ");
+    } else {
+      mostCommonRange = "฿" + maxItem.range;
+    }
   }
   return [
     {

@@ -148,7 +148,7 @@
       "x_axis": "บาท"
     },
     "range_labels": {
-      "under": "น้อยกว่า {price}",
+      "under": "ต่ำกว่า {price}",
       "above": "{price} ขึ้นไป"
     }
   },
