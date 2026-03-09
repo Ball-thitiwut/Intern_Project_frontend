@@ -40,7 +40,7 @@ const form = reactive({
   lastName: "",
   phone: "",
   email: "",
-  avatarSeed: "character",
+  avatarSeed: "HappyPet123",
   restaurantName: "",
   categoryId: "",
   ageRangeId: "",
@@ -271,7 +271,7 @@ const saveProfile = async () => {
               class="w-32 h-32 rounded-full border-4 border-white ring-1 ring-gray-200 overflow-hidden shadow-sm bg-gray-50"
             >
               <img
-                :src="`https://api.dicebear.com/7.x/avataaars/svg?seed=${form.avatarSeed}`"
+                :src="`https://api.dicebear.com/9.x/thumbs/svg?seed=${userStore.avatarSeed}&scale=80&radius=50&backgroundColor=0a5b83,67917a,82b6c9,b8d8e3,f1f5f9`"
                 alt="Avatar"
                 class="w-full h-full object-cover"
               />
